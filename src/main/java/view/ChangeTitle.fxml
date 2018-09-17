@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ChangeTitleController">
+   <children>
+      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="TITEL BEARBEITEN" />
+      <SplitPane dividerPositions="0.8317972350230415" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">
+         <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Button fx:id="changeImageBtn" layoutX="35.0" layoutY="252.0" mnemonicParsing="false" onAction="#handleChangeImageButton" prefHeight="25.0" prefWidth="131.0" text="BILD HINZUFÜGEN" />
+                  <ImageView fx:id="image" fitHeight="180.0" fitWidth="200.0" layoutX="35.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="116.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="514.1752624511719" AnchorPane.topAnchor="62.0">
+                     <image>
+                        <Image url="@../../../../../../Pictures/Saved%20Pictures/moon.jpg" />
+                     </image>
+                  </ImageView>
+                  <Pane layoutX="224.0" layoutY="14.0" prefHeight="155.0" prefWidth="456.0">
+                     <children>
+                        <TextField fx:id="txtFiTitle" promptText="Titel" />
+                        <TextField fx:id="txtFiAutor" layoutY="42.0" promptText="Autor" />
+                        <TextField fx:id="txtFiVerlag" layoutY="85.0" promptText="Verlag" />
+                        <TextField fx:id="txtFiJahr" layoutY="125.0" promptText="Erscheinungsjahr" />
+                        <SplitMenuButton fx:id="genreMenu" layoutX="299.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="Genre">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Sachbuch" />
+                              <MenuItem mnemonicParsing="false" text="Roman" />
+                           </items>
+                        </SplitMenuButton>
+                        <RadioButton fx:id="radioBtnIsThere" layoutX="300.0" layoutY="125.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="ausgeliehen" />
+                        <Group fx:id="checkBewertung" layoutX="299.0" layoutY="89.0">
+                           <children>
+                              <CheckBox mnemonicParsing="false" />
+                              <CheckBox layoutX="20.0" mnemonicParsing="false" />
+                              <CheckBox layoutX="41.0" mnemonicParsing="false" />
+                              <CheckBox layoutX="84.0" mnemonicParsing="false" />
+                              <CheckBox layoutX="63.0" mnemonicParsing="false" />
+                           </children>
+                        </Group>
+                     </children>
+                  </Pane>
+                  <TextArea fx:id="txtArInahlt" layoutX="224.0" layoutY="180.0" prefHeight="85.0" prefWidth="456.0" promptText="Inhaltsangabe" />
+                  <TextArea fx:id="txtArKommentar" layoutX="224.0" layoutY="273.0" prefHeight="85.0" prefWidth="456.0" promptText="Ellyns Kommentar" />
+               </children>
+            </AnchorPane>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Button fx:id="cancelBtn" layoutX="122.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="36.0" prefWidth="200.0" text="ABBRECHEN" />
+                  <Button fx:id="saveChangeBtn" layoutX="359.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleSaveChangeButton" prefHeight="36.0" prefWidth="200.0" text="ÄNDERUNGEN SPEICHERN" />
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
