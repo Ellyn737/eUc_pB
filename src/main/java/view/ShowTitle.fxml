@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ShowTitleController">
+   <children>
+      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="TITEL" />
+      <SplitPane dividerPositions="0.8317972350230415" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">
+         <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Pane layoutX="188.0" layoutY="-1.0" prefHeight="358.0" prefWidth="491.0">
+                     <children>
+                        <Label fx:id="givenTitle" layoutX="14.0" prefHeight="26.0" prefWidth="150.0" text="Titel" />
+                        <Label fx:id="givenAutor" layoutX="14.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Autor" />
+                        <Label fx:id="givenVerlag" layoutX="14.0" layoutY="53.0" prefHeight="26.0" prefWidth="150.0" text="Verlag" />
+                        <Label fx:id="givenJahr" layoutX="14.0" layoutY="85.0" prefHeight="26.0" prefWidth="150.0" text="Ersscheinungsjahr" />
+                        <Label fx:id="givenGenre" layoutX="265.0" layoutY="1.0" prefHeight="26.0" prefWidth="150.0" text="Genre" />
+                        <Label fx:id="givenSubgenre" layoutX="276.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Subgenre" />
+                        <RadioButton fx:id="givenIsThere" layoutX="275.0" layoutY="86.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="ausgeliehen" />
+                        <Group fx:id="givenBew" layoutX="276.0" layoutY="58.0">
+                           <children>
+                              <CheckBox mnemonicParsing="false" />
+                              <CheckBox layoutX="20.0" mnemonicParsing="false" />
+                              <CheckBox layoutX="41.0" mnemonicParsing="false" />
+                              <CheckBox layoutX="84.0" mnemonicParsing="false" />
+                              <CheckBox layoutX="63.0" mnemonicParsing="false" />
+                           </children>
+                        </Group>
+                        <Line endX="313.0" endY="151.0" startX="112.0" startY="151.0" />
+                        <Label fx:id="givenInhalt" alignment="TOP_LEFT" layoutX="7.0" layoutY="168.0" prefHeight="85.0" prefWidth="478.0" text="Inhaltsangabe" />
+                        <Label fx:id="givenKommentar" alignment="TOP_LEFT" layoutX="7.0" layoutY="253.0" prefHeight="85.0" prefWidth="478.0" text="Ellyns Kommentar" />
+                     </children>
+                  </Pane>
+                  <ImageView fx:id="image" fitHeight="180.0" fitWidth="200.0" layoutX="35.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="116.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="514.1752624511719" AnchorPane.topAnchor="62.0">
+                     <image>
+                        <Image url="@../../../../../../Pictures/Saved%20Pictures/moon.jpg" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Button fx:id="deleteTitleBtn" layoutX="348.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleDeleteTitleButton" prefHeight="36.0" prefWidth="150.0" text="TITEL LÖSCHEN" />
+                  <Button fx:id="changeTitleBtn" layoutX="183.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleChangeTitleButton" prefHeight="36.0" prefWidth="150.0" text="TITEL BEARBEITEN" />
+                  <Button fx:id="cancelBtn" layoutX="512.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="36.0" prefWidth="150.0" text="ABBRECHEN" />
+                  <Button fx:id="borrowBtn" layoutX="18.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleBorrowButton" prefHeight="36.0" prefWidth="150.0" text="AUSLEIHE / RÜCKGABE" />
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
