@@ -67,44 +67,6 @@ public class TestConnection {
 		}finally {
 			factory.close();
 		}
-				
-		/*
-		Session session = factory.getCurrentSession();
-
-		System.out.println("Connection successful");
-		System.out.println("Begin transaction");
-		
-		Transaction transA = session.beginTransaction();
-
-		Media m1 = new Buch("Das Lächeln der Fortuna", "Belletristik", 1999, "Rebecca Gable", "Lübbe");
-		session.persist(m1);
-
-		session.getTransaction().commit();
-		System.out.println("End transaction");
-		session.close();
-		System.out.println("Success");
-
-	*/
-		
-/*
-		System.out.println("Connecting to database");
-		
-		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
-		Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
-		
-		SessionFactory factory = meta.getSessionFactoryBuilder().build();
-		Session session = factory.openSession();
-		
-		Transaction t = session.beginTransaction();
-		
-			Media m1 = new Buch("Das Lächeln der Fortuna", "Belletristik", 1999, "Rebecca Gable", "Lübbe");
-			
-			session.persist(m1);
-			t.commit();
-			session.close();
-			System.out.println("Success");
-			
-			*/
 	}
 	
 	
