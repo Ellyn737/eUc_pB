@@ -9,6 +9,7 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +18,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import models.Ausleiher;
+import models.Bewertung;
 import models.Buch;
 import models.Media;
+import models.MediumAusleihen;
 import view.StartMenuController;
 
 
@@ -56,9 +60,23 @@ public class MainBibliothek extends Application{
 		
 	}
 	
+	public void connectingToDB() {
+		
+	}
+	
 	public static void main(String[] args) {
 		launch(args);
+		
+		System.out.println("Connecting to database");
+		//wird nur einmal erstellt
+		SessionFactory factory = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
+				addAnnotatedClass(Media.class).addAnnotatedClass(Buch.class).
+				addAnnotatedClass(Ausleiher.class).addAnnotatedClass(Bewertung.class).
+				addAnnotatedClass(MediumAusleihen.class).buildSessionFactory();
 	}
+	
+
+	
 
 
 }

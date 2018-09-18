@@ -2,6 +2,7 @@ package view;
 
 import java.io.IOException;
 
+import controller.BibController;
 import controller.MainBibliothek;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,6 +35,15 @@ public class AddNewTitleController {
 	@FXML Button cancelBtn;
 	@FXML Button addTitleBtn;
 	
+	public Boolean inBib;
+	public String title;
+	public String autor;
+	public String verlag;
+	public int jahr;
+	public String genre;
+	public String inhalt;
+	public String kommentar;
+	
 	public MainBibliothek mainBib;
 	
 	public void setMain(MainBibliothek mainBib) {
@@ -51,11 +61,66 @@ public class AddNewTitleController {
 	
 	@FXML private void handleAddTitleButton(ActionEvent event) throws IOException{
 			//add the title to db
+			//hole Strings mit Textfeldinhalten
+			title = txtFiTitle.getText();
+			autor = txtFiAutor.getText();
+			verlag = txtFiVerlag.getText();
+			jahr = Integer.valueOf(txtFiJahr.getText());
+			genre = menuGenre.getText();
+			inhalt = txtArInhalt.getText();
+			kommentar = txtArKommentar.getText();
+			
+			if(radioBtnIsThere.isPressed()) {
+				inBib = true;
+			}else {
+				inBib = false;
+			}
 		}	
 	
 	@FXML private void handleAddImageButton(ActionEvent event) throws IOException{
 		//add image to title in db
-	}	
+	}
+
+	public Boolean getInBib() {
+		return inBib;
+	}
+
+
+	public String getTitle() {
+		return title;
+	}
+
+
+	public String getAutor() {
+		return autor;
+	}
+
+
+	public String getVerlag() {
+		return verlag;
+	}
+
+
+	public int getJahr() {
+		return jahr;
+	}
+
+
+	public String getGenre() {
+		return genre;
+	}
+
+
+	public String getInhalt() {
+		return inhalt;
+	}
+
+	public String getKommentar() {
+		return kommentar;
+	}
+
+	
+	
 	
 	
 

@@ -36,6 +36,16 @@ public class ChangeTitleController {
 	
 	public MainBibliothek mainBib;
 	
+	public Boolean inBib;
+	public String title;
+	public String autor;
+	public String verlag;
+	public int jahr;
+	public String genre;
+	public String inhalt;
+	public String kommentar;
+	
+	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
 	}
@@ -51,6 +61,7 @@ public class ChangeTitleController {
 	
 	@FXML private void handleSaveChangeButton(ActionEvent event) throws IOException{
 			//save the changes to db
+		
 		}	
 	
 	@FXML private void handleChangeImageButton(ActionEvent event) throws IOException{
