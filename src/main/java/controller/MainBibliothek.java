@@ -66,13 +66,6 @@ public class MainBibliothek extends Application{
 	
 	public static void main(String[] args) {
 		launch(args);
-		
-		System.out.println("Connecting to database");
-		//wird nur einmal erstellt
-		SessionFactory factory = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
-				addAnnotatedClass(Media.class).addAnnotatedClass(Buch.class).
-				addAnnotatedClass(Ausleiher.class).addAnnotatedClass(Bewertung.class).
-				addAnnotatedClass(MediumAusleihen.class).buildSessionFactory();
 	}
 	
 

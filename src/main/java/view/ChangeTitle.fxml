@@ -5,7 +5,6 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
@@ -40,7 +39,6 @@
                               <MenuItem mnemonicParsing="false" text="Roman" />
                            </items>
                         </SplitMenuButton>
-                        <RadioButton fx:id="radioBtnIsThere" layoutX="300.0" layoutY="125.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="ausgeliehen" />
                         <Group fx:id="checkBewertung" layoutX="299.0" layoutY="89.0">
                            <children>
                               <CheckBox mnemonicParsing="false" />
