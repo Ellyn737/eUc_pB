@@ -2,6 +2,7 @@ package view;
 
 import java.io.IOException;
 
+import controller.BibController;
 import controller.MainBibliothek;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,10 +34,9 @@ public class ChangeTitleController {
 	@FXML TextArea txtArKommentar;
 	@FXML Button cancelBtn;
 	@FXML Button saveChangeBtn;
+		
+	public int buchId;
 	
-	public MainBibliothek mainBib;
-	
-	public Boolean inBib;
 	public String title;
 	public String autor;
 	public String verlag;
@@ -44,6 +44,10 @@ public class ChangeTitleController {
 	public String genre;
 	public String inhalt;
 	public String kommentar;
+	
+	public MainBibliothek mainBib;
+	public BibController bc = new BibController();
+	
 	
 	
 	public void setMain(MainBibliothek mainBib) {
@@ -62,6 +66,28 @@ public class ChangeTitleController {
 	@FXML private void handleSaveChangeButton(ActionEvent event) throws IOException{
 			//save the changes to db
 		
+			title = txtFiTitle.getText();
+			autor = txtFiAutor.getText();
+			verlag = txtFiVerlag.getText();
+			jahr = Integer.parseInt(txtFiJahr.getText());
+			genre = genreMenu.getText();
+			inhalt = txtArInhalt.getText();
+			kommentar = txtArKommentar.getText();
+			
+			//values an bibController uebergeben
+			bc.setTitle(title);
+			bc.setAutor(autor);
+			bc.setVerlag(verlag);
+			bc.setJahr(jahr);
+			bc.setGenre(genre);
+			bc.setInhalt(inhalt);
+			bc.setKommentar(kommentar);
+			
+			//buchId holen
+			int buchId = bc.findeBuchID(autor, title);
+			//veraenderungen speichern
+			bc.titelBearbeiten(buchId);
+			
 		}	
 	
 	@FXML private void handleChangeImageButton(ActionEvent event) throws IOException{
