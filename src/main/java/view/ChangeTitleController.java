@@ -2,6 +2,10 @@ package view;
 
 import java.io.IOException;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import controller.BibController;
 import controller.MainBibliothek;
 import javafx.event.ActionEvent;
@@ -18,6 +22,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import models.Ausleiher;
+import models.Bewertung;
+import models.Buch;
+import models.Media;
+import models.MediumAusleihen;
 
 public class ChangeTitleController {
 
@@ -35,20 +44,23 @@ public class ChangeTitleController {
 	@FXML Button cancelBtn;
 	@FXML Button saveChangeBtn;
 		
-	public int buchId;
+	private int buchId;
 	
-	public String title;
-	public String autor;
-	public String verlag;
-	public int jahr;
-	public String genre;
-	public String inhalt;
-	public String kommentar;
+	private String title;
+	private String autor;
+	private String verlag;
+	private int jahr;
+	private String genre;
+	private String inhalt;
+	private String kommentar;
 	
-	public MainBibliothek mainBib;
-	public BibController bc = new BibController();
+	private MainBibliothek mainBib;
+	private BibController bc = new BibController();
 	
-	
+	SessionFactory factory = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
+			addAnnotatedClass(Media.class).addAnnotatedClass(Buch.class).
+			addAnnotatedClass(Ausleiher.class).addAnnotatedClass(Bewertung.class).
+			addAnnotatedClass(MediumAusleihen.class).buildSessionFactory();
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -74,6 +86,63 @@ public class ChangeTitleController {
 			inhalt = txtArInhalt.getText();
 			kommentar = txtArKommentar.getText();
 			
+			//get buchId
+			
+			
+			//get buchData from buchId
+			try {
+				Session session = factory.getCurrentSession();
+				session.beginTransaction();
+				//aendere Daten
+				
+				Buch buch = (Buch)session.get(Buch.class, buchId);
+			
+				if(title != "") {
+					buch.setTitle(title);
+					System.out.println("neuer Titel: " + title);
+				}
+				
+				if(genre != "") {
+					buch.setGenre(genre);
+					System.out.println("neues Genre: " + genre);
+				}
+				
+				if(jahr != 0) {
+					buch.setErscheinungsjahr(jahr);
+					System.out.println("neues Erscheinungsjahr: " + jahr);
+				}
+				
+				if(autor != "") {
+				buch.setAutor(autor);
+				System.out.println("neuer Autor: " + autor);
+				}
+				
+				if(verlag != "") {
+					buch.setVerlag(verlag);
+					System.out.println("neuer Verlag: " + verlag);
+				}
+				
+				//inBIb hier nicht aendern
+				if(jahr == 0 && genre == "" && title == "" && autor == "" && verlag == ""){
+					System.out.println("Es wurde nichts verändert.");
+				}
+				
+				session.getTransaction().commit();
+			}catch (Exception e) {
+				System.out.println("Fehler!");
+
+			}
+			
+			//zu ShowTitle
+			Parent titlePane = FXMLLoader.load(getClass().getResource("../view/ShowTitle.fxml"));
+			Scene titleScene = new Scene(titlePane);
+			
+			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+			window.setScene(titleScene);
+			window.show();
+			
+			
+			/*
 			//values an bibController uebergeben
 			bc.setTitle(title);
 			bc.setAutor(autor);
@@ -87,7 +156,7 @@ public class ChangeTitleController {
 			int buchId = bc.findeBuchID(autor, title);
 			//veraenderungen speichern
 			bc.titelBearbeiten(buchId);
-			
+			*/
 		}	
 	
 	@FXML private void handleChangeImageButton(ActionEvent event) throws IOException{

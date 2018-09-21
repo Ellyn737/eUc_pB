@@ -48,17 +48,17 @@ public class AddNewTitleController {
 	@FXML Button cancelBtn;
 	@FXML Button addTitleBtn;
 	
-	public Boolean inBib;
-	public String title;
-	public String autor;
-	public String verlag;
-	public int jahr;
-	public String genre;
-	public String inhalt;
-	public String kommentar;
+	private Boolean inBib;
+	private String title;
+	private String autor;
+	private String verlag;
+	private int jahr;
+	private String genre;
+	private String inhalt;
+	private String kommentar;
 	
-	public MainBibliothek mainBib;
-	public BibController bc;
+	private MainBibliothek mainBib;
+	private BibController bc;
 	
 	
 	SessionFactory factory = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
@@ -89,72 +89,75 @@ public class AddNewTitleController {
 		verlag = txtFiVerlag.getText();
 		jahr = Integer.valueOf(txtFiJahr.getText());
 		genre = menuGenre.getText();
+		
+		//speichern in einer Bewertung
 		inhalt = txtArInhalt.getText();
 		kommentar = txtArKommentar.getText();
 		
 		if(radioBtnIsThere.isPressed()) {
-			inBib = true;
-		}else {
 			inBib = false;
+		}else {
+			inBib = true;
 		}
 		
-		//SessionFactory holen
-				try {
-					//session starten
-					Session session = factory.getCurrentSession();
-					
-					//use the session object to save/retrieve Java objects
-					//create a media/buch object
-					System.out.println("Create a media/buch object");
-					Buch buch = new Buch();
-					
-					System.out.println("Autor: " + autor);
-					buch.setAutor(autor);
-					
-					System.out.println("Verlag: " + verlag);
-					buch.setVerlag(verlag);
-					
-					System.out.println("Titel: " + title);
-					buch.setTitle(title);
-					
-					System.out.println("Jahr: "+ jahr);
-					buch.setErscheinungsjahr(jahr);
-					
-					System.out.println("Genre:" + genre);
-					buch.setGenre(genre);
-					
-					System.out.println("inBib:" + inBib);
-					buch.setIstInBib(inBib);			
-					
-					
-					//start transaction
-					session.beginTransaction();
-					
-					//save the book
-					System.out.println("Saving the book");
-					session.save(buch);
-					
-					//commit the transaction
-					session.getTransaction().commit();
-					
-					System.out.println("Done Fine");
-					
-					session.close();
+		try {
+			//session starten
+			Session session = factory.getCurrentSession();
+			
+			//use the session object to save/retrieve Java objects
+			//create a media/buch object
+			System.out.println("Create a media/buch object");
+			Buch buch = new Buch();
+			
+			System.out.println("Autor: " + autor);
+			buch.setAutor(autor);
+			
+			System.out.println("Verlag: " + verlag);
+			buch.setVerlag(verlag);
+			
+			System.out.println("Titel: " + title);
+			buch.setTitle(title);
+			
+			System.out.println("Jahr: "+ jahr);
+			buch.setErscheinungsjahr(jahr);
+			
+			System.out.println("Genre:" + genre);
+			buch.setGenre(genre);
+			
+			System.out.println("inBib:" + inBib);
+			buch.setIstInBib(inBib);			
+			
+			
+			//start transaction
+			session.beginTransaction();
+			
+			//save the book
+			System.out.println("Saving the book");
+			session.save(buch);
+			
+			//commit the transaction
+			session.getTransaction().commit();
+			
+			System.out.println("Done Fine");
+			
+			session.close();
 
-				}catch (Exception e) {}
-				
-				//go to startMenu
-				Parent startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-				Scene startScene = new Scene(startPane);
-				
-				Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-				window.setScene(startScene);
-				window.show();
+		}catch (Exception e) {}
 		
+		//zu ShowTitle
+		Parent titlePane = FXMLLoader.load(getClass().getResource("../view/ShowTitle.fxml"));
+		Scene titleScene = new Scene(titlePane);
+		
+		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+		window.setScene(titleScene);
+		window.show();
+		
+		
+				
+				
+				
 		
 		/*
-		
-			
 			//values an bibController übergeben
 			bc.setTitle(title);
 			bc.setAutor(autor);
@@ -172,7 +175,7 @@ public class AddNewTitleController {
 	
 	@FXML private void handleAddImageButton(ActionEvent event) throws IOException{
 		//add image to title in db
-	
+		
 		
 		
 	}

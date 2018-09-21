@@ -24,14 +24,14 @@ public class Ausleiher implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id_ausleiher")
-	public int idAusleiher;
+	private int idAusleiher;
 	
 	@Column(name="vorname")
-	public String vorName;
+	private String vorName;
 	@Column(name="nachname")
-	public String nachName;
+	private String nachName;
 	@Column(name="email")
-	public String email;
+	private String email;
 	
 	
 	public Ausleiher() {}

@@ -19,9 +19,9 @@ import java.text.MessageFormat;
 public class Buch extends Media implements Serializable{
 
 	@Column(name="autor")
-	public String autor;
+	private String autor;
 	@Column(name="verlag")
-	public String verlag;
+	private String verlag;
 	
 	public Buch() {super();}
 

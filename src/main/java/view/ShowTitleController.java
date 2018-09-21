@@ -33,7 +33,7 @@ public class ShowTitleController {
 	@FXML Button cancelBtn;
 	@FXML Button borrowBtn;
 
-	public MainBibliothek mainBib;
+	private MainBibliothek mainBib;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;

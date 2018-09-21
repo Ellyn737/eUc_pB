@@ -17,22 +17,22 @@ public class Bewertung implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id_bewertung")
-	public int idBewertung;
+	private int idBewertung;
 	
 	@Column(name="bewertungs_text")
-	public String bewertungsTxt;
+	private String bewertungsTxt;
 	
 	@Column(name="bewertungs_sterne")
-	public int bewertungsSterne;
+	private int bewertungsSterne;
 	
 	@Column(name="id_ausleiher")
-	public  int idAusleiher;
+	private  int idAusleiher;
 	
 	@Column(name="id_medium")
-	public int idMedium;
+	private int idMedium;
 	
 	@Column(name="bewertungs_datum")
-	public Date bewertungsDatum;
+	private Date bewertungsDatum;
 	
 	public Bewertung() {}
 
