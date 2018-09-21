@@ -27,22 +27,20 @@ import view.AddNewTitleController;
  */
 public class BibController {
 
-	public MainBibliothek mainBib = new MainBibliothek();
-	public AddNewTitleController addTitleView = new AddNewTitleController();
+	private MainBibliothek mainBib = new MainBibliothek();
+	private AddNewTitleController addTitleView = new AddNewTitleController();
 	
-	public Boolean inBib;
-	public String title;
-	public String autor;
-	public String verlag;
-	public int jahr;
-	public String genre;
-	public String inhalt;
-	public String kommentar;
+	private Boolean inBib;
+	private String title;
+	private String autor;
+	private String verlag;
+	private int jahr;
+	private String genre;
+	private String inhalt;
+	private String kommentar;
 	
-	SessionFactory factory = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
-			addAnnotatedClass(Media.class).addAnnotatedClass(Buch.class).
-			addAnnotatedClass(Ausleiher.class).addAnnotatedClass(Bewertung.class).
-			addAnnotatedClass(MediumAusleihen.class).buildSessionFactory();
+	private SessionFactory factory;
+
 	
 	public void aufnehmenInBib() {
 		/*
@@ -54,10 +52,10 @@ public class BibController {
 		
 		//SessionFactory holen
 		try {
+			System.out.println("In BC");
+			factory = SingletonFactory.getFactory();
+			Session session = factory.openSession();
 			//session starten
-			Session session = factory.getCurrentSession();
-			
-		
 			
 			//use the session object to save/retrieve Java objects
 			//create a media/buch object
@@ -82,8 +80,14 @@ public class BibController {
 			System.out.println("inBib:" + inBib);
 			buch.setIstInBib(inBib);			
 			
+			System.out.println("inhalt: " + inhalt);
+			buch.setInhalt(inhalt);
+
+			System.out.println("kommentar: "+ kommentar);
+			buch.setKommentar(kommentar);
 			
 			//start transaction
+			System.out.println("Beginn transaction");
 			session.beginTransaction();
 			
 			//save the book
@@ -91,13 +95,15 @@ public class BibController {
 			session.save(buch);
 			
 			//commit the transaction
+			System.out.println("Commiting");
 			session.getTransaction().commit();
 			
 			System.out.println("Done Fine");
-			
 			session.close();
 
 		}catch (Exception e) {}
+		
+		
 		
 	}
 	
