@@ -10,6 +10,7 @@ import org.hibernate.cfg.Configuration;
 
 import controller.BibController;
 import controller.MainBibliothek;
+import controller.SingletonFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -61,10 +62,7 @@ public class AddNewTitleController {
 	private BibController bc;
 	
 	
-	SessionFactory factory = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
-			addAnnotatedClass(Media.class).addAnnotatedClass(Buch.class).
-			addAnnotatedClass(Ausleiher.class).addAnnotatedClass(Bewertung.class).
-			addAnnotatedClass(MediumAusleihen.class).buildSessionFactory();
+	private SessionFactory factory;
 	
 	
 	public void setMain(MainBibliothek mainBib) {
@@ -81,7 +79,7 @@ public class AddNewTitleController {
 		}	
 	
 	@FXML private void handleAddTitleButton(ActionEvent event) throws IOException{
-		
+		bc = new BibController();
 		//add the title to db
 		//hole Strings mit Textfeldinhalten
 		title = txtFiTitle.getText();
@@ -100,49 +98,18 @@ public class AddNewTitleController {
 			inBib = true;
 		}
 		
-		try {
-			//session starten
-			Session session = factory.getCurrentSession();
-			
-			//use the session object to save/retrieve Java objects
-			//create a media/buch object
-			System.out.println("Create a media/buch object");
-			Buch buch = new Buch();
-			
-			System.out.println("Autor: " + autor);
-			buch.setAutor(autor);
-			
-			System.out.println("Verlag: " + verlag);
-			buch.setVerlag(verlag);
-			
-			System.out.println("Titel: " + title);
-			buch.setTitle(title);
-			
-			System.out.println("Jahr: "+ jahr);
-			buch.setErscheinungsjahr(jahr);
-			
-			System.out.println("Genre:" + genre);
-			buch.setGenre(genre);
-			
-			System.out.println("inBib:" + inBib);
-			buch.setIstInBib(inBib);			
-			
-			
-			//start transaction
-			session.beginTransaction();
-			
-			//save the book
-			System.out.println("Saving the book");
-			session.save(buch);
-			
-			//commit the transaction
-			session.getTransaction().commit();
-			
-			System.out.println("Done Fine");
-			
-			session.close();
-
-		}catch (Exception e) {}
+		//values an bc uebergeben zur db-uebergabe
+		bc.setAutor(autor);
+		bc.setTitle(title);
+		bc.setVerlag(verlag);
+		bc.setJahr(jahr);
+		bc.setGenre(genre);
+		bc.setInhalt(inhalt);
+		bc.setKommentar(kommentar);
+		bc.setInBib(inBib);
+		
+		//buch an db uebergeben
+		bc.aufnehmenInBib();
 		
 		//zu ShowTitle
 		Parent titlePane = FXMLLoader.load(getClass().getResource("../view/ShowTitle.fxml"));
@@ -151,25 +118,6 @@ public class AddNewTitleController {
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 		window.setScene(titleScene);
 		window.show();
-		
-		
-				
-				
-				
-		
-		/*
-			//values an bibController übergeben
-			bc.setTitle(title);
-			bc.setAutor(autor);
-			bc.setVerlag(verlag);
-			bc.setJahr(jahr);
-			bc.setGenre(genre);
-			bc.setInhalt(inhalt);
-			bc.setKommentar(kommentar);
-			
-			//uebergabe der Werte an DB
-			bc.aufnehmenInBib();
-			*/
 		
 		}	
 	

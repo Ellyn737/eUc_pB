@@ -43,10 +43,13 @@ public class Media implements Serializable {
 	private int erscheinungsjahr;
 	@Column(name="ist_in_bib")
 	private boolean istInBib;
+	@Column(name="inhalt")
+	private String inhalt;
+	@Column(name="kommentar")
+	private String kommentar;
 	
 	
 	public Media() {}
-
 
 	public int getIdmedia() {
 		return idmedia;
@@ -95,6 +98,23 @@ public class Media implements Serializable {
 
 	public void setIstInBib(boolean istInBib) {
 		this.istInBib = istInBib;
+	}
+	
+
+	public String getInhalt() {
+		return inhalt;
+	}
+
+	public void setInhalt(String inhalt) {
+		this.inhalt = inhalt;
+	}
+
+	public String getKommentar() {
+		return kommentar;
+	}
+
+	public void setKommentar(String kommentar) {
+		this.kommentar = kommentar;
 	}
 
 	@Override
