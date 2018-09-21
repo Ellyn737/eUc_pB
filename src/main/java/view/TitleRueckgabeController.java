@@ -27,7 +27,7 @@ public class TitleRueckgabeController {
 	@FXML Button giveBackBtn;
 	@FXML Button cancelBtn;
 	
-	public MainBibliothek mainBib;
+	private MainBibliothek mainBib;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;

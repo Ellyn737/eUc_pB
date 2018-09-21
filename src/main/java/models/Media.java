@@ -33,16 +33,16 @@ public class Media implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id_media")
-	public int idmedia;
+	private int idmedia;
 	
 	@Column(name="title")
-	public String title;
+	private String title;
 	@Column(name="genre")
-	public String genre;
+	private String genre;
 	@Column(name="erscheinungsjahr")
-	public int erscheinungsjahr;
+	private int erscheinungsjahr;
 	@Column(name="ist_in_bib")
-	public boolean istInBib;
+	private boolean istInBib;
 	
 	
 	public Media() {}

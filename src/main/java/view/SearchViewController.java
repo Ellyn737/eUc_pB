@@ -28,7 +28,7 @@ public class SearchViewController {
 	@FXML Button cancelBtn;
 	@FXML Button searchBtn;
 	
-	public MainBibliothek mainBib;
+	private MainBibliothek mainBib;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;

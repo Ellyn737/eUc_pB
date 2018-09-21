@@ -27,7 +27,7 @@ public class ResultsViewController {
 	@FXML Label givenSubgenre;
 	@FXML RadioButton givenIsThere;
 	
-	public MainBibliothek mainBib;
+	private MainBibliothek mainBib;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;

@@ -28,7 +28,7 @@ public class TitleAusleiheController {
 	@FXML Button borrowBtn;
 	@FXML Button cancelBtn;
 	
-	public MainBibliothek mainBib;
+	private MainBibliothek mainBib;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
