@@ -1,16 +1,8 @@
 package view;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-
 import controller.BibController;
 import controller.MainBibliothek;
-import controller.SingletonFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,13 +16,6 @@ import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import models.Ausleiher;
-import models.Bewertung;
-import models.Buch;
-import models.Media;
-import models.MediumAusleihen;
 import javafx.stage.Stage;
 
 public class AddNewTitleController {
@@ -42,6 +27,7 @@ public class AddNewTitleController {
 	@FXML TextField txtFiAutor;
 	@FXML TextField txtFiVerlag;
 	@FXML TextField txtFiJahr;
+	@FXML TextField txtFiAuflage;
 	@FXML SplitMenuButton menuGenre;
 	@FXML RadioButton radioBtnIsThere;
 	@FXML TextArea txtArInhalt;
@@ -57,13 +43,11 @@ public class AddNewTitleController {
 	private String genre;
 	private String inhalt;
 	private String kommentar;
+	private int auflage;
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
-	
-	
-	private SessionFactory factory;
-	
+		
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -87,10 +71,9 @@ public class AddNewTitleController {
 		verlag = txtFiVerlag.getText();
 		jahr = Integer.valueOf(txtFiJahr.getText());
 		genre = menuGenre.getText();
-		
-		//speichern in einer Bewertung
 		inhalt = txtArInhalt.getText();
 		kommentar = txtArKommentar.getText();
+		auflage = Integer.valueOf(txtFiAuflage.getText());
 		
 		if(radioBtnIsThere.isPressed()) {
 			inBib = false;
@@ -107,10 +90,11 @@ public class AddNewTitleController {
 		bc.setInhalt(inhalt);
 		bc.setKommentar(kommentar);
 		bc.setInBib(inBib);
+		bc.setAuflage(auflage);
 		
 		//buch an db uebergeben
 		bc.aufnehmenInBib();
-		
+	
 		//zu ShowTitle
 		Parent titlePane = FXMLLoader.load(getClass().getResource("../view/ShowTitle.fxml"));
 		Scene titleScene = new Scene(titlePane);

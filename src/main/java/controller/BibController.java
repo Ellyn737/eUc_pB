@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import javax.management.Query;
 
 import org.apache.commons.collections.functors.InstantiateFactory;
@@ -26,9 +28,6 @@ import view.AddNewTitleController;
  * 
  */
 public class BibController {
-
-	private MainBibliothek mainBib = new MainBibliothek();
-	private AddNewTitleController addTitleView = new AddNewTitleController();
 	
 	private Boolean inBib;
 	private String title;
@@ -38,6 +37,8 @@ public class BibController {
 	private String genre;
 	private String inhalt;
 	private String kommentar;
+	private int exemplar;
+	private int auflage;
 	
 	private SessionFactory factory;
 
@@ -54,8 +55,9 @@ public class BibController {
 		try {
 			System.out.println("In BC");
 			factory = SingletonFactory.getFactory();
-			Session session = factory.openSession();
 			//session starten
+			Session newTitleSession = factory.openSession();
+			
 			
 			//use the session object to save/retrieve Java objects
 			//create a media/buch object
@@ -86,20 +88,38 @@ public class BibController {
 			System.out.println("kommentar: "+ kommentar);
 			buch.setKommentar(kommentar);
 			
+			System.out.println("auflage: " + auflage);
+			buch.setAuflage(auflage);
+			
+			//herausfinden, ob es den Titel mit dem Autoren und der Auflage schon gibt
+			int anzahlAndererEx = suchenNachAnderenExemplaren(autor, title, auflage);
+			
+			// wenn ja, das neue Exemplar mit nächst höherer Exemplarzahl austatten
+			if(anzahlAndererEx > 0) {
+				exemplar = anzahlAndererEx++;
+			
+			}else {
+				//wenn es das erste Exemplar ist --> mit 1 ausstatten
+				exemplar = 1;
+			}
+			
+			System.out.println("anzahle der Exemplare: " + exemplar);
+			buch.setExemplar(exemplar);
+			
 			//start transaction
 			System.out.println("Beginn transaction");
-			session.beginTransaction();
+			newTitleSession.beginTransaction();
 			
 			//save the book
 			System.out.println("Saving the book");
-			session.save(buch);
+			newTitleSession.save(buch);
 			
 			//commit the transaction
 			System.out.println("Commiting");
-			session.getTransaction().commit();
+			newTitleSession.getTransaction().commit();
 			
 			System.out.println("Done Fine");
-			session.close();
+			newTitleSession.close();
 
 		}catch (Exception e) {}
 		
@@ -124,45 +144,65 @@ public class BibController {
 		 * --> Änderungen übernehmen
 		 */
 		
-		//get buchData from buchId
-		try {
-			Session session = factory.getCurrentSession();
-			session.beginTransaction();
-			//aendere Daten
-			Buch buch = (Buch)session.get(Buch.class, buchID);
 		
-			if(title != "") {
+		//uebergebe aenderungen bei WHERE ID = buchID
+		try {
+			System.out.println("In BC");
+			factory = SingletonFactory.getFactory();
+			Session changeSession = factory.openSession();
+			
+			
+			//aendere Daten
+			Buch buch = (Buch)changeSession.get(Buch.class, buchID);
+		
+			if(!title.equals(buch.getTitle())) {
 				buch.setTitle(title);
 				System.out.println("neuer Titel: " + title);
 			}
 			
-			if(genre != "") {
+			if(!genre.equals(buch.getGenre())) {
 				buch.setGenre(genre);
 				System.out.println("neues Genre: " + genre);
 			}
 			
-			if(jahr != 0) {
+			if(jahr != buch.getErscheinungsjahr()) {
 				buch.setErscheinungsjahr(jahr);
 				System.out.println("neues Erscheinungsjahr: " + jahr);
 			}
 			
-			//inBIb hier nicht aendern
-			//anpassen an BUCH (autor/ verlag fehlen)
-			if(jahr == 0 && genre == "" && title == ""){
-				System.out.println("Es wurde nichts verändert.");
-			}
-			
-			if(autor != "") {
-			buch.setAutor(autor);
-			System.out.println("neuer Autor: " + autor);
-			}
-			
-			if(verlag != "") {
+			if(!autor.equals(buch.getAutor())) {
+				buch.setAutor(autor);
+				System.out.println("neuer Autor: " + autor);
+				}
+				
+			if(!verlag.equals(buch.getVerlag())) {
 				buch.setVerlag(verlag);
 				System.out.println("neuer Verlag: " + verlag);
 			}
 			
-			session.getTransaction().commit();
+			if(inhalt != "") {
+				buch.setInhalt(inhalt);
+				System.out.println("neuer Inhalt: " + inhalt);
+			}
+			
+			if(kommentar != "") {
+				buch.setKommentar(kommentar);
+				System.out.println("neuer Kommentar: " + kommentar);
+			}
+			
+			if(auflage != buch.getAuflage()) {
+				buch.setAuflage(auflage);
+				System.out.println("andere Auflage: " + auflage);
+			}
+			
+			
+			changeSession.beginTransaction();
+			
+			changeSession.update(buch);
+			
+			changeSession.getTransaction().commit();
+			
+			changeSession.close();
 		}catch (Exception e) {
 			System.out.println("Fehler!");
 
@@ -180,15 +220,67 @@ public class BibController {
 		return isInBib;
 	}
 	
-	public int findeBuchID(String autorSuch, String titleSuch) {
-		int buchID = 0;
+	public List<Integer> findeBuchID(String autorSuch, String titleSuch) throws Exception {
+		
+		/*
+		 * wird nur von SEARCHVIEW aufgerufen 
+		 * (sonst immer von anderer View weitergegeben)
+		 * 
+		 * gibt Liste mit Ids zurück
+		 */
 		
 		
+			System.out.println("In BC - findeBuchID");
+			factory = SingletonFactory.getFactory();
+			Session findSession = factory.openSession();
+			
+			//holt die id der Buecher mit diesem Titel und Autor
+			List<Integer> idPassend = findSession.createQuery("select m.id_media from Media m where m.title=? and m.autor=?")
+					.setParameter(0, titleSuch).setParameter(1, autorSuch).list();
 		
+			findSession.beginTransaction();
+			
+			findSession.getTransaction().commit();
+			
+			findSession.close();
+			
+			return idPassend;
 		
-		return buchID;
 	}
+	
+	public int suchenNachAnderenExemplaren(String autorSuche, String titleSuche, int auflageSuche) {
+		int anzahlAndererExemplare = 0;
+		
+		try {
+			System.out.println("In BC - suchenNachAnderenExemplaren");
+			factory = SingletonFactory.getFactory();
+			Session findSession = factory.openSession();
+			
+			//holt die id der Buecher mit diesem Titel und Autor
+			List<Integer> passendeIds = findSession.createQuery("select m.id_media from Media m "
+					+ "where m.title like ? and m.autor like ? and m.auflage like ?")
+					.setParameter(0, titleSuche)
+					.setParameter(1, autorSuche)
+					.setParameter(2, auflageSuche).list();
+			
+			findSession.beginTransaction();
+			
+			findSession.getTransaction().commit();
+					
+			
+			//zaehlen der ids
+			for(int i: passendeIds) {
+				anzahlAndererExemplare++;
+			}
+			
+			findSession.close();
+		}catch(Exception e) {}
+		
+		return anzahlAndererExemplare;
+	}
+	
 
+	//Getter, Setter und ToString
 	public Boolean getInBib() {
 		return inBib;
 	}
@@ -251,6 +343,22 @@ public class BibController {
 
 	public void setKommentar(String kommentar) {
 		this.kommentar = kommentar;
+	}
+
+	public int getExemplar() {
+		return exemplar;
+	}
+
+	public void setExemplar(int exemplar) {
+		this.exemplar = exemplar;
+	}
+
+	public int getAuflage() {
+		return auflage;
+	}
+
+	public void setAuflage(int auflage) {
+		this.auflage = auflage;
 	}
 	
 	

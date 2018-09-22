@@ -37,6 +37,8 @@ public class ChangeTitleController {
 	@FXML TextField txtFiAutor;
 	@FXML TextField txtFiVerlag;
 	@FXML TextField txtFiJahr;
+	@FXML TextField txtFiAuflage;
+	@FXML TextField txtFiExemplar;
 	@FXML SplitMenuButton genreMenu;
 	@FXML RadioButton radioBtnIsThere;
 	@FXML TextArea txtArInhalt;
@@ -44,7 +46,7 @@ public class ChangeTitleController {
 	@FXML Button cancelBtn;
 	@FXML Button saveChangeBtn;
 		
-	private int buchId;
+	private int buchID;
 	
 	private String title;
 	private String autor;
@@ -53,14 +55,12 @@ public class ChangeTitleController {
 	private String genre;
 	private String inhalt;
 	private String kommentar;
+	private int auflage;
+	private int exemplar;
 	
 	private MainBibliothek mainBib;
-	private BibController bc = new BibController();
-	
-	SessionFactory factory = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
-			addAnnotatedClass(Media.class).addAnnotatedClass(Buch.class).
-			addAnnotatedClass(Ausleiher.class).addAnnotatedClass(Bewertung.class).
-			addAnnotatedClass(MediumAusleihen.class).buildSessionFactory();
+	private BibController bc;
+
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -77,7 +77,8 @@ public class ChangeTitleController {
 	
 	@FXML private void handleSaveChangeButton(ActionEvent event) throws IOException{
 			//save the changes to db
-		
+			bc = new BibController();
+			
 			title = txtFiTitle.getText();
 			autor = txtFiAutor.getText();
 			verlag = txtFiVerlag.getText();
@@ -85,54 +86,27 @@ public class ChangeTitleController {
 			genre = genreMenu.getText();
 			inhalt = txtArInhalt.getText();
 			kommentar = txtArKommentar.getText();
+			auflage = Integer.valueOf(txtFiAuflage.getText());
+			exemplar = Integer.valueOf(txtFiExemplar.getText());
 			
-			//get buchId
+			//get buchId von ShowTitle
 			
 			
-			//get buchData from buchId
-			try {
-				Session session = factory.getCurrentSession();
-				session.beginTransaction();
-				//aendere Daten
-				
-				Buch buch = (Buch)session.get(Buch.class, buchId);
+			//setze values
+			bc.setAutor(autor);
+			bc.setTitle(title);
+			bc.setVerlag(verlag);
+			bc.setJahr(jahr);
+			bc.setGenre(genre);
+			bc.setInhalt(inhalt);
+			bc.setKommentar(kommentar);
+			bc.setAuflage(auflage);
+			bc.setExemplar(exemplar);
+			//inBIb nur über Ausleihe ändern
 			
-				if(title != "") {
-					buch.setTitle(title);
-					System.out.println("neuer Titel: " + title);
-				}
-				
-				if(genre != "") {
-					buch.setGenre(genre);
-					System.out.println("neues Genre: " + genre);
-				}
-				
-				if(jahr != 0) {
-					buch.setErscheinungsjahr(jahr);
-					System.out.println("neues Erscheinungsjahr: " + jahr);
-				}
-				
-				if(autor != "") {
-				buch.setAutor(autor);
-				System.out.println("neuer Autor: " + autor);
-				}
-				
-				if(verlag != "") {
-					buch.setVerlag(verlag);
-					System.out.println("neuer Verlag: " + verlag);
-				}
-				
-				//inBIb hier nicht aendern
-				if(jahr == 0 && genre == "" && title == "" && autor == "" && verlag == ""){
-					System.out.println("Es wurde nichts verändert.");
-				}
-				
-				session.getTransaction().commit();
-			}catch (Exception e) {
-				System.out.println("Fehler!");
-
-			}
-			
+			//daten zur auswertung an bc uebergeben
+			bc.titelBearbeiten(buchID);
+						
 			//zu ShowTitle
 			Parent titlePane = FXMLLoader.load(getClass().getResource("../view/ShowTitle.fxml"));
 			Scene titleScene = new Scene(titlePane);
@@ -140,23 +114,7 @@ public class ChangeTitleController {
 			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 			window.setScene(titleScene);
 			window.show();
-			
-			
-			/*
-			//values an bibController uebergeben
-			bc.setTitle(title);
-			bc.setAutor(autor);
-			bc.setVerlag(verlag);
-			bc.setJahr(jahr);
-			bc.setGenre(genre);
-			bc.setInhalt(inhalt);
-			bc.setKommentar(kommentar);
-			
-			//buchId holen
-			int buchId = bc.findeBuchID(autor, title);
-			//veraenderungen speichern
-			bc.titelBearbeiten(buchId);
-			*/
+		
 		}	
 	
 	@FXML private void handleChangeImageButton(ActionEvent event) throws IOException{
