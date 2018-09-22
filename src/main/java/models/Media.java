@@ -47,6 +47,8 @@ public class Media implements Serializable {
 	private String inhalt;
 	@Column(name="kommentar")
 	private String kommentar;
+	@Column(name="exemplar")
+	private int exemplar;
 	
 	
 	public Media() {}
@@ -116,11 +118,21 @@ public class Media implements Serializable {
 	public void setKommentar(String kommentar) {
 		this.kommentar = kommentar;
 	}
+	
+	
+	public int getExemplar() {
+		return exemplar;
+	}
+
+	public void setExemplar(int exemplar) {
+		this.exemplar = exemplar;
+	}
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: idmedia={1}, title={2}, genre={3}, erscheinungsjahr={4}, istInBib={5}", 
-				new Object[] {getClass().getSimpleName(), idmedia, title, genre, erscheinungsjahr, istInBib});
+		return MessageFormat.format("{0}: idmedia={1}, title={2}, genre={3}, erscheinungsjahr={4}, "
+				+ "istInBib={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
+				new Object[] {getClass().getSimpleName(), idmedia, title, genre, erscheinungsjahr, istInBib, inhalt, kommentar, exemplar});
 	}
 	
 	
