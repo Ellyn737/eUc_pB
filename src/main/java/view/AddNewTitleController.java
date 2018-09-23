@@ -69,11 +69,11 @@ public class AddNewTitleController {
 		title = txtFiTitle.getText();
 		autor = txtFiAutor.getText();
 		verlag = txtFiVerlag.getText();
-		jahr = Integer.valueOf(txtFiJahr.getText());
+		jahr = Integer.parseInt(txtFiJahr.getText());
 		genre = menuGenre.getText();
 		inhalt = txtArInhalt.getText();
 		kommentar = txtArKommentar.getText();
-		auflage = Integer.valueOf(txtFiAuflage.getText());
+		auflage = Integer.parseInt(txtFiAuflage.getText());
 		
 		if(radioBtnIsThere.isPressed()) {
 			inBib = false;

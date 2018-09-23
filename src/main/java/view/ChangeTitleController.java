@@ -40,7 +40,6 @@ public class ChangeTitleController {
 	@FXML TextField txtFiAuflage;
 	@FXML TextField txtFiExemplar;
 	@FXML SplitMenuButton genreMenu;
-	@FXML RadioButton radioBtnIsThere;
 	@FXML TextArea txtArInhalt;
 	@FXML TextArea txtArKommentar;
 	@FXML Button cancelBtn;
@@ -86,8 +85,8 @@ public class ChangeTitleController {
 			genre = genreMenu.getText();
 			inhalt = txtArInhalt.getText();
 			kommentar = txtArKommentar.getText();
-			auflage = Integer.valueOf(txtFiAuflage.getText());
-			exemplar = Integer.valueOf(txtFiExemplar.getText());
+			auflage = Integer.parseInt(txtFiAuflage.getText());
+			exemplar = Integer.parseInt(txtFiExemplar.getText());
 			
 			//get buchId von ShowTitle
 			

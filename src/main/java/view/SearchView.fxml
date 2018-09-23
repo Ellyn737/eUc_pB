@@ -42,7 +42,7 @@
                            </children>
                         </Group>
                         <TextField fx:id="txtFiAuflage" layoutX="161.0" layoutY="30.0" promptText="Auflage" />
-                        <TextField fx:id="txtFiAnzahlExemplare" layoutX="161.0" layoutY="60.0" promptText="Anzahl der Exemplare" />
+                        <TextField fx:id="txtFiExemplar" layoutX="161.0" layoutY="60.0" promptText="Exemplar" />
                      </children>
                   </Pane>
                </children>
