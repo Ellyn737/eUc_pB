@@ -1,21 +1,15 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.management.Query;
+import javax.persistence.Query;
 
-import org.apache.commons.collections.functors.InstantiateFactory;
-import org.eclipse.osgi.internal.debug.Debug;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
-import models.Ausleiher;
-import models.Bewertung;
+import javafx.util.Pair;
 import models.Buch;
-import models.Media;
-import models.MediumAusleihen;
-import view.AddNewTitleController;
 
 
 
@@ -30,15 +24,19 @@ import view.AddNewTitleController;
 public class BibController {
 	
 	private Boolean inBib;
+	private String inBibString;
 	private String title;
 	private String autor;
 	private String verlag;
 	private int jahr;
+	private String jahrString;
 	private String genre;
 	private String inhalt;
 	private String kommentar;
 	private int exemplar;
+	private String exemplarString;
 	private int auflage;
+	private String auflageString;
 	
 	private SessionFactory factory;
 
@@ -220,31 +218,188 @@ public class BibController {
 		return isInBib;
 	}
 	
-	public List<Integer> findeBuchID(String autorSuch, String titleSuch) throws Exception {
+	public List<Integer> findeBuchID(ArrayList<String> suchParameter) throws Exception {
 		
 		/*
 		 * wird nur von SEARCHVIEW aufgerufen 
-		 * (sonst immer von anderer View weitergegeben)
+		 * (id sonst immer von anderer View weitergegeben)
 		 * 
 		 * gibt Liste mit Ids zurück
+		 * 
+		 * 
+		 * switch case erstellen für verschiedene sql-query-Strings
+		 * abhängig von den übergebenen Suchparametern
+		 * 
+		 * mögliche Suchparameter:
+		 * 
+		 * ausgeliehen / nicht
+		 * Genre
+		 * title
+		 * autor
+		 * verlag
+		 * jahr 
+		 * auflage
+		 * exemplar
+		 * 
+		 * Sternebewertung (1-5)
+		 * 
+		 * 
+		 * 
 		 */
 		
+		System.out.println("In BC - findeBuchID");
 		
-			System.out.println("In BC - findeBuchID");
-			factory = SingletonFactory.getFactory();
-			Session findSession = factory.openSession();
-			
-			//holt die id der Buecher mit diesem Titel und Autor
-			List<Integer> idPassend = findSession.createQuery("select m.id_media from Media m where m.title=? and m.autor=?")
-					.setParameter(0, titleSuch).setParameter(1, autorSuch).list();
+//		diese Liste wird gefuellt und zurueckgegeben
+		List<Integer> idPassend;
+
 		
-			findSession.beginTransaction();
-			
-			findSession.getTransaction().commit();
-			
-			findSession.close();
-			
-			return idPassend;
+//		Suchparameter holen
+		title = suchParameter.get(0);
+		autor = suchParameter.get(1);
+		verlag = suchParameter.get(2);
+		jahrString = suchParameter.get(3);
+		jahr = Integer.parseInt(suchParameter.get(3));
+		genre = suchParameter.get(4);
+		auflageString = suchParameter.get(5);
+		auflage = Integer.parseInt(suchParameter.get(5));
+		exemplarString = suchParameter.get(6);
+		exemplar = Integer.parseInt(suchParameter.get(6));
+		inBibString = suchParameter.get(7);
+		inBib = Boolean.parseBoolean(suchParameter.get(7));
+		
+//		ueberblick ueber suchparameter
+		System.out.println("Suchparameter sind: /ln Titel: " + title + ", Autor:  " + autor+ ", Verlag: " + verlag + ", Jahr: " + jahr 
+				+ ", Genre: " + genre + ", Auflage: " + auflage + ", Exemplar: " + exemplar + ", ausgeliehen: " + inBib);
+
+//		ArrayListe mit key und value anlegen
+		ArrayList<Pair> parameter = new ArrayList<Pair>();
+		
+		if(title != "") {
+			Pair titlePair = new Pair("title", title);
+			parameter.add(titlePair);
+		}
+		
+		if(autor != "") {
+			Pair autorPair = new Pair("autor", autor);
+			parameter.add(autorPair);
+		}
+		
+		if(verlag != "") {
+			Pair verlagPair = new Pair("verlag", verlag);
+			parameter.add(verlagPair);		}
+		
+		if(jahrString != "") {
+			Pair jahrPair = new Pair("jahr", jahrString);
+			parameter.add(jahrPair);		}
+		
+		if(genre != "") {
+			Pair genrePair = new Pair("genre", genre);
+			parameter.add(genrePair);		}
+		
+		if(auflageString != "") {
+			Pair auflagePair = new Pair("auflage", auflageString);
+			parameter.add(auflagePair);		}
+		
+		if(exemplarString != "") {
+			Pair exemplarPair = new Pair("exemplar", exemplarString);
+			parameter.add(exemplarPair);
+		}
+		
+		if(inBibString != "") {
+			Pair inBibPair = new Pair("inBib", inBibString);
+			parameter.add(inBibPair);
+		}
+		
+//		factory holen und session erstellen
+		factory = SingletonFactory.getFactory();
+		Session findSession = factory.openSession();
+		findSession.beginTransaction();
+		
+//		String und query erstellen zur Uebergabe der Parameter
+		String hql = "select m.id_media from Media m where";
+		Query query;
+		
+		
+//		setze den hql-String je nach vorhandenen keys
+		for(int i = 0; i < parameter.size(); i++) {
+			String key = parameter.get(i).getKey().toString();
+			switch(key) {
+				case "title":
+					hql += " m.title like ? ";
+					break;
+				case "autor":
+					hql += " m.autor like ? ";
+					break;			
+				case "verlag":
+					hql += " m.verlag like ? ";
+					break;	
+				case "jahr":
+					hql += " m.jahr like ? ";
+					break;
+				case "genre":
+					hql += " m.genre like ? ";
+					break;
+				case "auflage":
+					hql += " m.auflage like ? ";
+					break;
+				case "exemplar":
+					hql += " m.exemplar like ? ";
+					break;
+				case "inBib":
+					hql += " m.ist_in_bib like ? ";
+					break;
+			}
+			if(i < parameter.size() -1) {
+				hql += "and ";
+			}
+		}
+		
+		
+//		uebergebe hql an query
+		query = findSession.createQuery(hql);
+		
+		
+//		setze parameter fuer query
+		for(int i = 0; i < parameter.size(); i++) {
+			String key = parameter.get(i).getKey().toString();
+			switch(key) {
+				case "title":
+					query.setParameter(i, title);	
+					break;
+				case "autor":
+					query.setParameter(i, autor);	
+					break;			
+				case "verlag":
+					query.setParameter(i, verlag);	
+					break;	
+				case "jahr":
+					query.setParameter(i, jahr);	
+					break;
+				case "genre":
+					query.setParameter(i, genre);	
+					break;
+				case "auflage":
+					query.setParameter(i, auflage);	
+					break;
+				case "exemplar":
+					query.setParameter(i, exemplar);	
+					break;
+				case "inBib":
+					query.setParameter(i, inBib);	
+					break;
+			}
+		
+		}
+	
+		
+//		hole Ids
+		idPassend = query.getResultList();
+		
+		findSession.getTransaction().commit();
+		
+		findSession.close();
+		
+		return idPassend;
 		
 	}
 	
