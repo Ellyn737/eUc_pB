@@ -29,7 +29,7 @@ public class SearchViewController {
 	@FXML TextField txtFiAuflage;
 	@FXML TextField txtFiExemplar;
 	@FXML SplitMenuButton menuGenre;
-	@FXML RadioButton radioBtnIsThere;
+	@FXML RadioButton radioBtnAusgeliehen;
 	@FXML Button cancelBtn;
 	@FXML Button searchBtn;
 	
@@ -45,7 +45,7 @@ public class SearchViewController {
 	private String kommentar;
 	private String auflage;
 	private String exemplar;
-	private String inBib;
+	private String ausgeliehen;
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
@@ -76,10 +76,10 @@ public class SearchViewController {
 		auflage = txtFiAuflage.getText();
 		exemplar = txtFiExemplar.getText();
 		
-		if(radioBtnIsThere.isPressed()) {
-			inBib = "false";
+		if(radioBtnAusgeliehen.isPressed()) {
+			ausgeliehen = "false";
 		}else {
-			inBib = "true";
+			ausgeliehen = "true";
 		}
 		
 		//Suchparameter in Array uebergeben
@@ -91,7 +91,7 @@ public class SearchViewController {
 		parameters.add(genre);
 		parameters.add(auflage);
 		parameters.add(exemplar);
-		parameters.add(inBib);
+		parameters.add(ausgeliehen);
 		
 		try {
 			

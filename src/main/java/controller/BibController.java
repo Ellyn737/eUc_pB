@@ -23,8 +23,8 @@ import models.Buch;
  */
 public class BibController {
 	
-	private Boolean inBib;
-	private String inBibString;
+	private Boolean ausgeliehen;
+	private String ausgeliehenString;
 	private String title;
 	private String autor;
 	private String verlag;
@@ -77,8 +77,8 @@ public class BibController {
 			System.out.println("Genre:" + genre);
 			buch.setGenre(genre);
 			
-			System.out.println("inBib:" + inBib);
-			buch.setIstInBib(inBib);			
+			System.out.println("inBib:" + ausgeliehen);
+			buch.setAusgeliehen(ausgeliehen);			
 			
 			System.out.println("inhalt: " + inhalt);
 			buch.setInhalt(inhalt);
@@ -264,12 +264,12 @@ public class BibController {
 		auflage = Integer.parseInt(suchParameter.get(5));
 		exemplarString = suchParameter.get(6);
 		exemplar = Integer.parseInt(suchParameter.get(6));
-		inBibString = suchParameter.get(7);
-		inBib = Boolean.parseBoolean(suchParameter.get(7));
+		ausgeliehenString = suchParameter.get(7);
+		ausgeliehen = Boolean.parseBoolean(suchParameter.get(7));
 		
 //		ueberblick ueber suchparameter
 		System.out.println("Suchparameter sind: /ln Titel: " + title + ", Autor:  " + autor+ ", Verlag: " + verlag + ", Jahr: " + jahr 
-				+ ", Genre: " + genre + ", Auflage: " + auflage + ", Exemplar: " + exemplar + ", ausgeliehen: " + inBib);
+				+ ", Genre: " + genre + ", Auflage: " + auflage + ", Exemplar: " + exemplar + ", ausgeliehen: " + ausgeliehen);
 
 //		ArrayListe mit key und value anlegen
 		ArrayList<Pair> parameter = new ArrayList<Pair>();
@@ -305,9 +305,9 @@ public class BibController {
 			parameter.add(exemplarPair);
 		}
 		
-		if(inBibString != "") {
-			Pair inBibPair = new Pair("inBib", inBibString);
-			parameter.add(inBibPair);
+		if(ausgeliehenString != "") {
+			Pair ausgeliehenPair = new Pair("ausgeliehen", ausgeliehenString);
+			parameter.add(ausgeliehenPair);
 		}
 		
 //		factory holen und session erstellen
@@ -345,8 +345,8 @@ public class BibController {
 				case "exemplar":
 					hql += " m.exemplar like ? ";
 					break;
-				case "inBib":
-					hql += " m.ist_in_bib like ? ";
+				case "ausgeliehen":
+					hql += " m.ist_ausgeliehen like ? ";
 					break;
 			}
 			if(i < parameter.size() -1) {
@@ -384,8 +384,8 @@ public class BibController {
 				case "exemplar":
 					query.setParameter(i, exemplar);	
 					break;
-				case "inBib":
-					query.setParameter(i, inBib);	
+				case "ausgeliehen":
+					query.setParameter(i, ausgeliehen);	
 					break;
 			}
 		
@@ -436,12 +436,12 @@ public class BibController {
 	
 
 	//Getter, Setter und ToString
-	public Boolean getInBib() {
-		return inBib;
+	public Boolean getAusgeliehen() {
+		return ausgeliehen;
 	}
 
-	public void setInBib(Boolean inBib) {
-		this.inBib = inBib;
+	public void setAusgeliehen(Boolean ausgeliehen) {
+		this.ausgeliehen = ausgeliehen;
 	}
 
 	public String getTitle() {

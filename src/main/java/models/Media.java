@@ -41,8 +41,8 @@ public class Media implements Serializable {
 	private String genre;
 	@Column(name="erscheinungsjahr")
 	private int erscheinungsjahr;
-	@Column(name="ist_in_bib")
-	private boolean istInBib;
+	@Column(name="ist_ausgeliehen")
+	private boolean ausgeliehen;
 	@Column(name="inhalt")
 	private String inhalt;
 	@Column(name="kommentar")
@@ -93,13 +93,13 @@ public class Media implements Serializable {
 	}
 
 
-	public boolean isIstInBib() {
-		return istInBib;
+	public boolean getAusgeliehen() {
+		return ausgeliehen;
 	}
 
 
-	public void setIstInBib(boolean istInBib) {
-		this.istInBib = istInBib;
+	public void setAusgeliehen(boolean ausgeliehen) {
+		this.ausgeliehen = ausgeliehen;
 	}
 	
 
@@ -131,8 +131,8 @@ public class Media implements Serializable {
 	@Override
 	public String toString() {
 		return MessageFormat.format("{0}: idmedia={1}, title={2}, genre={3}, erscheinungsjahr={4}, "
-				+ "istInBib={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
-				new Object[] {getClass().getSimpleName(), idmedia, title, genre, erscheinungsjahr, istInBib, inhalt, kommentar, exemplar});
+				+ "ausgeliehen={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
+				new Object[] {getClass().getSimpleName(), idmedia, title, genre, erscheinungsjahr, ausgeliehen, inhalt, kommentar, exemplar});
 	}
 	
 	

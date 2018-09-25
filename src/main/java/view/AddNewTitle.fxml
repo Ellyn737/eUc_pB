@@ -40,7 +40,7 @@
                               <MenuItem mnemonicParsing="false" text="Roman" />
                            </items>
                         </SplitMenuButton>
-                        <RadioButton fx:id="radioBtnIsThere" layoutX="337.0" layoutY="120.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="ausgeliehen" />
+                        <RadioButton fx:id="radioBtnAusgeliehen" layoutX="337.0" layoutY="120.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="ausgeliehen" />
                         <Group fx:id="checkBewertung" layoutX="337.0" layoutY="85.0">
                            <children>
                               <CheckBox mnemonicParsing="false" />
