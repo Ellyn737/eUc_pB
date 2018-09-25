@@ -25,7 +25,15 @@ public class ResultsViewController {
 	@FXML Label givenJahr;
 	@FXML Label givenGenre;
 	@FXML Label givenSubgenre;
-	@FXML RadioButton givenIsThere;
+	@FXML RadioButton radioBtnAusgeliehen;
+	
+	private String title;
+	private String autor;
+	private String verlag;
+	private int jahr;
+	private String genre;
+	private boolean ausgeliehen;
+	
 	
 	private MainBibliothek mainBib;
 	

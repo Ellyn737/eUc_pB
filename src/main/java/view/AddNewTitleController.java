@@ -29,13 +29,13 @@ public class AddNewTitleController {
 	@FXML TextField txtFiJahr;
 	@FXML TextField txtFiAuflage;
 	@FXML SplitMenuButton menuGenre;
-	@FXML RadioButton radioBtnIsThere;
+	@FXML RadioButton radioBtnAusgeliehen;
 	@FXML TextArea txtArInhalt;
 	@FXML TextArea txtArKommentar;
 	@FXML Button cancelBtn;
 	@FXML Button addTitleBtn;
 	
-	private Boolean inBib;
+	private Boolean ausgeliehen;
 	private String title;
 	private String autor;
 	private String verlag;
@@ -75,10 +75,10 @@ public class AddNewTitleController {
 		kommentar = txtArKommentar.getText();
 		auflage = Integer.parseInt(txtFiAuflage.getText());
 		
-		if(radioBtnIsThere.isPressed()) {
-			inBib = false;
+		if(radioBtnAusgeliehen.isPressed()) {
+			ausgeliehen = false;
 		}else {
-			inBib = true;
+			ausgeliehen = true;
 		}
 		
 		//values an bc uebergeben zur db-uebergabe
@@ -89,7 +89,7 @@ public class AddNewTitleController {
 		bc.setGenre(genre);
 		bc.setInhalt(inhalt);
 		bc.setKommentar(kommentar);
-		bc.setInBib(inBib);
+		bc.setAusgeliehen(ausgeliehen);
 		bc.setAuflage(auflage);
 		
 		//buch an db uebergeben

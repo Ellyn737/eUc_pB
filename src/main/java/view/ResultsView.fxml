@@ -4,12 +4,14 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Line?>
 
 <AnchorPane prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ResultsViewController">
    <children>
@@ -24,52 +26,33 @@
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <ScrollPane prefHeight="436.0" prefWidth="474.0">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="435.0" prefWidth="470.0">
+                  <ListView fx:id="listView" prefHeight="436.0" prefWidth="474.0" />
+                  <Pane layoutX="-3.0" prefHeight="156.0" prefWidth="481.0">
+                     <children>
+                        <TextField fx:id="txtFiTitle" promptText="Titel" />
+                        <TextField fx:id="txtFiAutor" layoutY="30.0" promptText="Autor" />
+                        <TextField fx:id="txtFiVerlag" layoutY="60.0" promptText="Verlag" />
+                        <TextField fx:id="txtFiJahr" layoutX="161.0" promptText="Erscheinungsjahr" />
+                        <SplitMenuButton fx:id="menuGenre" layoutY="107.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="Genre">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="Sachbuch" />
+                              <MenuItem mnemonicParsing="false" text="Roman" />
+                           </items>
+                        </SplitMenuButton>
+                        <RadioButton fx:id="radioBtnAusgeliehen" layoutX="337.0" layoutY="120.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="ausgeliehen" />
+                        <Group fx:id="checkBewertung" layoutX="337.0" layoutY="85.0">
                            <children>
-                              <Pane prefHeight="151.0" prefWidth="456.0">
-                                 <children>
-                                    <Label fx:id="givenTitle" layoutX="14.0" prefHeight="26.0" prefWidth="150.0" text="Titel" />
-                                    <Label fx:id="givenAutor" layoutX="14.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Autor" />
-                                    <Label fx:id="givenVerlag" layoutX="14.0" layoutY="53.0" prefHeight="26.0" prefWidth="150.0" text="Verlag" />
-                                    <Label fx:id="givenJahr" layoutX="14.0" layoutY="85.0" prefHeight="26.0" prefWidth="150.0" text="Ersscheinungsjahr" />
-                                    <Label fx:id="givenGenre" layoutX="265.0" layoutY="1.0" prefHeight="26.0" prefWidth="150.0" text="Genre" />
-                                    <Label fx:id="givenSubgenre" layoutX="276.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Subgenre" />
-                                    <RadioButton fx:id="givenIsThere" layoutX="275.0" layoutY="86.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="ausgeliehen" />
-                                    <Group fx:id="givenBew" layoutX="276.0" layoutY="58.0">
-                                       <children>
-                                          <CheckBox mnemonicParsing="false" />
-                                          <CheckBox layoutX="20.0" mnemonicParsing="false" />
-                                          <CheckBox layoutX="41.0" mnemonicParsing="false" />
-                                          <CheckBox layoutX="84.0" mnemonicParsing="false" />
-                                          <CheckBox layoutX="63.0" mnemonicParsing="false" />
-                                       </children>
-                                    </Group>
-                                    <Line endX="313.0" endY="151.0" startX="112.0" startY="151.0" />
-                                 </children>
-                              </Pane>
-                              <Pane layoutY="170.0" prefHeight="151.0" prefWidth="456.0">
-                                 <children>
-                                    <Label layoutX="14.0" prefHeight="26.0" prefWidth="150.0" text="Titel" />
-                                    <Label layoutX="14.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Autor" />
-                                    <Label layoutX="14.0" layoutY="53.0" prefHeight="26.0" prefWidth="150.0" text="Verlag" />
-                                    <Label layoutX="14.0" layoutY="85.0" prefHeight="26.0" prefWidth="150.0" text="Ersscheinungsjahr" />
-                                    <Label layoutX="265.0" layoutY="1.0" prefHeight="26.0" prefWidth="150.0" text="Genre" />
-                                    <Label layoutX="276.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Subgenre" />
-                                    <RadioButton layoutX="275.0" layoutY="86.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="ausgeliehen" />
-                                    <CheckBox layoutX="276.0" layoutY="58.0" mnemonicParsing="false" />
-                                    <CheckBox layoutX="296.0" layoutY="58.0" mnemonicParsing="false" />
-                                    <CheckBox layoutX="317.0" layoutY="58.0" mnemonicParsing="false" />
-                                    <CheckBox layoutX="360.0" layoutY="58.0" mnemonicParsing="false" />
-                                    <CheckBox layoutX="339.0" layoutY="58.0" mnemonicParsing="false" />
-                                    <Line endX="313.0" endY="151.0" startX="112.0" startY="151.0" />
-                                 </children>
-                              </Pane>
+                              <CheckBox mnemonicParsing="false" />
+                              <CheckBox layoutX="20.0" mnemonicParsing="false" />
+                              <CheckBox layoutX="41.0" mnemonicParsing="false" />
+                              <CheckBox layoutX="84.0" mnemonicParsing="false" />
+                              <CheckBox layoutX="63.0" mnemonicParsing="false" />
                            </children>
-                        </AnchorPane>
-                    </content>
-                  </ScrollPane>
+                        </Group>
+                        <TextField fx:id="txtFiAuflage" layoutX="161.0" layoutY="30.0" promptText="Auflage" />
+                        <TextField fx:id="txtFiExemplar" layoutX="161.0" layoutY="60.0" promptText="Exemplar" />
+                     </children>
+                  </Pane>
                </children>
             </AnchorPane>
          </items>
