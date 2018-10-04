@@ -218,7 +218,7 @@ public class BibController {
 		return isInBib;
 	}
 	
-	public List<Integer> findeBuchID(ArrayList<String> suchParameter) throws Exception {
+	public List<Integer> findeBuchID(ArrayList<Pair> suchParameter) throws Exception {
 		
 		/*
 		 * wird nur von SEARCHVIEW aufgerufen 
@@ -253,8 +253,9 @@ public class BibController {
 		List<Integer> idPassend;
 
 		
+/*
 //		Suchparameter holen
-		title = suchParameter.get(0);
+		title = suchParameter.getK(0);
 		autor = suchParameter.get(1);
 		verlag = suchParameter.get(2);
 		jahrString = suchParameter.get(3);
@@ -270,7 +271,8 @@ public class BibController {
 //		ueberblick ueber suchparameter
 		System.out.println("Suchparameter sind: /ln Titel: " + title + ", Autor:  " + autor+ ", Verlag: " + verlag + ", Jahr: " + jahr 
 				+ ", Genre: " + genre + ", Auflage: " + auflage + ", Exemplar: " + exemplar + ", ausgeliehen: " + ausgeliehen);
-
+*/
+/*
 //		ArrayListe mit key und value anlegen
 		ArrayList<Pair> parameter = new ArrayList<Pair>();
 		
@@ -309,6 +311,11 @@ public class BibController {
 			Pair ausgeliehenPair = new Pair("ausgeliehen", ausgeliehenString);
 			parameter.add(ausgeliehenPair);
 		}
+*/
+		for(int i = 0; i < suchParameter.size(); i++) {
+			System.out.println(suchParameter.get(i));
+		}
+		
 		
 //		factory holen und session erstellen
 		factory = SingletonFactory.getFactory();
@@ -316,42 +323,43 @@ public class BibController {
 		findSession.beginTransaction();
 		
 //		String und query erstellen zur Uebergabe der Parameter
-		String hql = "select m.id_media from Media m where";
+		String hql = "select m.id_media from Media m where ";
 		Query query;
 		
 		
 //		setze den hql-String je nach vorhandenen keys
-		for(int i = 0; i < parameter.size(); i++) {
-			String key = parameter.get(i).getKey().toString();
+		for(int i = 0; i < suchParameter.size(); i++) {
+			String key = suchParameter.get(i).getKey().toString();
 			switch(key) {
 				case "title":
-					hql += " m.title like ? ";
+					hql += "m.title like ? ";
 					break;
 				case "autor":
-					hql += " m.autor like ? ";
+					hql += "m.autor like ?";
 					break;			
 				case "verlag":
-					hql += " m.verlag like ? ";
+					hql += "m.verlag like ?";
 					break;	
 				case "jahr":
-					hql += " m.jahr like ? ";
+					hql += "m.jahr like ?";
 					break;
 				case "genre":
-					hql += " m.genre like ? ";
+					hql += "m.genre like ?";
 					break;
 				case "auflage":
-					hql += " m.auflage like ? ";
+					hql += "m.auflage like ?";
 					break;
 				case "exemplar":
-					hql += " m.exemplar like ? ";
+					hql += "m.exemplar like ?";
 					break;
 				case "ausgeliehen":
-					hql += " m.ist_ausgeliehen like ? ";
+					hql += "m.ist_ausgeliehen like ?";
 					break;
 			}
-			if(i < parameter.size() -1) {
-				hql += "and ";
+			if ( i > 0  && i < suchParameter.size() -1) {
+				hql += " and ";
 			}
+			System.out.println(hql);
 		}
 		
 		
@@ -360,8 +368,8 @@ public class BibController {
 		
 		
 //		setze parameter fuer query
-		for(int i = 0; i < parameter.size(); i++) {
-			String key = parameter.get(i).getKey().toString();
+		for(int i = 0; i < suchParameter.size(); i++) {
+			String key = suchParameter.get(i).getKey().toString();
 			switch(key) {
 				case "title":
 					query.setParameter(i, title);	
@@ -390,7 +398,8 @@ public class BibController {
 			}
 		
 		}
-	
+		
+		System.out.println("HQL: " + hql);
 		
 //		hole Ids
 		idPassend = query.getResultList();
@@ -432,6 +441,24 @@ public class BibController {
 		}catch(Exception e) {}
 		
 		return anzahlAndererExemplare;
+	}
+	
+	public Buch holeBuchDaten(int id) {
+		Buch buch = null;
+		
+		try {
+			System.out.println("In BC - holeBuchDaten");
+			factory = SingletonFactory.getFactory();
+			Session findBookSession = factory.openSession();
+			//mit id suchen
+			buch = (Buch) findBookSession.createQuery("select * from Media m where m.id_media like ?").setParameter(0, id).uniqueResult();
+			
+			findBookSession.beginTransaction();
+			
+			findBookSession.getTransaction().commit();
+		}catch(Exception e) {}
+		//buch returnen		
+		return buch;
 	}
 	
 

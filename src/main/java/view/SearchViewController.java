@@ -18,6 +18,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 public class SearchViewController {
 
@@ -49,6 +50,7 @@ public class SearchViewController {
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
+	private ResultsViewController resultsView;
 
 	
 	public void setMain(MainBibliothek mainBib) {
@@ -67,24 +69,26 @@ public class SearchViewController {
 	@FXML private void handleSearchButton(ActionEvent event) throws IOException{
 		//ausserdem suchparameter weiter und an db geben
 		bc = new BibController();
+	
 		
-		title = txtFiTitle.getText();
-		autor = txtFiAutor.getText();
-		verlag = txtFiVerlag.getText();
-		jahr = txtFiJahr.getText();
-		genre = menuGenre.getText();
-		auflage = txtFiAuflage.getText();
-		exemplar = txtFiExemplar.getText();
+		title = txtFiTitle.getText().trim();
+		autor = txtFiAutor.getText().trim();
+		verlag = txtFiVerlag.getText().trim();
+		jahr = txtFiJahr.getText().trim();
+		genre = menuGenre.getText().trim();
+		auflage = txtFiAuflage.getText().trim();
+		exemplar = txtFiExemplar.getText().trim();
 		
 		if(radioBtnAusgeliehen.isPressed()) {
 			ausgeliehen = "false";
 		}else {
 			ausgeliehen = "true";
 		}
-		
-		//Suchparameter in Array uebergeben
-		ArrayList<String> parameters = new ArrayList();
-		parameters.add(title);
+				
+//		Suchparameter in Array uebergeben
+/*		ArrayList<String> parameters = new ArrayList();
+ * 
+ * 		parameters.add(title);
 		parameters.add(autor);
 		parameters.add(verlag);
 		parameters.add(jahr);
@@ -92,18 +96,77 @@ public class SearchViewController {
 		parameters.add(auflage);
 		parameters.add(exemplar);
 		parameters.add(ausgeliehen);
+ */
 		
+//		ArrayListe mit key und value anlegen
+		ArrayList<Pair> parameter = new ArrayList<Pair>();
+		
+		
+		if(!title.isEmpty()) {
+			Pair titlePair = new Pair("title", title);
+			parameter.add(titlePair);
+			System.out.println(title);
+		}
+		
+		if(!autor.isEmpty()) {
+			Pair autorPair = new Pair("autor", autor);
+			parameter.add(autorPair);
+			System.out.println(autor);
+		}
+		
+		if(!verlag.isEmpty()) {
+			Pair verlagPair = new Pair("verlag", verlag);
+			parameter.add(verlagPair);		
+			System.out.println(verlag);	
+		}
+		
+		if(!jahr.isEmpty()) {
+			Pair jahrPair = new Pair("jahr", jahr);
+			parameter.add(jahrPair);
+			System.out.println(jahr);
+		}
+		
+		if(!genre.isEmpty()) {
+			Pair genrePair = new Pair("genre", genre);
+			parameter.add(genrePair);
+			System.out.println(genre);
+		}
+		
+		if(!auflage.isEmpty()) {
+			Pair auflagePair = new Pair("auflage", auflage);
+			parameter.add(auflagePair);	
+			System.out.println(auflage);
+			}
+		
+		if(!exemplar.isEmpty()) {
+			Pair exemplarPair = new Pair("exemplar", exemplar);
+			parameter.add(exemplarPair);
+			System.out.println(exemplar);
+		}
+		
+		if(!ausgeliehen.isEmpty()) {
+			Pair ausgeliehenPair = new Pair("ausgeliehen", ausgeliehen);
+			parameter.add(ausgeliehenPair);
+			System.out.println(ausgeliehen);
+		}
+		
+		for(int j = 0; j < parameter.size();j++) {
+			System.out.println(parameter.get(j));
+		}
+	
 		try {
 			
 //			List mit Ids holen, die zu den Suchparametern passen
-			List<Integer> ids = bc.findeBuchID(parameters);
+			List<Integer> ids = bc.findeBuchID(parameter);
+			
+			//Liste mit ids an ResultsView uebergeben
+			resultsView.setIds(ids);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		//Liste mit ids an ResultsView uebergeben
-		
+	
 		
 		
 		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/ResultsView.fxml"));
