@@ -39,14 +39,14 @@ public class Media implements Serializable {
 	private String title;
 	@Column(name="genre")
 	private String genre;
-	@Column(name="erscheinungsjahr")
-	private int erscheinungsjahr;
-	@Column(name="ist_ausgeliehen")
-	private boolean ausgeliehen;
-	@Column(name="inhalt")
-	private String inhalt;
-	@Column(name="kommentar")
-	private String kommentar;
+	@Column(name="year_of_publication")
+	private int yearOfPublication;
+	@Column(name="is_borrowed")
+	private boolean isBorrowed;
+	@Column(name="content")
+	private String content;
+	@Column(name="commentary")
+	private String comment;
 	@Column(name="exemplar")
 	private int exemplar;
 	
@@ -83,40 +83,40 @@ public class Media implements Serializable {
 	}
 
 
-	public int getErscheinungsjahr() {
-		return erscheinungsjahr;
+	public int getYearOfPublication() {
+		return yearOfPublication;
 	}
 
 
-	public void setErscheinungsjahr(int erscheinungsjahr) {
-		this.erscheinungsjahr = erscheinungsjahr;
+	public void setYearOfPublication(int year) {
+		this.yearOfPublication = year;
 	}
 
 
-	public boolean getAusgeliehen() {
-		return ausgeliehen;
+	public boolean getIsBorrowed() {
+		return isBorrowed;
 	}
 
 
-	public void setAusgeliehen(boolean ausgeliehen) {
-		this.ausgeliehen = ausgeliehen;
+	public void setIsBorrowed(boolean isBorrowed) {
+		this.isBorrowed = isBorrowed;
 	}
 	
 
-	public String getInhalt() {
-		return inhalt;
+	public String getContent() {
+		return content;
 	}
 
-	public void setInhalt(String inhalt) {
-		this.inhalt = inhalt;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public String getKommentar() {
-		return kommentar;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setKommentar(String kommentar) {
-		this.kommentar = kommentar;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	
@@ -132,7 +132,7 @@ public class Media implements Serializable {
 	public String toString() {
 		return MessageFormat.format("{0}: idmedia={1}, title={2}, genre={3}, erscheinungsjahr={4}, "
 				+ "ausgeliehen={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
-				new Object[] {getClass().getSimpleName(), idmedia, title, genre, erscheinungsjahr, ausgeliehen, inhalt, kommentar, exemplar});
+				new Object[] {getClass().getSimpleName(), idmedia, title, genre, yearOfPublication, isBorrowed, content, comment, exemplar});
 	}
 	
 	

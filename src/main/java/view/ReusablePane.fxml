@@ -11,12 +11,12 @@
 
 <AnchorPane prefHeight="155.0" prefWidth="456.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-  	  <Pane prefHeight="155.0" prefWidth="456.0" fx:id="titleShower">
+  	  <Pane fx:id="titleShower" prefHeight="155.0" prefWidth="456.0">
         <children>
            <TextField fx:id="txtFiTitle" promptText="Titel" />
-           <TextField fx:id="txtFiAutor" layoutY="30.0" promptText="Autor" />
-           <TextField fx:id="txtFiVerlag" layoutY="60.0" promptText="Verlag" />
-           <TextField fx:id="txtFiJahr" layoutX="161.0" promptText="Erscheinungsjahr" />
+           <TextField fx:id="txtFiAuthor" layoutY="30.0" promptText="Autor" />
+           <TextField fx:id="txtFiPublisher" layoutY="60.0" promptText="Verlag" />
+           <TextField fx:id="txtFiYear" layoutX="161.0" promptText="Erscheinungsjahr" />
            <TextField fx:id="txtFiExemplar" layoutX="161.0" layoutY="61.0" promptText="Exemplar" />
            <SplitMenuButton fx:id="menuGenre" layoutY="107.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="Genre">
               <items>
@@ -24,7 +24,7 @@
                  <MenuItem mnemonicParsing="false" text="Roman" />
               </items>
            </SplitMenuButton>
-           <RadioButton fx:id="radioBtnAusgeliehen" layoutX="337.0" layoutY="120.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="ausgeliehen" />
+           <RadioButton fx:id="radioBtnBorrowed" layoutX="337.0" layoutY="120.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="ausgeliehen" />
            <Group fx:id="checkBewertung" layoutX="337.0" layoutY="85.0">
               <children>
                  <CheckBox mnemonicParsing="false" />
@@ -34,7 +34,7 @@
                  <CheckBox layoutX="63.0" mnemonicParsing="false" />
               </children>
            </Group>
-           <TextField fx:id="txtFiAuflage" layoutX="161.0" layoutY="30.0" promptText="Auflage" />
+           <TextField fx:id="txtFiEdition" layoutX="161.0" layoutY="30.0" promptText="Auflage" />
         </children>
      </Pane>
    </children>

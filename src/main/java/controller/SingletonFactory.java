@@ -4,11 +4,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import models.Ausleiher;
-import models.Bewertung;
-import models.Buch;
+import models.Lender;
+import models.Rating;
+import models.Book;
 import models.Media;
-import models.MediumAusleihen;
+import models.BorrowMedia;
 
 public final class SingletonFactory {
 	
@@ -22,9 +22,9 @@ public final class SingletonFactory {
 	public static synchronized SessionFactory getFactory() {
 		if(factoryReal == null) {
 			factoryReal = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
-					addAnnotatedClass(Media.class).addAnnotatedClass(Buch.class).
-					addAnnotatedClass(Ausleiher.class).addAnnotatedClass(Bewertung.class).
-					addAnnotatedClass(MediumAusleihen.class).buildSessionFactory();
+					addAnnotatedClass(Media.class).addAnnotatedClass(Book.class).
+					addAnnotatedClass(Lender.class).addAnnotatedClass(Rating.class).
+					addAnnotatedClass(BorrowMedia.class).buildSessionFactory();
 		}
 		return factoryReal;
 	}

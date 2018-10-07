@@ -31,16 +31,16 @@
                   <Pane layoutX="224.0" layoutY="14.0" prefHeight="155.0" prefWidth="456.0">
                      <children>
                         <TextField fx:id="txtFiTitle" promptText="Titel" />
-                        <TextField fx:id="txtFiAutor" layoutY="30.0" promptText="Autor" />
-                        <TextField fx:id="txtFiVerlag" layoutY="60.0" promptText="Verlag" />
-                        <TextField fx:id="txtFiJahr" layoutX="161.0" promptText="Erscheinungsjahr" />
+                        <TextField fx:id="txtFiAuthor" layoutY="30.0" promptText="Autor" />
+                        <TextField fx:id="txtFiPublisher" layoutY="60.0" promptText="Verlag" />
+                        <TextField fx:id="txtFiYear" layoutX="161.0" promptText="Erscheinungsjahr" />
                         <SplitMenuButton fx:id="menuGenre" layoutY="107.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="Genre">
                            <items>
                               <MenuItem mnemonicParsing="false" text="Sachbuch" />
                               <MenuItem mnemonicParsing="false" text="Roman" />
                            </items>
                         </SplitMenuButton>
-                        <RadioButton fx:id="radioBtnAusgeliehen" layoutX="337.0" layoutY="120.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="ausgeliehen" />
+                        <RadioButton fx:id="radioBtnBorrowed" layoutX="337.0" layoutY="120.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="ausgeliehen" />
                         <Group fx:id="checkBewertung" layoutX="337.0" layoutY="85.0">
                            <children>
                               <CheckBox mnemonicParsing="false" />
@@ -50,11 +50,11 @@
                               <CheckBox layoutX="63.0" mnemonicParsing="false" />
                            </children>
                         </Group>
-                        <TextField fx:id="txtFiAuflage" layoutX="161.0" layoutY="30.0" promptText="Auflage" />
+                        <TextField fx:id="txtFiEdition" layoutX="161.0" layoutY="30.0" promptText="Auflage" />
                      </children>
                   </Pane>
-                  <TextArea fx:id="txtArInhalt" layoutX="224.0" layoutY="183.0" prefHeight="85.0" prefWidth="456.0" promptText="Inhaltsangabe" />
-                  <TextArea fx:id="txtArKommentar" layoutX="224.0" layoutY="273.0" prefHeight="85.0" prefWidth="456.0" promptText="Ellyns Kommentar" />
+                  <TextArea fx:id="txtArContent" layoutX="224.0" layoutY="183.0" prefHeight="85.0" prefWidth="456.0" promptText="Inhaltsangabe" />
+                  <TextArea fx:id="txtArComment" layoutX="224.0" layoutY="273.0" prefHeight="85.0" prefWidth="456.0" promptText="Ellyns Kommentar" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">

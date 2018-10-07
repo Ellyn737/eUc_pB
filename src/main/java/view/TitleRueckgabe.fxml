@@ -24,9 +24,9 @@
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </ImageView>
-                  <Label fx:id="givenAutor" layoutX="24.0" layoutY="257.0" prefHeight="25.0" prefWidth="149.0" text="Autor" />
-                  <Label fx:id="givenVerlag" layoutX="24.0" layoutY="295.0" prefHeight="25.0" prefWidth="149.0" text="Verlag" />
-                  <Label fx:id="givenJahr" layoutX="24.0" layoutY="330.0" prefHeight="25.0" prefWidth="149.0" text="Erscheinungsjahr" />
+                  <Label fx:id="givenAuthor" layoutX="24.0" layoutY="257.0" prefHeight="25.0" prefWidth="149.0" text="Autor" />
+                  <Label fx:id="givenPublisher" layoutX="24.0" layoutY="295.0" prefHeight="25.0" prefWidth="149.0" text="Verlag" />
+                  <Label fx:id="givenYear" layoutX="24.0" layoutY="330.0" prefHeight="25.0" prefWidth="149.0" text="Erscheinungsjahr" />
                </children>
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">

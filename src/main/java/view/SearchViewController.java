@@ -24,29 +24,29 @@ public class SearchViewController {
 
 	@FXML Label titleLabel;
 	@FXML TextField txtFiTitle;
-	@FXML TextField txtFiAutor;
-	@FXML TextField txtFiVerlag;
-	@FXML TextField txtFiJahr;
-	@FXML TextField txtFiAuflage;
+	@FXML TextField txtFiAuthor;
+	@FXML TextField txtFiPublisher;
+	@FXML TextField txtFiYear;
+	@FXML TextField txtFiEdition;
 	@FXML TextField txtFiExemplar;
 	@FXML SplitMenuButton menuGenre;
-	@FXML RadioButton radioBtnAusgeliehen;
+	@FXML RadioButton radioBtnBorrowed;
 	@FXML Button cancelBtn;
 	@FXML Button searchBtn;
 	
 	
-	private int buchID;
+	private int bookID;
 	
 	private String title;
-	private String autor;
-	private String verlag;
-	private String jahr;
+	private String author;
+	private String publisher;
+	private String year;
 	private String genre;
-	private String inhalt;
-	private String kommentar;
-	private String auflage;
+	private String content;
+	private String comment;
+	private String edition;
 	private String exemplar;
-	private String ausgeliehen;
+	private String isBorrowed;
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
@@ -72,17 +72,17 @@ public class SearchViewController {
 	
 		
 		title = txtFiTitle.getText().trim();
-		autor = txtFiAutor.getText().trim();
-		verlag = txtFiVerlag.getText().trim();
-		jahr = txtFiJahr.getText().trim();
+		author = txtFiAuthor.getText().trim();
+		publisher = txtFiPublisher.getText().trim();
+		year = txtFiYear.getText().trim();
 		genre = menuGenre.getText().trim();
-		auflage = txtFiAuflage.getText().trim();
+		edition = txtFiEdition.getText().trim();
 		exemplar = txtFiExemplar.getText().trim();
 		
-		if(radioBtnAusgeliehen.isPressed()) {
-			ausgeliehen = "false";
+		if(radioBtnBorrowed.isPressed()) {
+			isBorrowed = "false";
 		}else {
-			ausgeliehen = "true";
+			isBorrowed = "true";
 		}
 				
 //		Suchparameter in Array uebergeben
@@ -99,65 +99,65 @@ public class SearchViewController {
  */
 		
 //		ArrayListe mit key und value anlegen
-		ArrayList<Pair> parameter = new ArrayList<Pair>();
+		ArrayList<Pair> parameters = new ArrayList<Pair>();
 		
 		
 		if(!title.isEmpty()) {
 			Pair titlePair = new Pair("title", title);
-			parameter.add(titlePair);
+			parameters.add(titlePair);
 			System.out.println(title);
 		}
 		
-		if(!autor.isEmpty()) {
-			Pair autorPair = new Pair("autor", autor);
-			parameter.add(autorPair);
-			System.out.println(autor);
+		if(!author.isEmpty()) {
+			Pair authorPair = new Pair("autor", author);
+			parameters.add(authorPair);
+			System.out.println(author);
 		}
 		
-		if(!verlag.isEmpty()) {
-			Pair verlagPair = new Pair("verlag", verlag);
-			parameter.add(verlagPair);		
-			System.out.println(verlag);	
+		if(!publisher.isEmpty()) {
+			Pair publisherPair = new Pair("verlag", publisher);
+			parameters.add(publisherPair);		
+			System.out.println(publisher);	
 		}
 		
-		if(!jahr.isEmpty()) {
-			Pair jahrPair = new Pair("jahr", jahr);
-			parameter.add(jahrPair);
-			System.out.println(jahr);
+		if(!year.isEmpty()) {
+			Pair yearPair = new Pair("jahr", year);
+			parameters.add(yearPair);
+			System.out.println(year);
 		}
 		
 		if(!genre.isEmpty()) {
 			Pair genrePair = new Pair("genre", genre);
-			parameter.add(genrePair);
+			parameters.add(genrePair);
 			System.out.println(genre);
 		}
 		
-		if(!auflage.isEmpty()) {
-			Pair auflagePair = new Pair("auflage", auflage);
-			parameter.add(auflagePair);	
-			System.out.println(auflage);
+		if(!edition.isEmpty()) {
+			Pair editionPair = new Pair("auflage", edition);
+			parameters.add(editionPair);	
+			System.out.println(edition);
 			}
 		
 		if(!exemplar.isEmpty()) {
 			Pair exemplarPair = new Pair("exemplar", exemplar);
-			parameter.add(exemplarPair);
+			parameters.add(exemplarPair);
 			System.out.println(exemplar);
 		}
 		
-		if(!ausgeliehen.isEmpty()) {
-			Pair ausgeliehenPair = new Pair("ausgeliehen", ausgeliehen);
-			parameter.add(ausgeliehenPair);
-			System.out.println(ausgeliehen);
+		if(!isBorrowed.isEmpty()) {
+			Pair isBorrowedPair = new Pair("ausgeliehen", isBorrowed);
+			parameters.add(isBorrowedPair);
+			System.out.println(isBorrowed);
 		}
 		
-		for(int j = 0; j < parameter.size();j++) {
-			System.out.println(parameter.get(j));
+		for(int j = 0; j < parameters.size();j++) {
+			System.out.println(parameters.get(j));
 		}
 	
 		try {
 			
 //			List mit Ids holen, die zu den Suchparametern passen
-			List<Integer> ids = bc.findeBuchID(parameter);
+			List<Integer> ids = bc.findBookId(parameters);
 			
 			//Liste mit ids an ResultsView uebergeben
 			resultsView.setIds(ids);

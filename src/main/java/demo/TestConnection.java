@@ -12,11 +12,11 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import models.Ausleiher;
-import models.Bewertung;
-import models.Buch;
+import models.Lender;
+import models.Rating;
+import models.Book;
 import models.Media;
-import models.MediumAusleihen;
+import models.BorrowMedia;
 
 public class TestConnection {
 	
@@ -32,9 +32,9 @@ public class TestConnection {
 		System.out.println("Connecting to database");
 		//wird nur einmal erstellt
 		SessionFactory factory = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
-				addAnnotatedClass(Media.class).addAnnotatedClass(Buch.class).
-				addAnnotatedClass(Ausleiher.class).addAnnotatedClass(Bewertung.class).
-				addAnnotatedClass(MediumAusleihen.class).buildSessionFactory();
+				addAnnotatedClass(Media.class).addAnnotatedClass(Book.class).
+				addAnnotatedClass(Lender.class).addAnnotatedClass(Rating.class).
+				addAnnotatedClass(BorrowMedia.class).buildSessionFactory();
 		
 		
 		Session session = factory.getCurrentSession();
@@ -44,11 +44,11 @@ public class TestConnection {
 			//use the session object to save/retrieve Java objects
 			//create a media/buch object
 			System.out.println("Create a media/buch object");
-			Ausleiher tempAusleiher = new Ausleiher();
+			Lender tempAusleiher = new Lender();
 			System.out.println("VorName");
-			tempAusleiher.setVorName("Ellyn");
+			tempAusleiher.setFirstName("Ellyn");
 			System.out.println("Nachname");
-			tempAusleiher.setNachName("Reese-Bünning");
+			tempAusleiher.setLastName("Reese-Bünning");
 			System.out.println("Email");
 			tempAusleiher.setEmail("e.reese@mail.de");
 			

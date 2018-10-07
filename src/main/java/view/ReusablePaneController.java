@@ -15,13 +15,13 @@ public class ReusablePaneController extends AnchorPane {
 	
 	@FXML Pane titleShower;
 	@FXML TextField txtFiTitle;
-	@FXML TextField txtFiAutor;
-	@FXML TextField txtFiJahr;
-	@FXML TextField txtFiVerlag;
+	@FXML TextField txtFiAuthor;
+	@FXML TextField txtFiYear;
+	@FXML TextField txtFiPublisher;
 	@FXML TextField txtFiExemplar;
-	@FXML TextField txtFiAuflage;
+	@FXML TextField txtFiEdition;
 	@FXML SplitMenuButton menuGenre;
-	@FXML RadioButton radioBtnAusgeliehen;
+	@FXML RadioButton radioBtnBorrowed;
 	
 	
 	
@@ -29,38 +29,38 @@ public class ReusablePaneController extends AnchorPane {
 	//Verwendung in ResultView, evtl uach bei showTitle
 	private int id;
 	private String title;
-	private String autor;
-	private String verlag;
-	private int jahr;
-	private int auflage;
+	private String author;
+	private String publisher;
+	private int year;
+	private int edition;
 	private int exemplar;
 	private String genre;
-	private boolean ausgeliehen;
+	private boolean isBorrowed;
 	
-	private String jahrString;
+	private String yearString;
 	private String exemplarString;
-	private String auflageString;
+	private String editionString;
 	
 	
 	public ReusablePaneController() {
 		
-		jahrString = Integer.toString(jahr);
+		yearString = Integer.toString(year);
 		exemplarString = Integer.toString(exemplar);
-		auflageString = Integer.toString(auflage);
+		editionString = Integer.toString(edition);
 		
 //		setze Variablen in die TextFelder
 		txtFiTitle.setText(title);
-		txtFiAutor.setText(autor);
-		txtFiJahr.setText(jahrString);
-		txtFiVerlag.setText(verlag);
+		txtFiAuthor.setText(author);
+		txtFiYear.setText(yearString);
+		txtFiPublisher.setText(publisher);
 		txtFiExemplar.setText(exemplarString);
-		txtFiAuflage.setText(auflageString);
+		txtFiEdition.setText(editionString);
 		menuGenre.setText(genre);
 		
-		if(ausgeliehen) {
-			radioBtnAusgeliehen.setSelected(true);
+		if(isBorrowed) {
+			radioBtnBorrowed.setSelected(true);
 		}else {
-			radioBtnAusgeliehen.setSelected(false);
+			radioBtnBorrowed.setSelected(false);
 		}
 		
 		
@@ -84,36 +84,36 @@ public class ReusablePaneController extends AnchorPane {
 		this.title = title;
 	}
 
-	public String getAutor() {
-		return autor;
+	public String getAuthor() {
+		return author;
 	}
 
-	public void setAutor(String autor) {
-		this.autor = autor;
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
-	public String getVerlag() {
-		return verlag;
+	public String getPublisher() {
+		return publisher;
 	}
 
-	public void setVerlag(String verlag) {
-		this.verlag = verlag;
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
 	}
 
-	public int getJahr() {
-		return jahr;
+	public int getYear() {
+		return year;
 	}
 
-	public void setJahr(int jahr) {
-		this.jahr = jahr;
+	public void setYear(int year) {
+		this.year = year;
 	}
 
-	public int getAuflage() {
-		return auflage;
+	public int getEdition() {
+		return edition;
 	}
 
-	public void setAuflage(int auflage) {
-		this.auflage = auflage;
+	public void setEdition(int edition) {
+		this.edition = edition;
 	}
 
 	public int getExemplar() {
@@ -132,12 +132,12 @@ public class ReusablePaneController extends AnchorPane {
 		this.genre = genre;
 	}
 
-	public boolean isAusgeliehen() {
-		return ausgeliehen;
+	public boolean getIsBorrowed() {
+		return isBorrowed;
 	}
 
-	public void setAusgeliehen(boolean ausgeliehen) {
-		this.ausgeliehen = ausgeliehen;
+	public void setIsBorrowed(boolean isBorrowed) {
+		this.isBorrowed = isBorrowed;
 	}
 	
 }
