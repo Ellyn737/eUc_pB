@@ -22,7 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.stage.Stage;
-import models.Buch;
+import models.Book;
 
 public class ResultsViewController implements Initializable {
 
@@ -30,12 +30,12 @@ public class ResultsViewController implements Initializable {
 	@FXML Button cancelBtn;
 	@FXML Label searchParametersLabel;
 	@FXML Label givenTitle;
-	@FXML Label givenAutor;
-	@FXML Label givenVerlag;
-	@FXML Label givenJahr;
+	@FXML Label givenAuthor;
+	@FXML Label givenPublisher;
+	@FXML Label givenYear;
 	@FXML Label givenGenre;
 	@FXML Label givenSubgenre;
-	@FXML RadioButton radioBtnAusgeliehen;
+	@FXML RadioButton radioBtnBorrowed;
 	@FXML ListView<ReusablePaneController> list;
 	
 	
@@ -45,11 +45,11 @@ public class ResultsViewController implements Initializable {
 	private List<Integer> ids = new ArrayList<>();
 	
 	private String title;
-	private String autor;
-	private String verlag;
-	private int jahr;
+	private String author;
+	private String publisher;
+	private int year;
 	private String genre;
-	private boolean ausgeliehen;
+	private boolean isBorrowed;
 	
 	
 	private MainBibliothek mainBib;
@@ -81,23 +81,23 @@ public class ResultsViewController implements Initializable {
 //		für jede id aus ids
 		for(int i = 0; i < ids.size(); i++) {
 //			hole das Buch
-			Buch buch = bc.holeBuchDaten(ids.get(i));
+			Book buch = bc.getBookData(ids.get(i));
 			
 //			setze variablen
 			title = buch.getTitle();
-			autor = buch.getAutor();
-			verlag = buch.getVerlag();
-			jahr = buch.getErscheinungsjahr();
+			author = buch.getAuthor();
+			publisher = buch.getPublisher();
+			year = buch.getYearOfPublication();
 			genre = buch.getGenre();
-			ausgeliehen = buch.getAusgeliehen();
+			isBorrowed = buch.getIsBorrowed();
 			
 //			setze variablen in ReusablePane
 			pane.setTitle(title);
-			pane.setAutor(autor);
-			pane.setVerlag(verlag);
-			pane.setJahr(jahr);
+			pane.setAuthor(author);
+			pane.setPublisher(publisher);
+			pane.setYear(year);
 			pane.setGenre(genre);
-			pane.setAusgeliehen(ausgeliehen);
+			pane.setIsBorrowed(isBorrowed);
 			
 //			panel an die liste mit panels uebergeben
 			panes.add(pane);

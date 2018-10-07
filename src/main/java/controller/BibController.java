@@ -9,7 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javafx.util.Pair;
-import models.Buch;
+import models.Book;
 
 
 
@@ -23,25 +23,25 @@ import models.Buch;
  */
 public class BibController {
 	
-	private Boolean ausgeliehen;
-	private String ausgeliehenString;
+	private Boolean isBorrowed;
+	private String isBorrowedString;
 	private String title;
-	private String autor;
-	private String verlag;
-	private int jahr;
-	private String jahrString;
+	private String author;
+	private String publisher;
+	private int year;
+	private String yearString;
 	private String genre;
-	private String inhalt;
-	private String kommentar;
+	private String content;
+	private String comment;
 	private int exemplar;
 	private String exemplarString;
-	private int auflage;
-	private String auflageString;
+	private int edition;
+	private String editionString;
 	
 	private SessionFactory factory;
 
 	
-	public void aufnehmenInBib() {
+	public void addToBib() {
 		/*
 		 * neues Buch erstellen
 		 * 		Parameter aus den textfeldern der View
@@ -60,49 +60,49 @@ public class BibController {
 			//use the session object to save/retrieve Java objects
 			//create a media/buch object
 			System.out.println("Create a media/buch object");
-			Buch buch = new Buch();
+			Book book = new Book();
 			
-			System.out.println("Autor: " + autor);
-			buch.setAutor(autor);
+			System.out.println("Autor: " + author);
+			book.setAuthor(author);
 			
-			System.out.println("Verlag: " + verlag);
-			buch.setVerlag(verlag);
+			System.out.println("Verlag: " + publisher);
+			book.setPublisher(publisher);
 			
 			System.out.println("Titel: " + title);
-			buch.setTitle(title);
+			book.setTitle(title);
 			
-			System.out.println("Jahr: "+ jahr);
-			buch.setErscheinungsjahr(jahr);
+			System.out.println("Jahr: "+ year);
+			book.setYearOfPublication(year);
 			
 			System.out.println("Genre:" + genre);
-			buch.setGenre(genre);
+			book.setGenre(genre);
 			
-			System.out.println("inBib:" + ausgeliehen);
-			buch.setAusgeliehen(ausgeliehen);			
+			System.out.println("inBib:" + isBorrowed);
+			book.setIsBorrowed(isBorrowed);			
 			
-			System.out.println("inhalt: " + inhalt);
-			buch.setInhalt(inhalt);
+			System.out.println("inhalt: " + content);
+			book.setContent(content);
 
-			System.out.println("kommentar: "+ kommentar);
-			buch.setKommentar(kommentar);
+			System.out.println("kommentar: "+ comment);
+			book.setComment(comment);
 			
-			System.out.println("auflage: " + auflage);
-			buch.setAuflage(auflage);
+			System.out.println("auflage: " + edition);
+			book.setEdition(edition);
 			
 			//herausfinden, ob es den Titel mit dem Autoren und der Auflage schon gibt
-			int anzahlAndererEx = suchenNachAnderenExemplaren(autor, title, auflage);
+			int numberOfOthers = searchForOthers(author, title, edition);
 			
 			// wenn ja, das neue Exemplar mit nächst höherer Exemplarzahl austatten
-			if(anzahlAndererEx > 0) {
-				exemplar = anzahlAndererEx++;
+			if(numberOfOthers > 0) {
+				exemplar = numberOfOthers++;
 			
 			}else {
 				//wenn es das erste Exemplar ist --> mit 1 ausstatten
 				exemplar = 1;
 			}
 			
-			System.out.println("anzahle der Exemplare: " + exemplar);
-			buch.setExemplar(exemplar);
+			System.out.println("Anzahle der Exemplare: " + exemplar);
+			book.setExemplar(exemplar);
 			
 			//start transaction
 			System.out.println("Beginn transaction");
@@ -110,7 +110,7 @@ public class BibController {
 			
 			//save the book
 			System.out.println("Saving the book");
-			newTitleSession.save(buch);
+			newTitleSession.save(book);
 			
 			//commit the transaction
 			System.out.println("Commiting");
@@ -125,7 +125,7 @@ public class BibController {
 		
 	}
 	
-	public void loeschenAusBib(int buchID) {
+	public void deleteFromBib(int bookID) {
 		/* 
 		 * Buch mit ID suchen und aus DB entfernen
 		 * 
@@ -135,7 +135,7 @@ public class BibController {
 		 */
 	}
 	
-	public void titelBearbeiten(int buchID) {
+	public void changeTitle(int bookID) {
 		/*
 		 * Parameter der Txtfelder aus View vergleichen
 		 * mit Parametern in DB
@@ -151,52 +151,52 @@ public class BibController {
 			
 			
 			//aendere Daten
-			Buch buch = (Buch)changeSession.get(Buch.class, buchID);
+			Book book = (Book)changeSession.get(Book.class, bookID);
 		
-			if(!title.equals(buch.getTitle())) {
-				buch.setTitle(title);
+			if(!title.equals(book.getTitle())) {
+				book.setTitle(title);
 				System.out.println("neuer Titel: " + title);
 			}
 			
-			if(!genre.equals(buch.getGenre())) {
-				buch.setGenre(genre);
+			if(!genre.equals(book.getGenre())) {
+				book.setGenre(genre);
 				System.out.println("neues Genre: " + genre);
 			}
 			
-			if(jahr != buch.getErscheinungsjahr()) {
-				buch.setErscheinungsjahr(jahr);
-				System.out.println("neues Erscheinungsjahr: " + jahr);
+			if(year != book.getYearOfPublication()) {
+				book.setYearOfPublication(year);
+				System.out.println("neues Erscheinungsjahr: " + year);
 			}
 			
-			if(!autor.equals(buch.getAutor())) {
-				buch.setAutor(autor);
-				System.out.println("neuer Autor: " + autor);
+			if(!author.equals(book.getAuthor())) {
+				book.setAuthor(author);
+				System.out.println("neuer Autor: " + author);
 				}
 				
-			if(!verlag.equals(buch.getVerlag())) {
-				buch.setVerlag(verlag);
-				System.out.println("neuer Verlag: " + verlag);
+			if(!publisher.equals(book.getPublisher())) {
+				book.setPublisher(publisher);
+				System.out.println("neuer Verlag: " + publisher);
 			}
 			
-			if(inhalt != "") {
-				buch.setInhalt(inhalt);
-				System.out.println("neuer Inhalt: " + inhalt);
+			if(content != "") {
+				book.setContent(content);
+				System.out.println("neuer Inhalt: " + content);
 			}
 			
-			if(kommentar != "") {
-				buch.setKommentar(kommentar);
-				System.out.println("neuer Kommentar: " + kommentar);
+			if(comment != "") {
+				book.setComment(comment);
+				System.out.println("neuer Kommentar: " + comment);
 			}
 			
-			if(auflage != buch.getAuflage()) {
-				buch.setAuflage(auflage);
-				System.out.println("andere Auflage: " + auflage);
+			if(edition != book.getEdition()) {
+				book.setEdition(edition);
+				System.out.println("andere Auflage: " + edition);
 			}
 			
 			
 			changeSession.beginTransaction();
 			
-			changeSession.update(buch);
+			changeSession.update(book);
 			
 			changeSession.getTransaction().commit();
 			
@@ -207,7 +207,7 @@ public class BibController {
 		}
 	}
 	
-	public boolean pruefenObInBestand(int buchID) {
+	public boolean checkIfBorrowed(int bookID) {
 		boolean isInBib = true;
 		/*
 		 * buch in DB suchen und istInBib überprüfen
@@ -218,7 +218,7 @@ public class BibController {
 		return isInBib;
 	}
 	
-	public List<Integer> findeBuchID(ArrayList<Pair> suchParameter) throws Exception {
+	public List<Integer> findBookId(ArrayList<Pair> searchParameters) throws Exception {
 		
 		/*
 		 * wird nur von SEARCHVIEW aufgerufen 
@@ -248,9 +248,6 @@ public class BibController {
 		 */
 		
 		System.out.println("In BC - findeBuchID");
-		
-//		diese Liste wird gefuellt und zurueckgegeben
-		List<Integer> idPassend;
 
 		
 /*
@@ -312,8 +309,8 @@ public class BibController {
 			parameter.add(ausgeliehenPair);
 		}
 */
-		for(int i = 0; i < suchParameter.size(); i++) {
-			System.out.println(suchParameter.get(i));
+		for(int i = 0; i < searchParameters.size(); i++) {
+			System.out.println(searchParameters.get(i));
 		}
 		
 		
@@ -323,40 +320,38 @@ public class BibController {
 		findSession.beginTransaction();
 		
 //		String und query erstellen zur Uebergabe der Parameter
-		String hql = "select m.id_media from Media m where ";
-		Query query;
-		
+		String hql = "select m.idmedia from Media m where ";		
 		
 //		setze den hql-String je nach vorhandenen keys
-		for(int i = 0; i < suchParameter.size(); i++) {
-			String key = suchParameter.get(i).getKey().toString();
+		for(int i = 0; i < searchParameters.size(); i++) {
+			String key = searchParameters.get(i).getKey().toString();
 			switch(key) {
 				case "title":
-					hql += "m.title like ? ";
+					hql += "m.title = ?"+i;
 					break;
-				case "autor":
-					hql += "m.autor like ?";
+				case "author":
+					hql += "m.autor = ?"+i;
 					break;			
-				case "verlag":
-					hql += "m.verlag like ?";
+				case "publisher":
+					hql += "m.verlag = ?"+i;
 					break;	
-				case "jahr":
-					hql += "m.jahr like ?";
+				case "year":
+					hql += "m.erscheinungsjahr = ?"+i;
 					break;
 				case "genre":
-					hql += "m.genre like ?";
+					hql += "m.genre = ?"+i;
 					break;
-				case "auflage":
-					hql += "m.auflage like ?";
+				case "edition":
+					hql += "m.auflage = ?"+i;
 					break;
 				case "exemplar":
-					hql += "m.exemplar like ?";
+					hql += "m.exemplar = ?"+i;
 					break;
-				case "ausgeliehen":
-					hql += "m.ist_ausgeliehen like ?";
+				case "isBorrowed":
+					hql += "m.ausgeliehen = ?"+i;
 					break;
 			}
-			if ( i > 0  && i < suchParameter.size() -1) {
+			if ( i >= 0  && i < searchParameters.size() -1) {
 				hql += " and ";
 			}
 			System.out.println(hql);
@@ -364,36 +359,48 @@ public class BibController {
 		
 		
 //		uebergebe hql an query
-		query = findSession.createQuery(hql);
+		System.out.println("erstelle Query");
+		Query query = findSession.createQuery(hql);
+		System.out.println("Query erstellt..");
 		
 		
 //		setze parameter fuer query
-		for(int i = 0; i < suchParameter.size(); i++) {
-			String key = suchParameter.get(i).getKey().toString();
+		for(int i = 0; i < searchParameters.size(); i++) {
+			int k = i+1;
+			System.out.println("Switch durchgehen zum " + k + "ten Mal:");
+			String key = searchParameters.get(i).getKey().toString();
 			switch(key) {
 				case "title":
 					query.setParameter(i, title);	
+					System.out.println("Parameter für title gesetzt");
 					break;
-				case "autor":
-					query.setParameter(i, autor);	
+				case "author":
+					query.setParameter(i, author);	
+					System.out.println("Parameter für autor gesetzt");
 					break;			
-				case "verlag":
-					query.setParameter(i, verlag);	
+				case "publisher":
+					query.setParameter(i, publisher);	
+					System.out.println("Parameter für verlag gesetzt");
 					break;	
-				case "jahr":
-					query.setParameter(i, jahr);	
+				case "year":
+					query.setParameter(i, year);	
+					System.out.println("Parameter für jahr gesetzt");
 					break;
 				case "genre":
 					query.setParameter(i, genre);	
+					System.out.println("Parameter für genre gesetzt");
 					break;
-				case "auflage":
-					query.setParameter(i, auflage);	
+				case "edition":
+					query.setParameter(i, edition);	
+					System.out.println("Parameter für auflage gesetzt");
 					break;
 				case "exemplar":
 					query.setParameter(i, exemplar);	
+					System.out.println("Parameter für exemplar gesetzt");
 					break;
-				case "ausgeliehen":
-					query.setParameter(i, ausgeliehen);	
+				case "isBorrowed":
+					query.setParameter(i, isBorrowed);	
+					System.out.println("Parameter für ausgeliehen gesetzt");
 					break;
 			}
 		
@@ -401,8 +408,15 @@ public class BibController {
 		
 		System.out.println("HQL: " + hql);
 		
+		
 //		hole Ids
-		idPassend = query.getResultList();
+		ArrayList<Integer> idPassend = (ArrayList<Integer>) query.getResultList();
+		for(int r: idPassend) {
+			System.out.println("Gesammelte ids: ");
+			System.out.println(r);
+		}
+		
+//		Fehler auffangen, wenn nichts geeignetes in der DB ist
 		
 		findSession.getTransaction().commit();
 		
@@ -412,7 +426,7 @@ public class BibController {
 		
 	}
 	
-	public int suchenNachAnderenExemplaren(String autorSuche, String titleSuche, int auflageSuche) {
+	public int searchForOthers(String authorSearch, String titleSearch, int editionSearch) {
 		int anzahlAndererExemplare = 0;
 		
 		try {
@@ -423,9 +437,9 @@ public class BibController {
 			//holt die id der Buecher mit diesem Titel und Autor
 			List<Integer> passendeIds = findSession.createQuery("select m.id_media from Media m "
 					+ "where m.title like ? and m.autor like ? and m.auflage like ?")
-					.setParameter(0, titleSuche)
-					.setParameter(1, autorSuche)
-					.setParameter(2, auflageSuche).list();
+					.setParameter(0, titleSearch)
+					.setParameter(1, authorSearch)
+					.setParameter(2, editionSearch).list();
 			
 			findSession.beginTransaction();
 			
@@ -443,32 +457,31 @@ public class BibController {
 		return anzahlAndererExemplare;
 	}
 	
-	public Buch holeBuchDaten(int id) {
-		Buch buch = null;
+	public Book getBookData(int id) {
+		Book book = null;
 		
 		try {
 			System.out.println("In BC - holeBuchDaten");
 			factory = SingletonFactory.getFactory();
 			Session findBookSession = factory.openSession();
 			//mit id suchen
-			buch = (Buch) findBookSession.createQuery("select * from Media m where m.id_media like ?").setParameter(0, id).uniqueResult();
+			book = (Book) findBookSession.createQuery("select * from Media m where m.id_media like ?").setParameter(0, id).uniqueResult();
 			
 			findBookSession.beginTransaction();
 			
 			findBookSession.getTransaction().commit();
 		}catch(Exception e) {}
-		//buch returnen		
-		return buch;
+		return book;
 	}
 	
 
 	//Getter, Setter und ToString
-	public Boolean getAusgeliehen() {
-		return ausgeliehen;
+	public Boolean getIsBorrowed() {
+		return isBorrowed;
 	}
 
-	public void setAusgeliehen(Boolean ausgeliehen) {
-		this.ausgeliehen = ausgeliehen;
+	public void setIsBorrowed(Boolean isBorrowed) {
+		this.isBorrowed = isBorrowed;
 	}
 
 	public String getTitle() {
@@ -479,28 +492,28 @@ public class BibController {
 		this.title = title;
 	}
 
-	public String getAutor() {
-		return autor;
+	public String getAuthor() {
+		return author;
 	}
 
-	public void setAutor(String autor) {
-		this.autor = autor;
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
-	public String getVerlag() {
-		return verlag;
+	public String getPublisher() {
+		return publisher;
 	}
 
-	public void setVerlag(String verlag) {
-		this.verlag = verlag;
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
 	}
 
-	public int getJahr() {
-		return jahr;
+	public int getYear() {
+		return year;
 	}
 
-	public void setJahr(int jahr) {
-		this.jahr = jahr;
+	public void setYear(int year) {
+		this.year = year;
 	}
 
 	public String getGenre() {
@@ -511,20 +524,20 @@ public class BibController {
 		this.genre = genre;
 	}
 
-	public String getInhalt() {
-		return inhalt;
+	public String getContent() {
+		return content;
 	}
 
-	public void setInhalt(String inhalt) {
-		this.inhalt = inhalt;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public String getKommentar() {
-		return kommentar;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setKommentar(String kommentar) {
-		this.kommentar = kommentar;
+	public void setComment(String commentary) {
+		this.comment = commentary;
 	}
 
 	public int getExemplar() {
@@ -535,12 +548,12 @@ public class BibController {
 		this.exemplar = exemplar;
 	}
 
-	public int getAuflage() {
-		return auflage;
+	public int getEdition() {
+		return edition;
 	}
 
-	public void setAuflage(int auflage) {
-		this.auflage = auflage;
+	public void setEdition(int edition) {
+		this.edition = edition;
 	}
 	
 	

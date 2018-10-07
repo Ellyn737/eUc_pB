@@ -20,9 +20,9 @@ public class TitleAusleiheController {
 	@FXML Label titleLabel;
 	@FXML Label givenTitle;
 	@FXML ImageView givenImage;
-	@FXML Label givenAutor;
-	@FXML Label givenVerlag;
-	@FXML Label givenJahr;
+	@FXML Label givenAuthor;
+	@FXML Label givenPublisher;
+	@FXML Label givenYear;
 	@FXML TextField txtFiBorrower;
 	@FXML TextField txtFiEmail;
 	@FXML Button borrowBtn;
