@@ -80,9 +80,9 @@ public class SearchViewController {
 		exemplar = txtFiExemplar.getText().trim();
 		
 		if(radioBtnBorrowed.isPressed()) {
-			isBorrowed = "false";
+			isBorrowed = "0";
 		}else {
-			isBorrowed = "true";
+			isBorrowed = "1";
 		}
 				
 //		Suchparameter in Array uebergeben
