@@ -109,19 +109,19 @@ public class SearchViewController {
 		}
 		
 		if(!author.isEmpty()) {
-			Pair authorPair = new Pair("autor", author);
+			Pair authorPair = new Pair("author", author);
 			parameters.add(authorPair);
 			System.out.println(author);
 		}
 		
 		if(!publisher.isEmpty()) {
-			Pair publisherPair = new Pair("verlag", publisher);
+			Pair publisherPair = new Pair("publisher", publisher);
 			parameters.add(publisherPair);		
 			System.out.println(publisher);	
 		}
 		
 		if(!year.isEmpty()) {
-			Pair yearPair = new Pair("jahr", year);
+			Pair yearPair = new Pair("year", year);
 			parameters.add(yearPair);
 			System.out.println(year);
 		}
@@ -133,7 +133,7 @@ public class SearchViewController {
 		}
 		
 		if(!edition.isEmpty()) {
-			Pair editionPair = new Pair("auflage", edition);
+			Pair editionPair = new Pair("edition", edition);
 			parameters.add(editionPair);	
 			System.out.println(edition);
 			}
@@ -145,7 +145,7 @@ public class SearchViewController {
 		}
 		
 		if(!isBorrowed.isEmpty()) {
-			Pair isBorrowedPair = new Pair("ausgeliehen", isBorrowed);
+			Pair isBorrowedPair = new Pair("isBorrowed", isBorrowed);
 			parameters.add(isBorrowedPair);
 			System.out.println(isBorrowed);
 		}
