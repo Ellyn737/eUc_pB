@@ -262,33 +262,42 @@ public class BibController {
 //		String und query erstellen zur Uebergabe der Parameter
 		String hql = "select m.idmedia from Media m where ";		
 		
+		
 //		setze den hql-String je nach vorhandenen keys
 		for(int i = 0; i < searchParameters.size(); i++) {
 			String key = searchParameters.get(i).getKey().toString();
 			switch(key) {
 				case "title":
-					hql += "m.title = ?"+i;
+					title = searchParameters.get(i).getValue().toString();
+					hql += "m.title = '" + title + "'";
 					break;
 				case "author":
-					hql += "m.author = ?"+i;
+					author = searchParameters.get(i).getValue().toString();
+					hql += "m.author = '" + author + "'";
 					break;			
 				case "publisher":
-					hql += "m.publisher = ?"+i;
+					publisher = searchParameters.get(i).getValue().toString();
+					hql += "m.publisher = '" + publisher + "'";
 					break;	
 				case "year":
-					hql += "m.year = ?"+i;
+					yearString = searchParameters.get(i).getValue().toString();
+					hql += "m.year = '" + yearString + "'";
 					break;
 				case "genre":
-					hql += "m.genre = ?"+i;
+					genre = searchParameters.get(i).getValue().toString();
+					hql += "m.genre = '" + genre + "'";
 					break;
 				case "edition":
-					hql += "m.edition = ?"+i;
+					editionString = searchParameters.get(i).getValue().toString();
+					hql += "m.edition = '" + editionString + "'";
 					break;
 				case "exemplar":
-					hql += "m.exemplar = ?"+i;
+					exemplarString = searchParameters.get(i).getValue().toString();
+					hql += "m.exemplar = '" + exemplarString + "'";
 					break;
 				case "isBorrowed":
-					hql += "m.isBorrowed = ?"+i;
+					isBorrowedString = searchParameters.get(i).getValue().toString();
+					hql += "m.isBorrowed = '" + isBorrowedString + "'";
 					break;
 			}
 			if (i < searchParameters.size() -1) {
@@ -298,56 +307,13 @@ public class BibController {
 		}
 		
 		
+		
+		
+		
 //		uebergebe hql an query
 		System.out.println("erstelle Query");
 		Query query = findSession.createQuery(hql);
-		System.out.println("Query erstellt..");
-		
-		
-//		setze parameter fuer query
-		for(int i = 0; i < searchParameters.size(); i++) {
-			int k = i+1;
-			System.out.println("Switch durchgehen zum " + k + "ten Mal:");
-			String key = searchParameters.get(i).getKey().toString();
-			switch(key) {
-				case "title":
-					query.setParameter(i, title);	
-					System.out.println("Parameter für title gesetzt");
-					break;
-				case "author":
-					query.setParameter(i, author);	
-					System.out.println("Parameter für autor gesetzt");
-					break;			
-				case "publisher":
-					query.setParameter(i, publisher);	
-					System.out.println("Parameter für verlag gesetzt");
-					break;	
-				case "year":
-					query.setParameter(i, year);	
-					System.out.println("Parameter für jahr gesetzt");
-					break;
-				case "genre":
-					query.setParameter(i, genre);	
-					System.out.println("Parameter für genre gesetzt");
-					break;
-				case "edition":
-					query.setParameter(i, edition);	
-					System.out.println("Parameter für auflage gesetzt");
-					break;
-				case "exemplar":
-					query.setParameter(i, exemplar);	
-					System.out.println("Parameter für exemplar gesetzt");
-					break;
-				case "isBorrowed":
-					query.setParameter(i, isBorrowed);	
-					System.out.println("Parameter für ausgeliehen gesetzt");
-					break;
-			}
-		
-		}
-		
-		System.out.println("HQL: " + hql);
-		
+		System.out.println("Query erstellt..");		
 		
 //		hole Ids
 		ArrayList<Integer> idPassend = (ArrayList<Integer>) query.getResultList();
