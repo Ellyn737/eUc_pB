@@ -7,7 +7,7 @@ package controller;
  * Klasse zur Kontrolle der Ausleihen und Rückgaben
  * 
  */
-public class AusleihController {
+public class BorrowController {
 
 	public void buchAusleihen(int buchID, int ausleiherID) {
 		/*

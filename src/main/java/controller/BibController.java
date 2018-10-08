@@ -249,66 +249,6 @@ public class BibController {
 		
 		System.out.println("In BC - findeBuchID");
 
-		
-/*
-//		Suchparameter holen
-		title = suchParameter.getK(0);
-		autor = suchParameter.get(1);
-		verlag = suchParameter.get(2);
-		jahrString = suchParameter.get(3);
-		jahr = Integer.parseInt(suchParameter.get(3));
-		genre = suchParameter.get(4);
-		auflageString = suchParameter.get(5);
-		auflage = Integer.parseInt(suchParameter.get(5));
-		exemplarString = suchParameter.get(6);
-		exemplar = Integer.parseInt(suchParameter.get(6));
-		ausgeliehenString = suchParameter.get(7);
-		ausgeliehen = Boolean.parseBoolean(suchParameter.get(7));
-		
-//		ueberblick ueber suchparameter
-		System.out.println("Suchparameter sind: /ln Titel: " + title + ", Autor:  " + autor+ ", Verlag: " + verlag + ", Jahr: " + jahr 
-				+ ", Genre: " + genre + ", Auflage: " + auflage + ", Exemplar: " + exemplar + ", ausgeliehen: " + ausgeliehen);
-*/
-/*
-//		ArrayListe mit key und value anlegen
-		ArrayList<Pair> parameter = new ArrayList<Pair>();
-		
-		if(title != "") {
-			Pair titlePair = new Pair("title", title);
-			parameter.add(titlePair);
-		}
-		
-		if(autor != "") {
-			Pair autorPair = new Pair("autor", autor);
-			parameter.add(autorPair);
-		}
-		
-		if(verlag != "") {
-			Pair verlagPair = new Pair("verlag", verlag);
-			parameter.add(verlagPair);		}
-		
-		if(jahrString != "") {
-			Pair jahrPair = new Pair("jahr", jahrString);
-			parameter.add(jahrPair);		}
-		
-		if(genre != "") {
-			Pair genrePair = new Pair("genre", genre);
-			parameter.add(genrePair);		}
-		
-		if(auflageString != "") {
-			Pair auflagePair = new Pair("auflage", auflageString);
-			parameter.add(auflagePair);		}
-		
-		if(exemplarString != "") {
-			Pair exemplarPair = new Pair("exemplar", exemplarString);
-			parameter.add(exemplarPair);
-		}
-		
-		if(ausgeliehenString != "") {
-			Pair ausgeliehenPair = new Pair("ausgeliehen", ausgeliehenString);
-			parameter.add(ausgeliehenPair);
-		}
-*/
 		for(int i = 0; i < searchParameters.size(); i++) {
 			System.out.println(searchParameters.get(i));
 		}
@@ -330,28 +270,28 @@ public class BibController {
 					hql += "m.title = ?"+i;
 					break;
 				case "author":
-					hql += "m.autor = ?"+i;
+					hql += "m.author = ?"+i;
 					break;			
 				case "publisher":
-					hql += "m.verlag = ?"+i;
+					hql += "m.publisher = ?"+i;
 					break;	
 				case "year":
-					hql += "m.erscheinungsjahr = ?"+i;
+					hql += "m.year = ?"+i;
 					break;
 				case "genre":
 					hql += "m.genre = ?"+i;
 					break;
 				case "edition":
-					hql += "m.auflage = ?"+i;
+					hql += "m.edition = ?"+i;
 					break;
 				case "exemplar":
 					hql += "m.exemplar = ?"+i;
 					break;
 				case "isBorrowed":
-					hql += "m.ausgeliehen = ?"+i;
+					hql += "m.isBorrowed = ?"+i;
 					break;
 			}
-			if ( i >= 0  && i < searchParameters.size() -1) {
+			if (i < searchParameters.size() -1) {
 				hql += " and ";
 			}
 			System.out.println(hql);

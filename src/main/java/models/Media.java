@@ -45,7 +45,7 @@ public class Media implements Serializable {
 	private boolean isBorrowed;
 	@Column(name="content")
 	private String content;
-	@Column(name="commentary")
+	@Column(name="comment")
 	private String comment;
 	@Column(name="exemplar")
 	private int exemplar;
