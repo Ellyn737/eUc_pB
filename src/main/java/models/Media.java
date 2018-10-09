@@ -33,20 +33,25 @@ public class Media implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id_media")
-	public int idmedia;
+	private int idmedia;
 	
 	@Column(name="title")
-	public String title;
+	private String title;
 	@Column(name="genre")
-	public String genre;
+	private String genre;
 	@Column(name="erscheinungsjahr")
-	public int erscheinungsjahr;
+	private int erscheinungsjahr;
 	@Column(name="ist_in_bib")
-	public boolean istInBib;
+	private boolean istInBib;
+	@Column(name="inhalt")
+	private String inhalt;
+	@Column(name="kommentar")
+	private String kommentar;
+	@Column(name="exemplar")
+	private int exemplar;
 	
 	
 	public Media() {}
-
 
 	public int getIdmedia() {
 		return idmedia;
@@ -96,11 +101,38 @@ public class Media implements Serializable {
 	public void setIstInBib(boolean istInBib) {
 		this.istInBib = istInBib;
 	}
+	
+
+	public String getInhalt() {
+		return inhalt;
+	}
+
+	public void setInhalt(String inhalt) {
+		this.inhalt = inhalt;
+	}
+
+	public String getKommentar() {
+		return kommentar;
+	}
+
+	public void setKommentar(String kommentar) {
+		this.kommentar = kommentar;
+	}
+	
+	
+	public int getExemplar() {
+		return exemplar;
+	}
+
+	public void setExemplar(int exemplar) {
+		this.exemplar = exemplar;
+	}
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: idmedia={1}, title={2}, genre={3}, erscheinungsjahr={4}, istInBib={5}", 
-				new Object[] {getClass().getSimpleName(), idmedia, title, genre, erscheinungsjahr, istInBib});
+		return MessageFormat.format("{0}: idmedia={1}, title={2}, genre={3}, erscheinungsjahr={4}, "
+				+ "istInBib={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
+				new Object[] {getClass().getSimpleName(), idmedia, title, genre, erscheinungsjahr, istInBib, inhalt, kommentar, exemplar});
 	}
 	
 	

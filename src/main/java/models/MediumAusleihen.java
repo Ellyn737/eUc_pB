@@ -18,16 +18,16 @@ public class MediumAusleihen implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="ausleih_id")
-	public int ausleihId;
+	private int ausleihId;
 	
 	@Column(name="id_medium")
-	public int idMedium;
+	private int idMedium;
 	
 	@Column(name="id_ausleiher")
-	public int idAusleiher;
+	private int idAusleiher;
 	
 	@Column(name="ausleih_datum")
-	public Date ausleihDatum;
+	private Date ausleihDatum;
 
 	public MediumAusleihen() {}
 

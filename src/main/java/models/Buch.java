@@ -19,9 +19,11 @@ import java.text.MessageFormat;
 public class Buch extends Media implements Serializable{
 
 	@Column(name="autor")
-	public String autor;
+	private String autor;
 	@Column(name="verlag")
-	public String verlag;
+	private String verlag;
+	@Column(name="auflage")
+	private int auflage;
 	
 	public Buch() {super();}
 
@@ -44,11 +46,23 @@ public class Buch extends Media implements Serializable{
 	public void setVerlag(String verlag) {
 		this.verlag = verlag;
 	}
+	
+	
+
+	public int getAuflage() {
+		return auflage;
+	}
+
+
+	public void setAuflage(int auflage) {
+		this.auflage = auflage;
+	}
+
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: autor={1}, verlag={2}", 
-				new Object[] {getClass().getSimpleName(), autor, verlag});
+		return MessageFormat.format("{0}: autor={1}, verlag={2}, auflage={3}", 
+				new Object[] {getClass().getSimpleName(), autor, verlag, auflage});
 	}
 	
 	
