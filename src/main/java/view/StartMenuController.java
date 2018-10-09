@@ -58,7 +58,12 @@ public class StartMenuController {
 		}	
 	
 	@FXML private void handleStatisticsButton(ActionEvent event) throws IOException{
-			// Go To Statistics
+		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/Overview.fxml"));
+		Scene searchScene = new Scene(searchPane);
+		
+		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+		window.setScene(searchScene);
+		window.show();
 		}	
 	
 	}
