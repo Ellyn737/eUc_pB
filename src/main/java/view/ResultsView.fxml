@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ResultsViewController">
@@ -14,7 +15,8 @@
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
                   <Button fx:id="cancelBtn" layoutX="40.0" layoutY="375.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="36.0" prefWidth="121.0" text="ABBRECHEN" />
-                  <Label fx:id="searchParametersLabel" alignment="TOP_LEFT" layoutX="15.0" layoutY="18.0" prefHeight="323.0" prefWidth="169.0" text="Suchparameter:" />
+                  <Label fx:id="searchParametersLabel" alignment="TOP_LEFT" layoutX="15.0" layoutY="18.0" prefHeight="27.0" prefWidth="169.0" text="Suchparameter:" />
+                  <TextArea fx:id="txtArSearchParams" layoutX="1.0" layoutY="45.0" prefHeight="319.0" prefWidth="200.0" />
                </children>
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">

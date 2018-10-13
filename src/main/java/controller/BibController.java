@@ -328,8 +328,7 @@ public class BibController {
 		
 		findSession.close();
 		
-		return idPassend;
-		
+		return idPassend;	
 	}
 	
 	public int searchForOthers(String authorSearch, String titleSearch, int editionSearch) {
@@ -364,18 +363,20 @@ public class BibController {
 	}
 	
 	public Book getBookData(int id) {
+		System.out.println("In BC - getBookData");
 		Book book = null;
 		
 		try {
-			System.out.println("In BC - holeBuchDaten");
 			factory = SingletonFactory.getFactory();
 			Session findBookSession = factory.openSession();
 			//mit id suchen
-			book = (Book) findBookSession.createQuery("select * from Media m where m.id_media like ?").setParameter(0, id).uniqueResult();
+//			book = (Book) findBookSession.createQuery("select Media m where m.id_media = ?0").setParameter(0, id).uniqueResult();
+			book = (Book) findBookSession.get(Book.class, id);
 			
 			findBookSession.beginTransaction();
 			
 			findBookSession.getTransaction().commit();
+			System.out.println(book);
 		}catch(Exception e) {}
 		return book;
 	}
