@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
+
 import controller.BibController;
 import controller.MainBibliothek;
 import javafx.event.ActionEvent;
@@ -50,8 +52,6 @@ public class SearchViewController {
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
-	private ResultsViewController resultsView;
-
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -84,19 +84,7 @@ public class SearchViewController {
 		}else {
 			isBorrowed = "1";
 		}
-				
-//		Suchparameter in Array uebergeben
-/*		ArrayList<String> parameters = new ArrayList();
- * 
- * 		parameters.add(title);
-		parameters.add(autor);
-		parameters.add(verlag);
-		parameters.add(jahr);
-		parameters.add(genre);
-		parameters.add(auflage);
-		parameters.add(exemplar);
-		parameters.add(ausgeliehen);
- */
+		
 		
 //		ArrayListe mit key und value anlegen
 		ArrayList<Pair> parameters = new ArrayList<Pair>();
@@ -158,23 +146,24 @@ public class SearchViewController {
 			
 //			List mit Ids holen, die zu den Suchparametern passen
 			List<Integer> ids = bc.findBookId(parameters);
+			System.out.println("Ids: " + ids);
+
+		
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
+			Parent root = (Parent) loader.load();
 			
 			//Liste mit ids an ResultsView uebergeben
-			resultsView.setIds(ids);
+			ResultsViewController resultsView = loader.getController();
+			resultsView.fillListAndView(ids, parameters);
+			
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root));
+			stage.show();
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-	
-		
-		
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/ResultsView.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
-		}	
+	}	
 	
 }
