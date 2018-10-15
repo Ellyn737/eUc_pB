@@ -40,7 +40,7 @@ public class Media implements Serializable {
 	@Column(name="genre")
 	private String genre;
 	@Column(name="year_of_publication")
-	private int yearOfPublication;
+	private int year;
 	@Column(name="is_borrowed")
 	private boolean isBorrowed;
 	@Column(name="content")
@@ -84,12 +84,12 @@ public class Media implements Serializable {
 
 
 	public int getYearOfPublication() {
-		return yearOfPublication;
+		return year;
 	}
 
 
 	public void setYearOfPublication(int year) {
-		this.yearOfPublication = year;
+		this.year = year;
 	}
 
 
@@ -132,7 +132,7 @@ public class Media implements Serializable {
 	public String toString() {
 		return MessageFormat.format("{0}: idmedia={1}, title={2}, genre={3}, erscheinungsjahr={4}, "
 				+ "ausgeliehen={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
-				new Object[] {getClass().getSimpleName(), idmedia, title, genre, yearOfPublication, isBorrowed, content, comment, exemplar});
+				new Object[] {getClass().getSimpleName(), idmedia, title, genre, year, isBorrowed, content, comment, exemplar});
 	}
 	
 	
