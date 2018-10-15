@@ -18,11 +18,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import models.Ausleiher;
-import models.Bewertung;
-import models.Buch;
+import models.Lender;
+import models.Rating;
+import models.Book;
 import models.Media;
-import models.MediumAusleihen;
+import models.BorrowMedia;
 import view.StartMenuController;
 
 

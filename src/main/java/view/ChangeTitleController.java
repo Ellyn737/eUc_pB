@@ -22,11 +22,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import models.Ausleiher;
-import models.Bewertung;
-import models.Buch;
+import models.Lender;
+import models.Rating;
+import models.Book;
 import models.Media;
-import models.MediumAusleihen;
+import models.BorrowMedia;
 
 public class ChangeTitleController {
 
@@ -34,27 +34,27 @@ public class ChangeTitleController {
 	@FXML Button changeImageBtn;
 	@FXML ImageView image;
 	@FXML TextField txtFiTitle;
-	@FXML TextField txtFiAutor;
-	@FXML TextField txtFiVerlag;
-	@FXML TextField txtFiJahr;
-	@FXML TextField txtFiAuflage;
+	@FXML TextField txtFiAuthor;
+	@FXML TextField txtFiPublisher;
+	@FXML TextField txtFiYear;
+	@FXML TextField txtFiEdition;
 	@FXML TextField txtFiExemplar;
 	@FXML SplitMenuButton genreMenu;
-	@FXML TextArea txtArInhalt;
-	@FXML TextArea txtArKommentar;
+	@FXML TextArea txtArContent;
+	@FXML TextArea txtArComment;
 	@FXML Button cancelBtn;
 	@FXML Button saveChangeBtn;
 		
-	private int buchID;
+	private int bookID;
 	
 	private String title;
-	private String autor;
-	private String verlag;
-	private int jahr;
+	private String author;
+	private String publisher;
+	private int year;
 	private String genre;
-	private String inhalt;
-	private String kommentar;
-	private int auflage;
+	private String content;
+	private String comment;
+	private int edition;
 	private int exemplar;
 	
 	private MainBibliothek mainBib;
@@ -79,32 +79,32 @@ public class ChangeTitleController {
 			bc = new BibController();
 			
 			title = txtFiTitle.getText();
-			autor = txtFiAutor.getText();
-			verlag = txtFiVerlag.getText();
-			jahr = Integer.parseInt(txtFiJahr.getText());
+			author = txtFiAuthor.getText();
+			publisher = txtFiPublisher.getText();
+			year = Integer.parseInt(txtFiYear.getText());
 			genre = genreMenu.getText();
-			inhalt = txtArInhalt.getText();
-			kommentar = txtArKommentar.getText();
-			auflage = Integer.parseInt(txtFiAuflage.getText());
+			content = txtArContent.getText();
+			comment = txtArComment.getText();
+			edition = Integer.parseInt(txtFiEdition.getText());
 			exemplar = Integer.parseInt(txtFiExemplar.getText());
 			
 			//get buchId von ShowTitle
 			
 			
 			//setze values
-			bc.setAutor(autor);
+			bc.setAuthor(author);
 			bc.setTitle(title);
-			bc.setVerlag(verlag);
-			bc.setJahr(jahr);
+			bc.setPublisher(publisher);
+			bc.setYear(year);
 			bc.setGenre(genre);
-			bc.setInhalt(inhalt);
-			bc.setKommentar(kommentar);
-			bc.setAuflage(auflage);
+			bc.setContent(content);
+			bc.setComment(comment);
+			bc.setEdition(edition);
 			bc.setExemplar(exemplar);
 			//inBIb nur über Ausleihe ändern
 			
 			//daten zur auswertung an bc uebergeben
-			bc.titelBearbeiten(buchID);
+			bc.changeTitle(bookID);
 						
 			//zu ShowTitle
 			Parent titlePane = FXMLLoader.load(getClass().getResource("../view/ShowTitle.fxml"));

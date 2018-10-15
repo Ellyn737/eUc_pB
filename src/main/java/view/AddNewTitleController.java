@@ -24,26 +24,26 @@ public class AddNewTitleController {
 	@FXML Button addImageBtn;
 	@FXML ImageView image;
 	@FXML TextField txtFiTitle;
-	@FXML TextField txtFiAutor;
-	@FXML TextField txtFiVerlag;
-	@FXML TextField txtFiJahr;
-	@FXML TextField txtFiAuflage;
+	@FXML TextField txtFiAuthor;
+	@FXML TextField txtFiPublisher;
+	@FXML TextField txtFiYear;
+	@FXML TextField txtFiEdition;
 	@FXML SplitMenuButton menuGenre;
-	@FXML RadioButton radioBtnIsThere;
-	@FXML TextArea txtArInhalt;
-	@FXML TextArea txtArKommentar;
+	@FXML RadioButton radioBtnBorrowed;
+	@FXML TextArea txtArContent;
+	@FXML TextArea txtArComment;
 	@FXML Button cancelBtn;
 	@FXML Button addTitleBtn;
 	
-	private Boolean inBib;
+	private Boolean isBorrowed;
 	private String title;
-	private String autor;
-	private String verlag;
-	private int jahr;
+	private String author;
+	private String publisher;
+	private int year;
 	private String genre;
-	private String inhalt;
-	private String kommentar;
-	private int auflage;
+	private String content;
+	private String comment;
+	private int edition;
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
@@ -67,33 +67,33 @@ public class AddNewTitleController {
 		//add the title to db
 		//hole Strings mit Textfeldinhalten
 		title = txtFiTitle.getText();
-		autor = txtFiAutor.getText();
-		verlag = txtFiVerlag.getText();
-		jahr = Integer.parseInt(txtFiJahr.getText());
+		author = txtFiAuthor.getText();
+		publisher = txtFiPublisher.getText();
+		year = Integer.parseInt(txtFiYear.getText());
 		genre = menuGenre.getText();
-		inhalt = txtArInhalt.getText();
-		kommentar = txtArKommentar.getText();
-		auflage = Integer.parseInt(txtFiAuflage.getText());
+		content = txtArContent.getText();
+		comment = txtArComment.getText();
+		edition = Integer.parseInt(txtFiEdition.getText());
 		
-		if(radioBtnIsThere.isPressed()) {
-			inBib = false;
+		if(radioBtnBorrowed.isPressed()) {
+			isBorrowed = false;
 		}else {
-			inBib = true;
+			isBorrowed = true;
 		}
 		
 		//values an bc uebergeben zur db-uebergabe
-		bc.setAutor(autor);
+		bc.setAuthor(author);
 		bc.setTitle(title);
-		bc.setVerlag(verlag);
-		bc.setJahr(jahr);
+		bc.setPublisher(publisher);
+		bc.setYear(year);
 		bc.setGenre(genre);
-		bc.setInhalt(inhalt);
-		bc.setKommentar(kommentar);
-		bc.setInBib(inBib);
-		bc.setAuflage(auflage);
+		bc.setContent(content);
+		bc.setComment(comment);
+		bc.setIsBorrowed(isBorrowed);
+		bc.setEdition(edition);
 		
 		//buch an db uebergeben
-		bc.aufnehmenInBib();
+		bc.addToBib();
 	
 		//zu ShowTitle
 		Parent titlePane = FXMLLoader.load(getClass().getResource("../view/ShowTitle.fxml"));

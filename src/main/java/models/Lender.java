@@ -18,52 +18,52 @@ import java.text.MessageFormat;
  */
 
 @Entity
-@Table(name="ausleiher")
-public class Ausleiher implements Serializable{
+@Table(name="lender")
+public class Lender implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id_ausleiher")
-	private int idAusleiher;
+	@Column(name="id_lender")
+	private int idLender;
 	
-	@Column(name="vorname")
-	private String vorName;
-	@Column(name="nachname")
-	private String nachName;
+	@Column(name="firstname")
+	private String firstName;
+	@Column(name="lastname")
+	private String lastName;
 	@Column(name="email")
 	private String email;
 	
 	
-	public Ausleiher() {}
+	public Lender() {}
 
 
-	public int getIdAusleiher() {
-		return idAusleiher;
+	public int getIdLender() {
+		return idLender;
 	}
 
 
-	public void setIdAusleiher(int idAusleiher) {
-		this.idAusleiher = idAusleiher;
+	public void setIdLender(int idLender) {
+		this.idLender = idLender;
 	}
 
 
-	public String getVorName() {
-		return vorName;
+	public String getFirstName() {
+		return firstName;
 	}
 
 
-	public void setVorName(String vorName) {
-		this.vorName = vorName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
 
-	public String getNachName() {
-		return nachName;
+	public String getLastName() {
+		return lastName;
 	}
 
 
-	public void setNachName(String nachName) {
-		this.nachName = nachName;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 
@@ -79,7 +79,7 @@ public class Ausleiher implements Serializable{
 	@Override
 	public String toString() {
 		return MessageFormat.format("{0}: idAusleiher={1}, vorName={2}, nachName={3}, email={4}", 
-				new Object[] {getClass().getSimpleName(), idAusleiher, vorName, nachName, email});
+				new Object[] {getClass().getSimpleName(), idLender, firstName, lastName, email});
 	}
 	
 	
