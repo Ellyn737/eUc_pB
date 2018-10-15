@@ -11,6 +11,7 @@ import controller.MainBibliothek;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import models.Book;
@@ -66,9 +68,7 @@ public class ResultsViewController{
 		window.setScene(searchScene);
 		window.show();
 		}
-	
-	
-	//funktion zum öffnen bei klicken auf titel
+
 
 	/**
 	 * empfaengt die Daten von SearchView
@@ -85,6 +85,8 @@ public class ResultsViewController{
 		
 		System.out.println("Setzte die ListView");
 		setListView(ids);
+		
+		
 	}
 	
 	/**
@@ -114,7 +116,7 @@ public class ResultsViewController{
 					break;	
 				case "year":
 					yearString = parameters.get(i).getValue().toString();
-					result += "Erscheinungsjahr: " + yearString + "\r\n";;
+					result += "Erscheinungsjahr: " + yearString + "\r\n";
 					break;
 				case "genre":
 					genre = parameters.get(i).getValue().toString();
@@ -130,6 +132,11 @@ public class ResultsViewController{
 					break;
 				case "isBorrowed":
 					isBorrowedString = parameters.get(i).getValue().toString();
+					if(isBorrowedString == "0") {
+						isBorrowedString = "ja";
+					}else {
+						isBorrowedString = "nein";
+					}
 					result += "Ausgeliehen: " + isBorrowedString + "\r\n";
 					break;
 			}
@@ -160,6 +167,22 @@ public class ResultsViewController{
 		
 		System.out.println("Setze Liste");
 		listView.setItems(list);	
+		System.out.println(list);
+
+		System.out.println("setze MouseEvent");
+		listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+//				Integer listIndex = listView.getSelectionModel().getSelectedIndex(); 
+//				System.out.println("index: " + listIndex);
+				
+				String listString = listView.getSelectionModel().getSelectedItem();
+				System.out.println("ausgewählter String: " + listString);
+				
+				
+			}
+		});
+
 	}
 	
 	/**
@@ -201,7 +224,8 @@ public class ResultsViewController{
 			}
 
 //			setze String
-			resultListString += title + ", " + author + ", " + year + ", " + publisher + ", " + isB;
+			resultListString += title + ", " + author + ", " + year + ", " + publisher + ", " + isB + " [" + id + "]";
+			System.out.println(resultListString);
 			
 			return resultListString;
 			
