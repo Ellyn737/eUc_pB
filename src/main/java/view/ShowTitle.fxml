@@ -22,12 +22,12 @@
                   <Pane layoutX="188.0" layoutY="-1.0" prefHeight="358.0" prefWidth="491.0">
                      <children>
                         <Label fx:id="givenTitle" layoutX="14.0" prefHeight="26.0" prefWidth="150.0" text="Titel" />
-                        <Label fx:id="givenAutor" layoutX="14.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Autor" />
-                        <Label fx:id="givenVerlag" layoutX="14.0" layoutY="53.0" prefHeight="26.0" prefWidth="150.0" text="Verlag" />
-                        <Label fx:id="givenJahr" layoutX="14.0" layoutY="85.0" prefHeight="26.0" prefWidth="150.0" text="Ersscheinungsjahr" />
+                        <Label fx:id="givenAuthor" layoutX="14.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Autor" />
+                        <Label fx:id="givenPublisher" layoutX="14.0" layoutY="53.0" prefHeight="26.0" prefWidth="150.0" text="Verlag" />
+                        <Label fx:id="givenYear" layoutX="14.0" layoutY="85.0" prefHeight="26.0" prefWidth="150.0" text="Ersscheinungsjahr" />
                         <Label fx:id="givenGenre" layoutX="265.0" layoutY="1.0" prefHeight="26.0" prefWidth="150.0" text="Genre" />
                         <Label fx:id="givenSubgenre" layoutX="276.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Subgenre" />
-                        <RadioButton fx:id="givenIsThere" layoutX="275.0" layoutY="86.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="ausgeliehen" />
+                        <RadioButton fx:id="radioBtnBorrowed" layoutX="275.0" layoutY="86.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="ausgeliehen" />
                         <Group fx:id="givenBew" layoutX="276.0" layoutY="58.0">
                            <children>
                               <CheckBox mnemonicParsing="false" />
@@ -38,8 +38,8 @@
                            </children>
                         </Group>
                         <Line endX="313.0" endY="151.0" startX="112.0" startY="151.0" />
-                        <Label fx:id="givenInhalt" alignment="TOP_LEFT" layoutX="7.0" layoutY="168.0" prefHeight="85.0" prefWidth="478.0" text="Inhaltsangabe" />
-                        <Label fx:id="givenKommentar" alignment="TOP_LEFT" layoutX="7.0" layoutY="253.0" prefHeight="85.0" prefWidth="478.0" text="Ellyns Kommentar" />
+                        <Label fx:id="givenContent" alignment="TOP_LEFT" layoutX="7.0" layoutY="168.0" prefHeight="85.0" prefWidth="478.0" text="Inhaltsangabe" />
+                        <Label fx:id="givenComment" alignment="TOP_LEFT" layoutX="7.0" layoutY="253.0" prefHeight="85.0" prefWidth="478.0" text="Ellyns Kommentar" />
                      </children>
                   </Pane>
                   <ImageView fx:id="image" fitHeight="180.0" fitWidth="200.0" layoutX="35.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="116.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="514.1752624511719" AnchorPane.topAnchor="62.0">

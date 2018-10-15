@@ -33,20 +33,25 @@ public class Media implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id_media")
-	public int idmedia;
+	private int idmedia;
 	
 	@Column(name="title")
-	public String title;
+	private String title;
 	@Column(name="genre")
-	public String genre;
-	@Column(name="erscheinungsjahr")
-	public int erscheinungsjahr;
-	@Column(name="ist_in_bib")
-	public boolean istInBib;
+	private String genre;
+	@Column(name="year_of_publication")
+	private int year;
+	@Column(name="is_borrowed")
+	private boolean isBorrowed;
+	@Column(name="content")
+	private String content;
+	@Column(name="comment")
+	private String comment;
+	@Column(name="exemplar")
+	private int exemplar;
 	
 	
 	public Media() {}
-
 
 	public int getIdmedia() {
 		return idmedia;
@@ -78,29 +83,56 @@ public class Media implements Serializable {
 	}
 
 
-	public int getErscheinungsjahr() {
-		return erscheinungsjahr;
+	public int getYearOfPublication() {
+		return year;
 	}
 
 
-	public void setErscheinungsjahr(int erscheinungsjahr) {
-		this.erscheinungsjahr = erscheinungsjahr;
+	public void setYearOfPublication(int year) {
+		this.year = year;
 	}
 
 
-	public boolean isIstInBib() {
-		return istInBib;
+	public boolean getIsBorrowed() {
+		return isBorrowed;
 	}
 
 
-	public void setIstInBib(boolean istInBib) {
-		this.istInBib = istInBib;
+	public void setIsBorrowed(boolean isBorrowed) {
+		this.isBorrowed = isBorrowed;
+	}
+	
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	
+	
+	public int getExemplar() {
+		return exemplar;
+	}
+
+	public void setExemplar(int exemplar) {
+		this.exemplar = exemplar;
 	}
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: idmedia={1}, title={2}, genre={3}, erscheinungsjahr={4}, istInBib={5}", 
-				new Object[] {getClass().getSimpleName(), idmedia, title, genre, erscheinungsjahr, istInBib});
+		return MessageFormat.format("{0}: idmedia={1}, title={2}, genre={3}, erscheinungsjahr={4}, "
+				+ "ausgeliehen={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
+				new Object[] {getClass().getSimpleName(), idmedia, title, genre, year, isBorrowed, content, comment, exemplar});
 	}
 	
 	

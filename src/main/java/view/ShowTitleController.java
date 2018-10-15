@@ -14,26 +14,32 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-
+/**
+ * 
+ * @author ellyn
+ *
+ *Werte werden von ResultsViewController oder AddNewTitleController uebergeben
+ */
 public class ShowTitleController {
 
 	@FXML Label titleLabel;
 	@FXML Label givenTable;
-	@FXML Label givenAutor;
-	@FXML Label givenVerlag;
-	@FXML Label givenJahr;
+	@FXML Label givenAuthor;
+	@FXML Label givenPublisher;
+	@FXML Label givenYear;
 	@FXML Label givenGenre;
 	@FXML Label givenSubgenre;
-	@FXML RadioButton givenIsThere;
-	@FXML Label givenInhalt;
-	@FXML Label givenKommentar;
+	@FXML RadioButton radioBtnBorrowed;
+	@FXML Label givenContent;
+	@FXML Label givenComment;
 	@FXML ImageView image;
 	@FXML Button deleteTitleBtn;
 	@FXML Button changeTitleBtn;
 	@FXML Button cancelBtn;
 	@FXML Button borrowBtn;
 
-	public MainBibliothek mainBib;
+	private MainBibliothek mainBib;
+	private ShowTitleController showTitleC;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -79,5 +85,18 @@ public class ShowTitleController {
 		window.show();
 		}	
 
+	
+	
+	
+	
+
+	/**
+	 * ermöglicht die uebergabe von daten von einem anderen FXController an diesen
+	 * 
+	 * @return
+	 */
+	public ShowTitleController getController() {
+		return this.showTitleC;
+	}
 	
 }

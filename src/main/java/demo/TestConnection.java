@@ -12,11 +12,11 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import models.Ausleiher;
-import models.Bewertung;
-import models.Buch;
+import models.Lender;
+import models.Rating;
+import models.Book;
 import models.Media;
-import models.MediumAusleihen;
+import models.BorrowMedia;
 
 public class TestConnection {
 	
@@ -32,9 +32,9 @@ public class TestConnection {
 		System.out.println("Connecting to database");
 		//wird nur einmal erstellt
 		SessionFactory factory = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
-				addAnnotatedClass(Media.class).addAnnotatedClass(Buch.class).
-				addAnnotatedClass(Ausleiher.class).addAnnotatedClass(Bewertung.class).
-				addAnnotatedClass(MediumAusleihen.class).buildSessionFactory();
+				addAnnotatedClass(Media.class).addAnnotatedClass(Book.class).
+				addAnnotatedClass(Lender.class).addAnnotatedClass(Rating.class).
+				addAnnotatedClass(BorrowMedia.class).buildSessionFactory();
 		
 		
 		Session session = factory.getCurrentSession();
@@ -44,11 +44,11 @@ public class TestConnection {
 			//use the session object to save/retrieve Java objects
 			//create a media/buch object
 			System.out.println("Create a media/buch object");
-			Ausleiher tempAusleiher = new Ausleiher();
+			Lender tempAusleiher = new Lender();
 			System.out.println("VorName");
-			tempAusleiher.setVorName("Ellyn");
+			tempAusleiher.setFirstName("Ellyn");
 			System.out.println("Nachname");
-			tempAusleiher.setNachName("Reese-Bünning");
+			tempAusleiher.setLastName("Reese-Bünning");
 			System.out.println("Email");
 			tempAusleiher.setEmail("e.reese@mail.de");
 			
@@ -67,44 +67,6 @@ public class TestConnection {
 		}finally {
 			factory.close();
 		}
-				
-		/*
-		Session session = factory.getCurrentSession();
-
-		System.out.println("Connection successful");
-		System.out.println("Begin transaction");
-		
-		Transaction transA = session.beginTransaction();
-
-		Media m1 = new Buch("Das Lächeln der Fortuna", "Belletristik", 1999, "Rebecca Gable", "Lübbe");
-		session.persist(m1);
-
-		session.getTransaction().commit();
-		System.out.println("End transaction");
-		session.close();
-		System.out.println("Success");
-
-	*/
-		
-/*
-		System.out.println("Connecting to database");
-		
-		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
-		Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
-		
-		SessionFactory factory = meta.getSessionFactoryBuilder().build();
-		Session session = factory.openSession();
-		
-		Transaction t = session.beginTransaction();
-		
-			Media m1 = new Buch("Das Lächeln der Fortuna", "Belletristik", 1999, "Rebecca Gable", "Lübbe");
-			
-			session.persist(m1);
-			t.commit();
-			session.close();
-			System.out.println("Success");
-			
-			*/
 	}
 	
 	

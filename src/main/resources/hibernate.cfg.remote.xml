@@ -16,11 +16,11 @@
         <property name="show_sql">true</property>               
         <property name="current_session_context_class">thread</property>
 
-        <mapping class="models.Buch"/>
+        <mapping class="models.Book"/>
         <mapping class="models.Media"/>
-		<mapping class="models.Ausleiher"/>
-        <mapping class="models.Bewertung"/>
-        <mapping class="models.MediumAusleihen"/>
+		<mapping class="models.Lender"/>
+        <mapping class="models.Rating"/>
+        <mapping class="models.BorrowMedia"/>
 
     </session-factory>
 </hibernate-configuration>

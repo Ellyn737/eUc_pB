@@ -6,7 +6,7 @@ package controller;
  *
  * Klasse verwaltet die Ausleiher
  */
-public class AusleiherController {
+public class LenderController {
 
 	public void ausleiherRegistrieren() {
 		/*

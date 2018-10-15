@@ -19,15 +19,15 @@ public class TitleRueckgabeController {
 	@FXML Label titleLabel;
 	@FXML Label givenTitle;
 	@FXML ImageView givenImage;
-	@FXML Label givenAutor;
-	@FXML Label givenVerlag;
-	@FXML Label givenJahr;
+	@FXML Label givenAuthor;
+	@FXML Label givenPublisher;
+	@FXML Label givenYear;
 	@FXML TextField txtFiBorrower;
 	@FXML TextField txtFiDateBack;
 	@FXML Button giveBackBtn;
 	@FXML Button cancelBtn;
 	
-	public MainBibliothek mainBib;
+	private MainBibliothek mainBib;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
