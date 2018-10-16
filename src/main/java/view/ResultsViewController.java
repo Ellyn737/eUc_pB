@@ -173,20 +173,36 @@ public class ResultsViewController{
 		System.out.println(list);
 
 		System.out.println("setze MouseEvent");
+		/**
+		 * beim Mausklick auf ein item in der Liste
+		 * den index holen und damit die Id holen
+		 * id an ShowTitleController geben und ShowTitle anzeigen
+		 */
 		listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				Integer listIndex = listView.getSelectionModel().getSelectedIndex(); 
-				System.out.println("index: " + listIndex);
-				
-				Integer clickedId = theIds.get(listIndex);
-				System.out.println(clickedId);
-				
-				String listString = listView.getSelectionModel().getSelectedItem();
-				System.out.println("ausgewählter String: " + listString);
-				
-//				String [] segments = listString.
-				
+				try {
+					Integer listIndex = listView.getSelectionModel().getSelectedIndex(); 
+					System.out.println("index: " + listIndex);
+					
+					Integer clickedId = theIds.get(listIndex);
+					System.out.println(clickedId);
+					
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
+					Parent root = (Parent) loader.load();
+					
+					//id an ResultsView uebergeben
+					ShowTitleController showTitle = loader.getController();
+					showTitle.fillView(clickedId);
+					
+					Stage stage = new Stage();
+					stage.setScene(new Scene(root));
+					stage.show();
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
