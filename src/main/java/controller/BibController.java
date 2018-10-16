@@ -381,6 +381,29 @@ public class BibController {
 		return book;
 	}
 	
+	public int getLastId() {
+		int lastId = -1;
+		
+//		factory holen und session erstellen
+		factory = SingletonFactory.getFactory();
+		Session findMaxIdSession = factory.openSession();
+		findMaxIdSession.beginTransaction();
+		
+		String hql = "select max(m.idmedia) from Media m ";
+		Query query = findMaxIdSession.createQuery(hql);
+
+		ArrayList<Integer> idPassend = (ArrayList<Integer>) query.getResultList();
+		for(int r: idPassend) {
+			lastId = r;
+			System.out.println("Gesammelte ids: ");
+			System.out.println(r);
+		}
+		
+		findMaxIdSession.getTransaction().commit();
+		findMaxIdSession.close();
+		
+		return lastId;
+	}
 
 	//Getter, Setter und ToString
 	public Boolean getIsBorrowed() {

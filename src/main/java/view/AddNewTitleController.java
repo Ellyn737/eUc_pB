@@ -94,14 +94,19 @@ public class AddNewTitleController {
 		
 		//buch an db uebergeben
 		bc.addToBib();
-	
-		//zu ShowTitle
-		Parent titlePane = FXMLLoader.load(getClass().getResource("../view/ShowTitle.fxml"));
-		Scene titleScene = new Scene(titlePane);
 		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(titleScene);
-		window.show();
+		//zu ShowTitle
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
+		Parent root = (Parent) loader.load();
+		
+		//id an ResultsView uebergeben
+		ShowTitleController showTitle = loader.getController();
+		int id = bc.getLastId();
+		showTitle.fillView(id);
+		
+		Stage stage = new Stage();
+		stage.setScene(new Scene(root));
+		stage.show();
 		
 		}	
 	
