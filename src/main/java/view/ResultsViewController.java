@@ -49,6 +49,8 @@ public class ResultsViewController{
 	private String exemplarString;
 	private boolean isBorrowed;
 	private String isBorrowedString;
+	
+	private List<Integer> theIds;
 		
 	private ResultsViewController resContr;
 	
@@ -80,12 +82,13 @@ public class ResultsViewController{
 	public void fillListAndView(List<Integer> ids, ArrayList<Pair> searchParams) {
 		System.out.println("RVC - In FillListAndView");
 		
+		theIds = ids;
+		
 		System.out.println("Setze die gesuchten Parameter");
 		setSearchParameters(searchParams);
 		
 		System.out.println("Setzte die ListView");
-		setListView(ids);
-		
+		setListView();
 		
 	}
 	
@@ -152,17 +155,17 @@ public class ResultsViewController{
 	 * 
 	 * @param ids
 	 */
-	public void setListView(List<Integer> ids) {
+	public void setListView() {
 		System.out.println("RVC - In setListView");
-		System.out.println(ids);
+		System.out.println(theIds);
 		
 //		panel an die liste mit panels uebergeben
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
 //		hole die buchdaten und setze sie in die listView
-		for(int i = 0; i < ids.size(); i++) {					
-			System.out.println("Setze Ergebnisstring in Liste für id: " + ids.get(i));
-	 		list.add(getTheBookDataForList(ids.get(i)));
+		for(int i = 0; i < theIds.size(); i++) {					
+			System.out.println("Setze Ergebnisstring in Liste für id: " + theIds.get(i));
+	 		list.add(getTheBookDataForList(theIds.get(i)));
 		}
 		
 		System.out.println("Setze Liste");
@@ -176,7 +179,8 @@ public class ResultsViewController{
 				Integer listIndex = listView.getSelectionModel().getSelectedIndex(); 
 				System.out.println("index: " + listIndex);
 				
-//				Integer clickedId = ids.get(listIndex);
+				Integer clickedId = theIds.get(listIndex);
+				System.out.println(clickedId);
 				
 				String listString = listView.getSelectionModel().getSelectedItem();
 				System.out.println("ausgewählter String: " + listString);
