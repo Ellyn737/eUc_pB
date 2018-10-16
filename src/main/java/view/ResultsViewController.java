@@ -173,12 +173,15 @@ public class ResultsViewController{
 		listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-//				Integer listIndex = listView.getSelectionModel().getSelectedIndex(); 
-//				System.out.println("index: " + listIndex);
+				Integer listIndex = listView.getSelectionModel().getSelectedIndex(); 
+				System.out.println("index: " + listIndex);
+				
+//				Integer clickedId = ids.get(listIndex);
 				
 				String listString = listView.getSelectionModel().getSelectedItem();
 				System.out.println("ausgewählter String: " + listString);
 				
+//				String [] segments = listString.
 				
 			}
 		});
