@@ -1,24 +1,33 @@
 package view;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import controller.BibController;
 import controller.MainBibliothek;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class AddNewTitleController {
+public class AddNewTitleController implements Initializable{
 	
 	@FXML Label titleLabel;
 	@FXML Button addImageBtn;
@@ -53,6 +62,23 @@ public class AddNewTitleController {
 		this.mainBib = mainBib;
 	}
 	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+
+		ObservableList<MenuItem> items = menuGenre.getItems();
+		for(MenuItem item: items) {
+			item.setOnAction(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+					String genreItem = item.getText();
+					menuGenre.setText(genreItem);
+				}
+		
+			});
+		}
+	}
+	
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
 		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 		Scene searchScene = new Scene(searchPane);
@@ -80,6 +106,9 @@ public class AddNewTitleController {
 		}else {
 			isBorrowed = true;
 		}
+		
+
+
 		
 		//values an bc uebergeben zur db-uebergabe
 		bc.setAuthor(author);
@@ -116,5 +145,6 @@ public class AddNewTitleController {
 		
 		
 	}
-	
+
+
 }

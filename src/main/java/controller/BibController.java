@@ -51,7 +51,7 @@ public class BibController {
 		
 		//SessionFactory holen
 		try {
-			System.out.println("In BC");
+			System.out.println("In BC - addToBib");
 			factory = SingletonFactory.getFactory();
 			//session starten
 			Session newTitleSession = factory.openSession();
@@ -101,7 +101,7 @@ public class BibController {
 				exemplar = 1;
 			}
 			
-			System.out.println("Anzahle der Exemplare: " + exemplar);
+			System.out.println("Anzahl der Exemplare: " + exemplar);
 			book.setExemplar(exemplar);
 			
 			//start transaction
@@ -335,13 +335,13 @@ public class BibController {
 		int anzahlAndererExemplare = 0;
 		
 		try {
-			System.out.println("In BC - suchenNachAnderenExemplaren");
+			System.out.println("In BC - searchForOthers");
 			factory = SingletonFactory.getFactory();
 			Session findSession = factory.openSession();
 			
 			//holt die id der Buecher mit diesem Titel und Autor
 			List<Integer> passendeIds = findSession.createQuery("select m.id_media from Media m "
-					+ "where m.title like ? and m.autor like ? and m.auflage like ?")
+					+ "where m.title like ?0 and m.autor like ?1 and m.auflage like ?2")
 					.setParameter(0, titleSearch)
 					.setParameter(1, authorSearch)
 					.setParameter(2, editionSearch).list();
