@@ -127,7 +127,7 @@ public class ShowTitleController {
 			radioBtnBorrowed.setSelected(true);
 		}
 		
-		//es fehlen noch subgenre, richtiges genre, bild, bewertung
+		//es fehlen noch bild, bewertung
 
 		
 		

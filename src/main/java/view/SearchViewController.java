@@ -79,7 +79,7 @@ public class SearchViewController implements Initializable {
 		}	
 	
 	@FXML private void handleSearchButton(ActionEvent event) throws IOException{
-		System.out.println("SVC - handleSaveButton");
+		System.out.println("SVC - handleSearchButton");
 		//ausserdem suchparameter weiter und an db geben
 		bc = new BibController();
 	
@@ -101,60 +101,73 @@ public class SearchViewController implements Initializable {
 //		ArrayListe mit key und value anlegen
 		ArrayList<Pair> parameters = new ArrayList<Pair>();
 		
-		
+		System.out.println("Probiere Titel");
 		if(!title.isEmpty()) {
 			Pair titlePair = new Pair("title", title);
 			parameters.add(titlePair);
-			System.out.println(title);
+			System.out.println("Setze Paar für Titel: "+title);
 		}
 		
+		System.out.println("Probiere Autor");
 		if(!author.isEmpty()) {
 			Pair authorPair = new Pair("author", author);
 			parameters.add(authorPair);
 			System.out.println(author);
 		}
 		
+		System.out.println("Probiere Verlag");
 		if(!publisher.isEmpty()) {
 			Pair publisherPair = new Pair("publisher", publisher);
 			parameters.add(publisherPair);		
 			System.out.println(publisher);	
 		}
 		
+		System.out.println("Probiere Jahr");
 		if(!year.isEmpty()) {
 			Pair yearPair = new Pair("year", year);
 			parameters.add(yearPair);
 			System.out.println(year);
 		}
 		
-		if(!genre.isEmpty()) {
+		System.out.println("Probiere Genre");
+		System.out.println(genre);
+		if(genre != null) {
 			Pair genrePair = new Pair("genre", genre);
 			parameters.add(genrePair);
 			System.out.println(genre);
-			if(!subGenre.isEmpty()) {
+			System.out.println("Probiere Subgenre");
+			System.out.println(subGenre);
+			if(subGenre != null) {
 				Pair subGenrePair = new Pair("subGenre", subGenre);
 				parameters.add(subGenrePair);
 				System.out.println(subGenre);
 			}
 		}
 		
+
+		
+		System.out.println("Probiere Auflage");
 		if(!edition.isEmpty()) {
 			Pair editionPair = new Pair("edition", edition);
 			parameters.add(editionPair);	
 			System.out.println(edition);
 			}
 		
+		System.out.println("Probiere Exemplar");
 		if(!exemplar.isEmpty()) {
 			Pair exemplarPair = new Pair("exemplar", exemplar);
 			parameters.add(exemplarPair);
 			System.out.println(exemplar);
 		}
 		
+		System.out.println("Probiere isBorrowed");
 		if(!isBorrowed.isEmpty()) {
 			Pair isBorrowedPair = new Pair("isBorrowed", isBorrowed);
 			parameters.add(isBorrowedPair);
 			System.out.println(isBorrowed);
 		}
 		
+		System.out.println("Die Parameter: ");
 		for(int j = 0; j < parameters.size();j++) {
 			System.out.println(parameters.get(j));
 		}

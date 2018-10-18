@@ -254,7 +254,7 @@ public class ResultsViewController{
 			}
 
 //			setze String
-			resultListString += title + ", " + author + ", " + year + ", " + publisher + ", " + isB + " [" + id + "]";
+			resultListString += title + ", " + author + ", " + year + ", " + publisher + ", " + isB;
 			System.out.println(resultListString);
 			
 			return resultListString;
