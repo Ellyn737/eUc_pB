@@ -92,9 +92,9 @@ public class SearchViewController implements Initializable {
 		exemplar = txtFiExemplar.getText().trim();
 		
 		if(radioBtnBorrowed.isPressed()) {
-			isBorrowed = "0";
-		}else {
 			isBorrowed = "1";
+		}else {
+			isBorrowed = "0";
 		}
 		
 		

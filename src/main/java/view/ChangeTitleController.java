@@ -82,7 +82,9 @@ public class ChangeTitleController {
 			author = txtFiAuthor.getText();
 			publisher = txtFiPublisher.getText();
 			year = Integer.parseInt(txtFiYear.getText());
+			
 			genre = genreMenu.getText();
+			
 			content = txtArContent.getText();
 			comment = txtArComment.getText();
 			edition = Integer.parseInt(txtFiEdition.getText());

@@ -143,9 +143,9 @@ public class ResultsViewController{
 				case "isBorrowed":
 					isBorrowedString = parameters.get(i).getValue().toString();
 					if(isBorrowedString == "0") {
-						isBorrowedString = "ja";
-					}else {
 						isBorrowedString = "nein";
+					}else {
+						isBorrowedString = "ja";
 					}
 					result += "Ausgeliehen: " + isBorrowedString + "\r\n";
 					break;

@@ -93,17 +93,17 @@ public class BibController {
 		System.out.println("auflage: " + edition);
 		book.setEdition(edition);
 		
-		//herausfinden, ob es den Titel mit dem Autoren und der Auflage schon gibt
+//		herausfinden, ob es den Titel mit dem Autoren und der Auflage schon gibt
 		int numberOfOthers = searchForOthers(author, title, edition);
 		System.out.println("Anzahl anderer Exemplare:" + numberOfOthers);
 		
-		// wenn ja, das neue Exemplar mit nächst höherer Exemplarzahl austatten
+//		wenn ja, das neue Exemplar mit nächst höherer Exemplarzahl austatten
 		if(numberOfOthers > 0) {
 			exemplar = numberOfOthers + 1;
 			System.out.println(exemplar);
 		
 		}else {
-			//wenn es das erste Exemplar ist --> mit 1 ausstatten
+//			wenn es das erste Exemplar ist --> mit 1 ausstatten
 			exemplar = 1;
 		}
 		
@@ -167,6 +167,11 @@ public class BibController {
 		if(!genre.equals(book.getGenre())) {
 			book.setGenre(genre);
 			System.out.println("neues Genre: " + genre);
+		}
+		
+		if(!subGenre.equals(book.getSubGenre())) {
+			book.setGenre(subGenre);
+			System.out.println("neues Subgenre: " + subGenre);
 		}
 		
 		if(year != book.getYearOfPublication()) {

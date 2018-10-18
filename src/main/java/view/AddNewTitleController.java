@@ -140,9 +140,9 @@ public class AddNewTitleController implements Initializable{
 		edition = Integer.parseInt(txtFiEdition.getText());
 		
 		if(radioBtnBorrowed.isPressed()) {
-			isBorrowed = false;
-		}else {
 			isBorrowed = true;
+		}else {
+			isBorrowed = false;
 		}
 		
 		System.out.println("Vor der Uebergabe an BC");
