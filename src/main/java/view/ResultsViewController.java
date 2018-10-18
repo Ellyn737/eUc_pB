@@ -229,34 +229,38 @@ public class ResultsViewController{
 			
 			System.out.println(id);
 			bc = new BibController();
-			Book book = bc.getBookData(id);
+			try {
+				Book book = bc.getBookData(id);
 			
-//			setze variablen
-			title = book.getTitle();
-			System.out.println(title);
-			
-			author = book.getAuthor();
-			System.out.println(author);
-			
-			publisher = book.getPublisher();
-			System.out.println(publisher);
-			
-			year = book.getYearOfPublication();
-			System.out.println(year);
-			
-			isBorrowed = book.getIsBorrowed();
-			System.out.println(isBorrowed);
-			
-			if(isBorrowed) {
-				isB = "ausgeliehen";
-			}else {
-				isB = "verfügbar";
+				
+	//			setze variablen
+				title = book.getTitle();
+				System.out.println(title);
+				
+				author = book.getAuthor();
+				System.out.println(author);
+				
+				publisher = book.getPublisher();
+				System.out.println(publisher);
+				
+				year = book.getYearOfPublication();
+				System.out.println(year);
+				
+				isBorrowed = book.getIsBorrowed();
+				System.out.println(isBorrowed);
+				
+				if(isBorrowed) {
+					isB = "ausgeliehen";
+				}else {
+					isB = "verfügbar";
+				}
+	
+	//			setze String
+				resultListString += title + ", " + author + ", " + year + ", " + publisher + ", " + isB;
+				System.out.println(resultListString);
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
 			}
-
-//			setze String
-			resultListString += title + ", " + author + ", " + year + ", " + publisher + ", " + isB;
-			System.out.println(resultListString);
-			
 			return resultListString;
 			
 		}	

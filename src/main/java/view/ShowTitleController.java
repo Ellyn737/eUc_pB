@@ -107,24 +107,28 @@ public class ShowTitleController {
 		System.out.println("ST - fillView");
 		
 		bc = new BibController();
-		Book book = bc.getBookData(id);
-		
-		System.out.println("Setze variablen in die Felder");
-		titleLabel.setText(book.getTitle().toUpperCase());
-		givenTitle.setText(book.getTitle());
-		givenAuthor.setText(book.getAuthor());
-		givenPublisher.setText(book.getPublisher());
-		givenYear.setText(String.valueOf(book.getYearOfPublication()));
-		givenGenre.setText(book.getGenre());
-		givenSubgenre.setText(book.getSubGenre());
-		givenContent.setText(book.getContent());
-		givenComment.setText(book.getComment());
-		
-		System.out.println("hole isBorrowed");
-		if(book.getIsBorrowed()) {
-			radioBtnBorrowed.setSelected(false);
-		}else {
-			radioBtnBorrowed.setSelected(true);
+		try {
+			Book book = bc.getBookData(id);
+			
+			System.out.println("Setze variablen in die Felder");
+			titleLabel.setText(book.getTitle().toUpperCase());
+			givenTitle.setText(book.getTitle());
+			givenAuthor.setText(book.getAuthor());
+			givenPublisher.setText(book.getPublisher());
+			givenYear.setText(String.valueOf(book.getYearOfPublication()));
+			givenGenre.setText(book.getGenre());
+			givenSubgenre.setText(book.getSubGenre());
+			givenContent.setText(book.getContent());
+			givenComment.setText(book.getComment());
+			
+			System.out.println("hole isBorrowed");
+			if(book.getIsBorrowed()) {
+				radioBtnBorrowed.setSelected(false);
+			}else {
+				radioBtnBorrowed.setSelected(true);
+			}
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
 		}
 		
 		//es fehlen noch bild, bewertung

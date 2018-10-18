@@ -163,17 +163,23 @@ public class AddNewTitleController implements Initializable{
 		bc.setEdition(edition);
 		
 		//buch an db uebergeben
-		bc.addToBib();
-		
+		try {
+			bc.addToBib();
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
 		//zu ShowTitle
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 		Parent root = (Parent) loader.load();
 		
 		//id an ResultsView uebergeben
 		ShowTitleController showTitle = loader.getController();
-		int id = bc.getLastId();
-		showTitle.fillView(id);
-		
+		try {
+			int id = bc.getLastId();
+			showTitle.fillView(id);
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
 		Stage stage = new Stage();
 		stage.setScene(new Scene(root));
 		stage.show();

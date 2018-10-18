@@ -104,8 +104,11 @@ public class ChangeTitleController {
 			//inBIb nur über Ausleihe ändern
 			
 			//daten zur auswertung an bc uebergeben
+			try {
 			bc.changeTitle(bookID);
-						
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
 			//zu ShowTitle
 			Parent titlePane = FXMLLoader.load(getClass().getResource("../view/ShowTitle.fxml"));
 			Scene titleScene = new Scene(titlePane);
