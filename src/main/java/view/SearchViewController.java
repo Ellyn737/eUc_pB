@@ -1,28 +1,35 @@
 package view;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 import controller.BibController;
 import controller.MainBibliothek;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-public class SearchViewController {
+public class SearchViewController implements Initializable {
 
 	@FXML Label titleLabel;
 	@FXML TextField txtFiTitle;
@@ -32,6 +39,8 @@ public class SearchViewController {
 	@FXML TextField txtFiEdition;
 	@FXML TextField txtFiExemplar;
 	@FXML SplitMenuButton menuGenre;
+	@FXML Menu sbMenu;
+	@FXML Menu rMenu;
 	@FXML RadioButton radioBtnBorrowed;
 	@FXML Button cancelBtn;
 	@FXML Button searchBtn;
@@ -44,6 +53,7 @@ public class SearchViewController {
 	private String publisher;
 	private String year;
 	private String genre;
+	private String subGenre;
 	private String content;
 	private String comment;
 	private String edition;
@@ -58,6 +68,8 @@ public class SearchViewController {
 	}
 
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
+		System.out.println("SVC - handleCancelButton");
+
 		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 		Scene searchScene = new Scene(searchPane);
 		
@@ -67,6 +79,7 @@ public class SearchViewController {
 		}	
 	
 	@FXML private void handleSearchButton(ActionEvent event) throws IOException{
+		System.out.println("SVC - handleSaveButton");
 		//ausserdem suchparameter weiter und an db geben
 		bc = new BibController();
 	
@@ -75,7 +88,6 @@ public class SearchViewController {
 		author = txtFiAuthor.getText().trim();
 		publisher = txtFiPublisher.getText().trim();
 		year = txtFiYear.getText().trim();
-		genre = menuGenre.getText().trim();
 		edition = txtFiEdition.getText().trim();
 		exemplar = txtFiExemplar.getText().trim();
 		
@@ -118,6 +130,11 @@ public class SearchViewController {
 			Pair genrePair = new Pair("genre", genre);
 			parameters.add(genrePair);
 			System.out.println(genre);
+			if(!subGenre.isEmpty()) {
+				Pair subGenrePair = new Pair("subGenre", subGenre);
+				parameters.add(subGenrePair);
+				System.out.println(subGenre);
+			}
 		}
 		
 		if(!edition.isEmpty()) {
@@ -164,6 +181,66 @@ public class SearchViewController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * genre  und subgenre auswerten
+	 * @param location
+	 * @param resources
+	 */
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		System.out.println("SVC - initialize");
+		
+		ObservableList<MenuItem> genreItems = menuGenre.getItems();
+		for(MenuItem genreItem: genreItems ) {
+			genreItem.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					
+					String genreIt = genreItem.getText();
+					menuGenre.setText(genreIt);
+					genre = genreIt;
+					System.out.println(genre);
+					
+				}
+			});
+		}
+		
+		ObservableList<MenuItem> sbSubGenreItems = sbMenu.getItems();
+		for(MenuItem sbSubGenreItem: sbSubGenreItems ) {
+			sbSubGenreItem.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					
+					String subGenreIt = sbSubGenreItem.getText();
+					menuGenre.setText(subGenreIt);
+					subGenre = subGenreIt;
+					System.out.println(subGenre);
+					
+				}
+			});
+		}
+		
+		ObservableList<MenuItem> rSubGenreItems = sbMenu.getItems();
+		for(MenuItem rSubGenreItem: rSubGenreItems ) {
+			rSubGenreItem.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					
+					String subGenreIt = rSubGenreItem.getText();
+					menuGenre.setText(subGenreIt);
+					subGenre = subGenreIt;
+					System.out.println(subGenre);
+					
+				}
+			});
+		}
+		
 	}	
+	
 	
 }

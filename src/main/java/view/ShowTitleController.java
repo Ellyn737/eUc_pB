@@ -50,6 +50,8 @@ public class ShowTitleController {
 	}
 
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
+		System.out.println("STC - handleCancelButton");
+
 		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 		Scene searchScene = new Scene(searchPane);
 		
@@ -59,6 +61,8 @@ public class ShowTitleController {
 		}	
 	
 	@FXML private void handleDeleteTitleButton(ActionEvent event) throws IOException{
+		System.out.println("STC - handleDeleteButton");
+
 		//show warning
 		//delete title from db then go to menu
 		
@@ -71,6 +75,8 @@ public class ShowTitleController {
 		}	
 	
 	@FXML private void handleChangeTitleButton(ActionEvent event) throws IOException{
+		System.out.println("STC - handleChangeTitleButton");
+
 		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/ChangeTitle.fxml"));
 		Scene searchScene = new Scene(searchPane);
 		
@@ -80,6 +86,8 @@ public class ShowTitleController {
 		}	
 	
 	@FXML private void handleBorrowButton(ActionEvent event) throws IOException{
+		System.out.println("STC - handleBorrowButton");
+
 		//if IsThere --> go to TitleRückgabe, else TitleAusleihe
 		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/TitleAusleihe.fxml"));
 		Scene searchScene = new Scene(searchPane);
@@ -96,7 +104,7 @@ public class ShowTitleController {
 	 * @param id
 	 */
 	public void fillView(int id) {
-		System.out.println("ST - in fillView");
+		System.out.println("ST - fillView");
 		
 		bc = new BibController();
 		Book book = bc.getBookData(id);
@@ -108,6 +116,7 @@ public class ShowTitleController {
 		givenPublisher.setText(book.getPublisher());
 		givenYear.setText(String.valueOf(book.getYearOfPublication()));
 		givenGenre.setText(book.getGenre());
+		givenSubgenre.setText(book.getSubGenre());
 		givenContent.setText(book.getContent());
 		givenComment.setText(book.getComment());
 		
@@ -124,7 +133,6 @@ public class ShowTitleController {
 		
 		
 	}
-	
 	
 
 	/**

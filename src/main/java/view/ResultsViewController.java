@@ -45,6 +45,7 @@ public class ResultsViewController{
 	private int year;
 	private String yearString;
 	private String genre;
+	private String subGenre;
 	private String editionString;
 	private String exemplarString;
 	private boolean isBorrowed;
@@ -63,6 +64,8 @@ public class ResultsViewController{
 
 	
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
+		System.out.println("RVC - handleCancelButton");
+
 		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 		Scene searchScene = new Scene(searchPane);
 		
@@ -80,7 +83,7 @@ public class ResultsViewController{
 	 * @param searchParams
 	 */
 	public void fillListAndView(List<Integer> ids, ArrayList<Pair> searchParams) {
-		System.out.println("RVC - In FillListAndView");
+		System.out.println("RVC - FillListAndView");
 		
 		theIds = ids;
 		
@@ -98,7 +101,7 @@ public class ResultsViewController{
 	 * @param parameters
 	 */
 	public void setSearchParameters(ArrayList<Pair> parameters) {
-		System.out.println("RVC - In setSearchParameters");
+		System.out.println("RVC - setSearchParameters");
 
 		String result = "";
 	
@@ -124,6 +127,10 @@ public class ResultsViewController{
 				case "genre":
 					genre = parameters.get(i).getValue().toString();
 					result += "Genre: " + genre + "\r\n";
+					break;
+				case "subGenre":
+					subGenre = parameters.get(i).getValue().toString();
+					result += "Subgenre: " + subGenre + "\r\n";
 					break;
 				case "edition":
 					editionString = parameters.get(i).getValue().toString();
@@ -156,7 +163,7 @@ public class ResultsViewController{
 	 * @param ids
 	 */
 	public void setListView() {
-		System.out.println("RVC - In setListView");
+		System.out.println("RVC - setListView");
 		System.out.println(theIds);
 		
 //		panel an die liste mit panels uebergeben
@@ -215,7 +222,7 @@ public class ResultsViewController{
 	 * @return
 	 */
 	public String getTheBookDataForList(int id) {
-		System.out.println("RVC - getTheBookDataForPanel");
+		System.out.println("RVC - getTheBookDataForList");
 		
 		String resultListString = "";
 		String isB = "";

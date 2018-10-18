@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitMenuButton;
@@ -43,6 +44,8 @@ public class AddNewTitleController implements Initializable{
 	@FXML TextArea txtArComment;
 	@FXML Button cancelBtn;
 	@FXML Button addTitleBtn;
+	@FXML Menu sbMenu;
+	@FXML Menu rMenu;
 	
 	private Boolean isBorrowed;
 	private String title;
@@ -50,6 +53,7 @@ public class AddNewTitleController implements Initializable{
 	private String publisher;
 	private int year;
 	private String genre;
+	private String subGenre;
 	private String content;
 	private String comment;
 	private int edition;
@@ -62,17 +66,48 @@ public class AddNewTitleController implements Initializable{
 		this.mainBib = mainBib;
 	}
 	
+	
+	/**
+	 * setzen von genre und subgenre bei klick
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		System.out.println("ANTC - initialize");
 
-		ObservableList<MenuItem> items = menuGenre.getItems();
-		for(MenuItem item: items) {
+		ObservableList<MenuItem> sbItems = sbMenu.getItems();
+		/**
+		 * subgenre wird auf das ausgewählte subgenre gesetzt
+		 * genre wird entsprechend des angeklickten menues gesetzt (sb, r)
+		 */
+		for(MenuItem item: sbItems) {
 			item.setOnAction(new EventHandler<ActionEvent>() {
 
 				@Override
 				public void handle(ActionEvent event) {
 					String genreItem = item.getText();
 					menuGenre.setText(genreItem);
+					genre = "Sachbuch";
+					subGenre = genreItem;
+					System.out.println(genre);
+					System.out.println(subGenre);
+				}
+		
+			});
+		}
+		
+		ObservableList<MenuItem> rItems = rMenu.getItems();
+		
+		for(MenuItem rItem: rItems) {
+			rItem.setOnAction(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+					String genreItem = rItem.getText();
+					menuGenre.setText(genreItem);
+					genre = "Roman";
+					subGenre = genreItem;
+					System.out.println(genre);
+					System.out.println(subGenre);
 				}
 		
 			});
@@ -80,6 +115,7 @@ public class AddNewTitleController implements Initializable{
 	}
 	
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
+		System.out.println("ANTC - handleCancelButton");
 		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 		Scene searchScene = new Scene(searchPane);
 		
@@ -89,14 +125,16 @@ public class AddNewTitleController implements Initializable{
 		}	
 	
 	@FXML private void handleAddTitleButton(ActionEvent event) throws IOException{
+		System.out.println("ANTC - handleAddTitleButton");
+
 		bc = new BibController();
+		
 		//add the title to db
 		//hole Strings mit Textfeldinhalten
 		title = txtFiTitle.getText();
 		author = txtFiAuthor.getText();
 		publisher = txtFiPublisher.getText();
 		year = Integer.parseInt(txtFiYear.getText());
-		genre = menuGenre.getText();
 		content = txtArContent.getText();
 		comment = txtArComment.getText();
 		edition = Integer.parseInt(txtFiEdition.getText());
@@ -107,7 +145,9 @@ public class AddNewTitleController implements Initializable{
 			isBorrowed = true;
 		}
 		
-
+		System.out.println("Vor der Uebergabe an BC");
+		System.out.println("Genre: " +genre);
+		System.out.println("Subgenre: " +subGenre);
 
 		
 		//values an bc uebergeben zur db-uebergabe
@@ -116,6 +156,7 @@ public class AddNewTitleController implements Initializable{
 		bc.setPublisher(publisher);
 		bc.setYear(year);
 		bc.setGenre(genre);
+		bc.setSubGenre(subGenre);
 		bc.setContent(content);
 		bc.setComment(comment);
 		bc.setIsBorrowed(isBorrowed);

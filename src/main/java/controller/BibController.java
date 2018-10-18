@@ -31,6 +31,7 @@ public class BibController {
 	private int year;
 	private String yearString;
 	private String genre;
+	private String subGenre;
 	private String content;
 	private String comment;
 	private int exemplar;
@@ -76,6 +77,9 @@ public class BibController {
 			
 			System.out.println("Genre:" + genre);
 			book.setGenre(genre);
+			
+			System.out.println("Subgenre:" + subGenre);
+			book.setSubGenre(subGenre);
 			
 			System.out.println("inBib:" + isBorrowed);
 			book.setIsBorrowed(isBorrowed);			
@@ -133,6 +137,8 @@ public class BibController {
 		 * 		bestätigen lassen
 		 * 
 		 */
+		System.out.println("In BC - deleteFromBib");
+
 	}
 	
 	public void changeTitle(int bookID) {
@@ -141,6 +147,8 @@ public class BibController {
 		 * mit Parametern in DB
 		 * --> Änderungen übernehmen
 		 */
+		System.out.println("In BC - changeTitle");
+
 		
 		
 		//uebergebe aenderungen bei WHERE ID = buchID
@@ -214,7 +222,8 @@ public class BibController {
 		 * wenn da --> true
 		 * wenn nicht da --> false
 		 */
-		
+		System.out.println("In BC - checkIfBorrowed");
+
 		return isInBib;
 	}
 	
@@ -247,7 +256,7 @@ public class BibController {
 		 * 
 		 */
 		
-		System.out.println("In BC - findeBuchID");
+		System.out.println("In BC - findBookId");
 
 		for(int i = 0; i < searchParameters.size(); i++) {
 			System.out.println(searchParameters.get(i));
@@ -286,6 +295,10 @@ public class BibController {
 				case "genre":
 					genre = searchParameters.get(i).getValue().toString();
 					hql += "m.genre = '" + genre + "'";
+					break;
+				case "subGenre":
+					subGenre = searchParameters.get(i).getValue().toString();
+					hql += "m.subGenre = '" + subGenre + "'";
 					break;
 				case "edition":
 					editionString = searchParameters.get(i).getValue().toString();
@@ -332,7 +345,8 @@ public class BibController {
 	}
 	
 	public int searchForOthers(String authorSearch, String titleSearch, int editionSearch) {
-		int anzahlAndererExemplare = 0;
+		System.out.println("BC - SearchForOthers");
+		int numberOfCopys = -1;
 		
 		try {
 			System.out.println("In BC - searchForOthers");
@@ -346,20 +360,24 @@ public class BibController {
 					.setParameter(1, authorSearch)
 					.setParameter(2, editionSearch).list();
 			
+			
+			
 			findSession.beginTransaction();
 			
 			findSession.getTransaction().commit();
-					
 			
-			//zaehlen der ids
-			for(int i: passendeIds) {
-				anzahlAndererExemplare++;
+			System.out.println("PassendeIds: " + passendeIds);
+			
+			if(passendeIds.size() < 1) {
+				numberOfCopys = 0;
+			}else {
+				numberOfCopys = passendeIds.get(passendeIds.size());
 			}
 			
 			findSession.close();
 		}catch(Exception e) {}
-		
-		return anzahlAndererExemplare;
+
+		return numberOfCopys;
 	}
 	
 	public Book getBookData(int id) {
@@ -382,6 +400,8 @@ public class BibController {
 	}
 	
 	public int getLastId() {
+		System.out.println("In BC - getLastId");
+
 		int lastId = -1;
 		
 //		factory holen und session erstellen
@@ -405,7 +425,16 @@ public class BibController {
 		return lastId;
 	}
 
-	//Getter, Setter und ToString
+	
+//	GETTER SETTER UND TOSTRING	
+	public String getSubGenre() {
+		return subGenre;
+	}
+
+	public void setSubGenre(String subGenre) {
+		this.subGenre = subGenre;
+	}
+	
 	public Boolean getIsBorrowed() {
 		return isBorrowed;
 	}
