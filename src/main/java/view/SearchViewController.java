@@ -133,15 +133,15 @@ public class SearchViewController implements Initializable {
 			Pair genrePair = new Pair("genre", genre);
 			parameters.add(genrePair);
 			System.out.println(genre);
-			System.out.println("Probiere Subgenre");
-			System.out.println(subGenre);
-			if(subGenre != null) {
-				Pair subGenrePair = new Pair("subGenre", subGenre);
-				parameters.add(subGenrePair);
-				System.out.println(subGenre);
-			}
 		}
 		
+		System.out.println("Probiere Subgenre");
+		System.out.println(subGenre);
+		if(subGenre != null) {
+			Pair subGenrePair = new Pair("subGenre", subGenre);
+			parameters.add(subGenrePair);
+			System.out.println(subGenre);
+		}
 
 		
 		System.out.println("Probiere Auflage");
@@ -159,7 +159,7 @@ public class SearchViewController implements Initializable {
 		}
 		
 		System.out.println("Probiere isBorrowed");
-		if(!isBorrowed.isEmpty()) {
+		if(isBorrowed != null) {
 			Pair isBorrowedPair = new Pair("isBorrowed", isBorrowed);
 			parameters.add(isBorrowedPair);
 			System.out.println(isBorrowed);

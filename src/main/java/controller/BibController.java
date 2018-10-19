@@ -131,12 +131,23 @@ public class BibController {
 		/* 
 		 * Buch mit ID suchen und aus DB entfernen
 		 * 
-		 * AlarmFenster --> wirklich löschen?
-		 * 		bestätigen lassen
+		 * 
 		 * 
 		 */
 		System.out.println("In BC - deleteFromBib");
 
+		factory = SingletonFactory.getFactory();
+		Session deleteSession = factory.openSession();
+		deleteSession.beginTransaction();
+		
+		Book book = getBookData(bookID);
+		deleteSession.delete(book);
+		
+		deleteSession.getTransaction().commit();
+		System.out.println("Titel gelöscht");
+		deleteSession.close();
+	
+		
 	}
 	
 	public void changeTitle(int bookID) throws Exception{
@@ -213,18 +224,6 @@ public class BibController {
 		
 		changeSession.close();
 	
-	}
-	
-	public boolean checkIfBorrowed(int bookID) throws Exception {
-		boolean isInBib = true;
-		/*
-		 * buch in DB suchen und istInBib überprüfen
-		 * wenn da --> true
-		 * wenn nicht da --> false
-		 */
-		System.out.println("In BC - checkIfBorrowed");
-
-		return isInBib;
 	}
 	
 	public List<Integer> findBookId(ArrayList<Pair> searchParameters) throws Exception {

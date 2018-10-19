@@ -10,9 +10,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import models.Book;
@@ -45,6 +49,8 @@ public class ShowTitleController {
 	private ShowTitleController showTitleC;
 	private BibController bc;
 	
+	private int titleId;
+	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
 	}
@@ -65,14 +71,29 @@ public class ShowTitleController {
 
 		//show warning
 		//delete title from db then go to menu
-		
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
-		}	
+		Book selection;
+		try {
+			selection = bc.getBookData(titleId);
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Sind Sie sicher, dass sie " + selection.getTitle() + " löschen möchten?", ButtonType.YES, ButtonType.NO);
+			alert.showAndWait();
+			
+			if(alert.getResult() == ButtonType.YES) {
+				bc.deleteFromBib(titleId);
+				Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
+				Scene searchScene = new Scene(searchPane);
+				
+				Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+				window.setScene(searchScene);
+				window.show();
+			}
+			
+//			nothing happens on no
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}	
 	
 	@FXML private void handleChangeTitleButton(ActionEvent event) throws IOException{
 		System.out.println("STC - handleChangeTitleButton");
@@ -106,9 +127,11 @@ public class ShowTitleController {
 	public void fillView(int id) {
 		System.out.println("ST - fillView");
 		
+		titleId = id;
+		
 		bc = new BibController();
 		try {
-			Book book = bc.getBookData(id);
+			Book book = bc.getBookData(titleId);
 			
 			System.out.println("Setze variablen in die Felder");
 			titleLabel.setText(book.getTitle().toUpperCase());
