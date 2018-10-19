@@ -36,6 +36,7 @@ public class AddNewTitleController implements Initializable{
 	@FXML Button addImageBtn;
 	@FXML ImageView image;
 	@FXML TextField txtFiTitle;
+	@FXML TextField txtFiSubTitle;
 	@FXML TextField txtFiAuthor;
 	@FXML TextField txtFiPublisher;
 	@FXML TextField txtFiYear;
@@ -51,6 +52,7 @@ public class AddNewTitleController implements Initializable{
 	
 	private Boolean isBorrowed = false;
 	private String title;
+	private String subTitle;
 	private String author;
 	private String publisher;
 	private int year;
@@ -150,6 +152,7 @@ public class AddNewTitleController implements Initializable{
 		//add the title to db
 		//hole Strings mit Textfeldinhalten
 		title = txtFiTitle.getText();
+		subTitle = txtFiSubTitle.getText();
 		author = txtFiAuthor.getText();
 		publisher = txtFiPublisher.getText();
 		year = Integer.parseInt(txtFiYear.getText());
@@ -165,6 +168,9 @@ public class AddNewTitleController implements Initializable{
 		//values an bc uebergeben zur db-uebergabe
 		bc.setAuthor(author);
 		bc.setTitle(title);
+		if(!subTitle.isEmpty()) {
+			bc.setSubTitle(subTitle);
+		}
 		bc.setPublisher(publisher);
 		bc.setYear(year);
 		bc.setGenre(genre);

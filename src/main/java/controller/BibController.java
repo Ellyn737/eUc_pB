@@ -27,6 +27,7 @@ public class BibController {
 	private Boolean isBorrowed;
 	private String isBorrowedString;
 	private String title;
+	private String subTitle;
 	private String author;
 	private String publisher;
 	private int year;
@@ -59,6 +60,9 @@ public class BibController {
 		book.setAuthor(author);
 		book.setPublisher(publisher);		
 		book.setTitle(title);
+		if(subTitle != null) {
+			book.setSubTitle(subTitle);
+		}
 		book.setYearOfPublication(year);
 		book.setGenre(genre);
 		book.setSubGenre(subGenre);
@@ -140,6 +144,14 @@ public class BibController {
 			System.out.println("neuer Titel: " + title);
 		}
 		
+//		nur einen neuen untertitel setzten, wenn
+//		NICHT(der untertitel leer ist UND er auch vorher schon leer war) UND
+//		sich die untertitel unterscheiden
+		if(!subTitle.equals(book.getSubTitle()) && !(subTitle == "" && book.getSubTitle() == null)) {
+			book.setSubTitle(subTitle);
+			System.out.println("neuer Untertitel: " + subTitle);
+		}
+		
 		if(!genre.equals(book.getGenre())) {
 			book.setGenre(genre);
 			System.out.println("neues Genre: " + genre);
@@ -213,6 +225,10 @@ public class BibController {
 				case "title":
 					title = searchParameters.get(i).getValue().toString();
 					hql += "m.title = '" + title + "'";
+					break;
+				case "subTitle":
+					subTitle = searchParameters.get(i).getValue().toString();
+					hql = "m.subTitle = '" + subTitle + "'";
 					break;
 				case "author":
 					author = searchParameters.get(i).getValue().toString();
@@ -406,7 +422,18 @@ public class BibController {
 
 	
 	
-//	--------------------GETTER SETTER UND TOSTRING---------------------------------------	
+//	--------------------GETTER SETTER --------------------------------------------------------	
+	
+
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
+	
 	public String getSubGenre() {
 		return subGenre;
 	}

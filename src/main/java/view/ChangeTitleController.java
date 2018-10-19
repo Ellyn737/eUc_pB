@@ -38,6 +38,7 @@ public class ChangeTitleController {
 	@FXML Button changeImageBtn;
 	@FXML ImageView image;
 	@FXML TextField txtFiTitle;
+	@FXML TextField txtFiSubTitle;
 	@FXML TextField txtFiAuthor;
 	@FXML TextField txtFiPublisher;
 	@FXML TextField txtFiYear;
@@ -53,6 +54,7 @@ public class ChangeTitleController {
 	private int bookID;
 	
 	private String title;
+	private String subTitle;
 	private String author;
 	private String publisher;
 	private int year;
@@ -85,6 +87,7 @@ public class ChangeTitleController {
 //			bc = new BibController();
 			
 			title = txtFiTitle.getText();
+			subTitle = txtFiSubTitle.getText();
 			author = txtFiAuthor.getText();
 			publisher = txtFiPublisher.getText();
 			year = Integer.parseInt(txtFiYear.getText());			
@@ -95,6 +98,7 @@ public class ChangeTitleController {
 			//setze values
 			bc.setAuthor(author);
 			bc.setTitle(title);
+			bc.setSubTitle(subTitle);
 			bc.setPublisher(publisher);
 			bc.setYear(year);
 			System.out.println("Vor Übergabe an BC: " + genre + "/ " + subGenre);
@@ -149,6 +153,11 @@ public class ChangeTitleController {
 			txtArContent.setText(book.getContent());
 			txtArComment.setText(book.getComment());
 			menuGenre.setText(book.getSubGenre().toString());
+			if(book.getSubTitle() != null) {
+				txtFiSubTitle.setText(book.getSubTitle());
+			}else {
+				txtFiSubTitle.setText("");
+			}
 			
 			subGenre = book.getSubGenre();
 			genre = book.getGenre();

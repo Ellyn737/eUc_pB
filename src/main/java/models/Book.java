@@ -28,8 +28,20 @@ public class Book extends Media implements Serializable{
 	private String genre;
 	@Column(name="sub_genre")
 	private String subGenre;
+	@Column(name="sub_title")
+	private String subTitle;
 	
 	public Book() {super();}
+
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
 
 
 	public String getSubGenre() {

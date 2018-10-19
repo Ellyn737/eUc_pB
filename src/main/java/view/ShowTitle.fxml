@@ -22,13 +22,13 @@
                   <Pane layoutX="188.0" layoutY="-1.0" prefHeight="358.0" prefWidth="491.0">
                      <children>
                         <Label fx:id="givenTitle" layoutX="14.0" prefHeight="26.0" prefWidth="150.0" text="Titel" />
-                        <Label fx:id="givenAuthor" layoutX="14.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Autor" />
-                        <Label fx:id="givenPublisher" layoutX="14.0" layoutY="53.0" prefHeight="26.0" prefWidth="150.0" text="Verlag" />
-                        <Label fx:id="givenYear" layoutX="14.0" layoutY="85.0" prefHeight="26.0" prefWidth="150.0" text="Ersscheinungsjahr" />
+                        <Label fx:id="givenAuthor" layoutX="14.0" layoutY="53.0" prefHeight="26.0" prefWidth="150.0" text="Autor" />
+                        <Label fx:id="givenPublisher" layoutX="14.0" layoutY="82.0" prefHeight="26.0" prefWidth="150.0" text="Verlag" />
+                        <Label fx:id="givenYear" layoutX="14.0" layoutY="112.0" prefHeight="26.0" prefWidth="150.0" text="Ersscheinungsjahr" />
                         <Label fx:id="givenGenre" layoutX="265.0" layoutY="1.0" prefHeight="26.0" prefWidth="150.0" text="Genre" />
                         <Label fx:id="givenSubgenre" layoutX="276.0" layoutY="27.0" prefHeight="26.0" prefWidth="150.0" text="Subgenre" />
                         <RadioButton fx:id="radioBtnBorrowed" layoutX="266.0" layoutY="112.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="ausgeliehen" />
-                        <Group fx:id="givenBew" layoutX="265.0" layoutY="89.0">
+                        <Group fx:id="givenBew" layoutX="265.0" layoutY="87.0">
                            <children>
                               <CheckBox mnemonicParsing="false" />
                               <CheckBox layoutX="20.0" mnemonicParsing="false" />
@@ -37,11 +37,12 @@
                               <CheckBox layoutX="63.0" mnemonicParsing="false" />
                            </children>
                         </Group>
-                        <Line endX="313.0" endY="151.0" startX="112.0" startY="151.0" />
-                        <Label fx:id="givenContent" alignment="TOP_LEFT" layoutX="7.0" layoutY="168.0" prefHeight="85.0" prefWidth="478.0" text="Inhaltsangabe" />
-                        <Label fx:id="givenComment" alignment="TOP_LEFT" layoutX="7.0" layoutY="253.0" prefHeight="85.0" prefWidth="478.0" text="Ellyns Kommentar" />
-                        <Label fx:id="givenEdition" layoutX="14.0" layoutY="111.0" prefHeight="26.0" prefWidth="150.0" text="Auflage" />
+                        <Line endX="313.0" endY="151.0" layoutX="3.0" layoutY="28.0" startX="112.0" startY="151.0" />
+                        <Label fx:id="givenContent" alignment="TOP_LEFT" layoutX="7.0" layoutY="231.0" prefHeight="53.0" prefWidth="478.0" text="Inhaltsangabe" />
+                        <Label fx:id="givenComment" alignment="TOP_LEFT" layoutX="7.0" layoutY="291.0" prefHeight="53.0" prefWidth="478.0" text="Ellyns Kommentar" />
+                        <Label fx:id="givenEdition" layoutX="14.0" layoutY="141.0" prefHeight="26.0" prefWidth="150.0" text="Auflage" />
                         <Label fx:id="givenExemplar" layoutX="265.0" layoutY="53.0" prefHeight="26.0" prefWidth="150.0" text="Exemplar" />
+                        <Label fx:id="givenSubTitle" layoutX="26.0" layoutY="26.0" prefHeight="26.0" prefWidth="150.0" text="Untertitel" />
                      </children>
                   </Pane>
                   <ImageView fx:id="image" fitHeight="180.0" fitWidth="200.0" layoutX="35.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="116.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="514.1752624511719" AnchorPane.topAnchor="62.0">

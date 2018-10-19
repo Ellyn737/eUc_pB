@@ -31,6 +31,7 @@ public class ShowTitleController {
 	@FXML Label titleLabel;
 	
 	@FXML Label givenTitle;
+	@FXML Label givenSubTitle;
 	@FXML Label givenAuthor;
 	@FXML Label givenPublisher;
 	@FXML Label givenYear;
@@ -173,7 +174,12 @@ public class ShowTitleController {
 			givenExemplar.setText("Exemplar: " + String.valueOf(book.getExemplar()));
 			givenEdition.setText("Auflage: " + String.valueOf(book.getEdition()));
 			
-			System.out.println("hole isBorrowed");
+			if(book.getSubTitle() != null) {
+				givenSubTitle.setText(book.getSubTitle());
+			}else {
+				givenSubTitle.setText("");				
+			}
+
 			if(book.getIsBorrowed()) {
 				radioBtnBorrowed.setSelected(true);
 				System.out.println("Buch ist ausgeliehen");
