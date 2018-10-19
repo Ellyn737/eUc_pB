@@ -86,7 +86,7 @@ public class ShowTitleController {
 		//delete title from db then go to menu
 		Book selection;
 		try {
-			selection = bc.getBookData(titleId);
+			selection = bc.getTheBook(titleId);
 			Alert alert = new Alert(AlertType.CONFIRMATION, "Sind Sie sicher, dass sie " + selection.getTitle() + " löschen möchten?", ButtonType.YES, ButtonType.NO);
 			alert.showAndWait();
 			
@@ -158,7 +158,7 @@ public class ShowTitleController {
 		
 		bc = new BibController();
 		try {
-			Book book = bc.getBookData(titleId);
+			Book book = bc.getTheBook(titleId);
 			
 			System.out.println("Setze variablen in die Felder");
 			titleLabel.setText(book.getTitle().toUpperCase());

@@ -230,7 +230,7 @@ public class ResultsViewController{
 			System.out.println(id);
 			bc = new BibController();
 			try {
-				Book book = bc.getBookData(id);
+				Book book = bc.getTheBook(id);
 			
 				
 	//			setze variablen

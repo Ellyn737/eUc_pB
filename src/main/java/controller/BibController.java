@@ -56,66 +56,41 @@ public class BibController {
 		System.out.println("Create a media/buch object");
 		Book book = new Book();
 		
-		System.out.println("Autor: " + author);
 		book.setAuthor(author);
-		
-		System.out.println("Verlag: " + publisher);
-		book.setPublisher(publisher);
-		
-		System.out.println("Titel: " + title);
+		book.setPublisher(publisher);		
 		book.setTitle(title);
-		
-		System.out.println("Jahr: "+ year);
 		book.setYearOfPublication(year);
-		
-		System.out.println("Genre:" + genre);
 		book.setGenre(genre);
-		
-		System.out.println("Subgenre:" + subGenre);
 		book.setSubGenre(subGenre);
-		
-		System.out.println("isBorrowed:" + isBorrowed);
 		book.setIsBorrowed(isBorrowed);			
-		
-		System.out.println("inhalt: " + content);
 		book.setContent(content);
-
-		System.out.println("kommentar: "+ comment);
 		book.setComment(comment);
-		
-		System.out.println("auflage: " + edition);
 		book.setEdition(edition);
+		System.out.println(book);
 		
 //		herausfinden, ob es den Titel mit dem Autoren und der Auflage schon gibt
 		int numberOfOthers = searchForOthers(author, title, edition);
-		System.out.println("Anzahl anderer Exemplare:" + numberOfOthers);
 		
 //		wenn ja, das neue Exemplar mit nächst höherer Exemplarzahl austatten
 		if(numberOfOthers > 0) {
-			exemplar = numberOfOthers + 1;
-			System.out.println(exemplar);
-		
+			exemplar = numberOfOthers + 1;		
 		}else {
 //			wenn es das erste Exemplar ist --> mit 1 ausstatten
 			exemplar = 1;
 		}
 		
-		System.out.println("Anzahl der Exemplare: " + exemplar);
 		book.setExemplar(exemplar);
 		
 		//start transaction
-		System.out.println("Beginn transaction");
 		newTitleSession.beginTransaction();
 		
 		//save the book
-		System.out.println("Saving the book");
 		newTitleSession.save(book);
 		
 		//commit the transaction
-		System.out.println("Commiting");
 		newTitleSession.getTransaction().commit();
 		
-		System.out.println("Done Fine");
+		System.out.println("Book added");
 		newTitleSession.close();	
 		
 	}
@@ -127,24 +102,18 @@ public class BibController {
 	 * @throws Exception
 	 */
 	public void deleteFromBib(int bookID) throws Exception {
-		/* 
-		 * Buch mit ID suchen und aus DB entfernen
-		 * 
-		 * 
-		 * 
-		 */
 		System.out.println("In BC - deleteFromBib");
 
 		factory = SingletonFactory.getFactory();
 		Session deleteSession = factory.openSession();
 		deleteSession.beginTransaction();
 		
-		Book book = getBookData(bookID);
+		Book book = getTheBook(bookID);
 		deleteSession.delete(book);
 		setNewExemplarListing(bookID);
 		
 		deleteSession.getTransaction().commit();
-		System.out.println("Titel gelöscht");
+		System.out.println("Book deleted");
 		deleteSession.close();
 	
 		
@@ -166,69 +135,55 @@ public class BibController {
 		//aendere Daten
 		Book book = (Book)changeSession.get(Book.class, bookID);
 	
-		System.out.println("Probiere Titel..");
 		if(!title.equals(book.getTitle())) {
 			book.setTitle(title);
 			System.out.println("neuer Titel: " + title);
 		}
 		
-		System.out.println("Probiere Genre..");
 		if(!genre.equals(book.getGenre())) {
 			book.setGenre(genre);
 			System.out.println("neues Genre: " + genre);
 		}
 		
-		System.out.println("Probiere Subgenre..");
 		if(!subGenre.equals(book.getSubGenre())) {
 			book.setSubGenre(subGenre);
 			System.out.println("neues Subgenre: " + subGenre);
 		}
 		
-		System.out.println("Probiere Jahr..");
 		if(year != book.getYearOfPublication()) {
 			book.setYearOfPublication(year);
 			System.out.println("neues Erscheinungsjahr: " + year);
 		}
 		
-		System.out.println("Probiere Autor..");
 		if(!author.equals(book.getAuthor())) {
 			book.setAuthor(author);
 			System.out.println("neuer Autor: " + author);
 			}
 			
-		System.out.println("Probiere Verlag..");
 		if(!publisher.equals(book.getPublisher())) {
 			book.setPublisher(publisher);
 			System.out.println("neuer Verlag: " + publisher);
 		}
 		
-		System.out.println("Probiere Inhalt..");
 		if(!content.equals(book.getContent())) {
 			book.setContent(content);
 			System.out.println("neuer Inhalt: " + content);
 		}
 		
-		System.out.println("Probiere Kommentar..");
 		if(!comment.equals(book.getComment())) {
 			book.setComment(comment);
 			System.out.println("neuer Kommentar: " + comment);
 		}
 		
-		System.out.println("Probiere Edition..");
 		if(edition != book.getEdition()) {
 			book.setEdition(edition);
 			System.out.println("andere Auflage: " + edition);
 		}
 		
-		System.out.println("Transaction beginnen..");
 		changeSession.beginTransaction();
-		System.out.println("Update beginnen..");
-		System.out.println("Buch vor update: " + book);
 		changeSession.update(book);
-		System.out.println("Buch nach update: " + book);
-		System.out.println("Commit beginnen..");
 		changeSession.getTransaction().commit();
-		System.out.println("Session schließen..");
+		System.out.println("Book updated");
 		changeSession.close();
 	
 	}
@@ -242,13 +197,7 @@ public class BibController {
 	 */
 	public List<Integer> findBookId(ArrayList<Pair> searchParameters) throws Exception {		
 		System.out.println("In BC - findBookId");
-
-		for(int i = 0; i < searchParameters.size(); i++) {
-			System.out.println(searchParameters.get(i));
-		}
 	
-
-//		factory holen und session erstellen
 		factory = SingletonFactory.getFactory();
 		Session findSession = factory.openSession();
 		findSession.beginTransaction();
@@ -306,21 +255,13 @@ public class BibController {
 			}
 			
 	//		uebergebe hql an query
-			System.out.println("erstelle Query");
 			Query query = findSession.createQuery(hql);
-			System.out.println("Query erstellt..");		
 			
 	//		hole Ids
-			ArrayList<Integer> idPassend = (ArrayList<Integer>) query.getResultList();
-			for(int r: idPassend) {
-				System.out.println("Gesammelte ids: ");
-				System.out.println(r);
-			}
-			
-	//		Fehler auffangen, wenn nichts geeignetes in der DB ist
-			
+			ArrayList<Integer> idPassend = (ArrayList<Integer>) query.getResultList();		
+						
 			findSession.getTransaction().commit();
-			
+			System.out.println("Ids collected");
 			findSession.close();
 		
 			return idPassend;	
@@ -351,17 +292,18 @@ public class BibController {
 		Query query = findSession.createQuery(hql);
 		
 		
-		List<Integer> passendeIds = query.getResultList();
-		System.out.println("PassendeIds: " + passendeIds);
+		List<Integer> matchingIds = query.getResultList();
 		
-		if(passendeIds.size() < 1) {
+		if(matchingIds.size() < 1) {
 			numberOfCopys = 0;
 		}else {
-			numberOfCopys = passendeIds.size();
+			numberOfCopys = matchingIds.size();
 		}
 		
 		findSession.getTransaction().commit();
+		System.out.println("other copys: " + numberOfCopys);
 		findSession.close();
+		
 		return numberOfCopys;
 	}
 	
@@ -372,20 +314,18 @@ public class BibController {
 	 * @return
 	 * @throws Exception
 	 */
-	public Book getBookData(int id) throws Exception {
-		System.out.println("In BC - getBookData");
+	public Book getTheBook(int id) throws Exception {
+		System.out.println("In BC - getTheBook");
 		Book book = null;
 		
 		factory = SingletonFactory.getFactory();
 		Session findBookSession = factory.openSession();
-		//mit id suchen
-//			book = (Book) findBookSession.createQuery("select Media m where m.id_media = ?0").setParameter(0, id).uniqueResult();
+
 		book = (Book) findBookSession.get(Book.class, id);
 		
 		findBookSession.beginTransaction();
-		
 		findBookSession.getTransaction().commit();
-		System.out.println(book);
+		System.out.println("Found Book: " + book);
 		findBookSession.close();
 		
 		return book;
@@ -399,9 +339,8 @@ public class BibController {
 	 */
 	public int getLastId() throws Exception {
 		System.out.println("In BC - getLastId");
-
 		int lastId = -1;
-//		factory holen und session erstellen
+
 		factory = SingletonFactory.getFactory();
 		Session findMaxIdSession = factory.openSession();
 		findMaxIdSession.beginTransaction();
@@ -409,8 +348,8 @@ public class BibController {
 		String hql = "select max(m.idmedia) from Media m ";
 		Query query = findMaxIdSession.createQuery(hql);
 
-		ArrayList<Integer> idPassend = (ArrayList<Integer>) query.getResultList();
-		for(int r: idPassend) {
+		ArrayList<Integer> lastIds = (ArrayList<Integer>) query.getResultList();
+		for(int r: lastIds) {
 			lastId = r;
 			System.out.println("Gesammelte ids: " + r);
 		}
@@ -431,7 +370,7 @@ public class BibController {
 	public void setNewExemplarListing(int mediaId) throws Exception{
 		System.out.println("BC - setNewExemplarListing");
 //		Daten des Buchs besorgen
-		Book book = getBookData(mediaId);
+		Book book = getTheBook(mediaId);
 		
 //		Anzahl der uebrigen Exemplare herausfinden
 		int newExemplarnumber = searchForOthers(book.getAuthor(), book.getTitle(), book.getEdition());
@@ -446,7 +385,6 @@ public class BibController {
 
 //		Exemplarnummern der uebrigen exemplare neu zuordnen
 		for(int i = 0; i< newExemplarnumber; i++) {
-			System.out.println("Für exemplar " + i);
 //			session erstellen
 			Session exemplarSession = factory.openSession();
 			
@@ -461,7 +399,7 @@ public class BibController {
 			exemplarSession.update(exemplar);
 			
 			exemplarSession.getTransaction().commit();
-			
+			System.out.println("exemplarnumbers sorted");
 			exemplarSession.close();
 		}
 	}

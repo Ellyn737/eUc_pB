@@ -139,7 +139,7 @@ public class ChangeTitleController {
 		bookID = id;
 		
 		try {
-			Book book = bc.getBookData(bookID);
+			Book book = bc.getTheBook(bookID);
 			
 			txtFiTitle.setText(book.getTitle());
 			txtFiAuthor.setText(book.getAuthor());
