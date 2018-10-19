@@ -81,7 +81,7 @@ public class BibController {
 		System.out.println("Subgenre:" + subGenre);
 		book.setSubGenre(subGenre);
 		
-		System.out.println("inBib:" + isBorrowed);
+		System.out.println("isBorrowed:" + isBorrowed);
 		book.setIsBorrowed(isBorrowed);			
 		
 		System.out.println("inhalt: " + content);

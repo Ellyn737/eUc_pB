@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 
 import controller.BibController;
 import controller.MainBibliothek;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -112,6 +114,22 @@ public class AddNewTitleController implements Initializable{
 		
 			});
 		}
+		
+//		setzen von isBorrowed on click
+		radioBtnBorrowed.selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if(radioBtnBorrowed.isSelected()) {
+					isBorrowed = true;
+					System.out.println("RadioButton wurde gedrückt");
+				}else {
+					isBorrowed = false;
+					System.out.println("RadioButton wurde nicht gedrückt");
+				}				
+			}
+		});
+		
 	}
 	
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
@@ -139,16 +157,10 @@ public class AddNewTitleController implements Initializable{
 		comment = txtArComment.getText();
 		edition = Integer.parseInt(txtFiEdition.getText());
 		
-		if(radioBtnBorrowed.isPressed()) {
-			isBorrowed = true;
-		}else {
-			isBorrowed = false;
-		}
-		
 		System.out.println("Vor der Uebergabe an BC");
 		System.out.println("Genre: " +genre);
 		System.out.println("Subgenre: " +subGenre);
-
+		System.out.println("isBorrowed: " + isBorrowed);
 		
 		//values an bc uebergeben zur db-uebergabe
 		bc.setAuthor(author);

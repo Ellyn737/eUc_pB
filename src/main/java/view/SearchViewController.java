@@ -10,6 +10,8 @@ import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 import controller.BibController;
 import controller.MainBibliothek;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -91,11 +93,7 @@ public class SearchViewController implements Initializable {
 		edition = txtFiEdition.getText().trim();
 		exemplar = txtFiExemplar.getText().trim();
 		
-		if(radioBtnBorrowed.isPressed()) {
-			isBorrowed = "1";
-		}else {
-			isBorrowed = "0";
-		}
+
 		
 		
 //		ArrayListe mit key und value anlegen
@@ -197,7 +195,7 @@ public class SearchViewController implements Initializable {
 	}
 
 	/**
-	 * genre  und subgenre auswerten
+	 * genre, subgenre und isBorrowed auswerten
 	 * @param location
 	 * @param resources
 	 */
@@ -205,6 +203,7 @@ public class SearchViewController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("SVC - initialize");
 		
+//		setze Genre und Subgenre
 		ObservableList<MenuItem> genreItems = menuGenre.getItems();
 		for(MenuItem genreItem: genreItems ) {
 			genreItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -219,6 +218,8 @@ public class SearchViewController implements Initializable {
 					
 				}
 			});
+			
+
 		}
 		
 		ObservableList<MenuItem> sbSubGenreItems = sbMenu.getItems();
@@ -252,6 +253,23 @@ public class SearchViewController implements Initializable {
 				}
 			});
 		}
+		
+//		setzen von isBorrowed on click
+		radioBtnBorrowed.selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if(radioBtnBorrowed.isSelected()) {
+//					1 == true
+					isBorrowed = "1";
+					System.out.println("RadioButton wurde gedrückt");
+				}else {
+//					0 == false
+					isBorrowed = "0";
+					System.out.println("RadioButton wurde nicht gedrückt");
+				}				
+			}
+		});
 		
 	}	
 	

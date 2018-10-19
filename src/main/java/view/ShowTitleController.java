@@ -123,9 +123,11 @@ public class ShowTitleController {
 			
 			System.out.println("hole isBorrowed");
 			if(book.getIsBorrowed()) {
-				radioBtnBorrowed.setSelected(false);
-			}else {
 				radioBtnBorrowed.setSelected(true);
+				System.out.println("Buch ist ausgeliehen");
+			}else {
+				radioBtnBorrowed.setSelected(false);
+				System.out.println("Buch ist verfügbar");
 			}
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
