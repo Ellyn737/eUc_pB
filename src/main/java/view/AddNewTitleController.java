@@ -49,7 +49,7 @@ public class AddNewTitleController implements Initializable{
 	@FXML Menu sbMenu;
 	@FXML Menu rMenu;
 	
-	private Boolean isBorrowed;
+	private Boolean isBorrowed = false;
 	private String title;
 	private String author;
 	private String publisher;

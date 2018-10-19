@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 
 import javafx.util.Pair;
 import models.Book;
+import models.Media;
 
 
 
@@ -41,25 +42,17 @@ public class BibController {
 	
 	private SessionFactory factory;
 
-	
-	public void addToBib() throws Exception{
-		/*
-		 * neues Buch erstellen
-		 * 		Parameter aus den textfeldern der View
-		 * 
-		 * Buch an DB uebergeben
-		 */
-		
-		//SessionFactory holen
-		
+/**
+ * fügt einen neuen titel zur bibliothek hinzu
+ * 	
+ * @throws Exception
+ */
+	public void addToBib() throws Exception{				
 		System.out.println("In BC - addToBib");
+		
 		factory = SingletonFactory.getFactory();
-		//session starten
 		Session newTitleSession = factory.openSession();
 		
-		
-		//use the session object to save/retrieve Java objects
-		//create a media/buch object
 		System.out.println("Create a media/buch object");
 		Book book = new Book();
 		
@@ -127,6 +120,12 @@ public class BibController {
 		
 	}
 	
+	/**
+	 * löscht buch anhand der id aus der db
+	 * 
+	 * @param bookID
+	 * @throws Exception
+	 */
 	public void deleteFromBib(int bookID) throws Exception {
 		/* 
 		 * Buch mit ID suchen und aus DB entfernen
@@ -142,6 +141,7 @@ public class BibController {
 		
 		Book book = getBookData(bookID);
 		deleteSession.delete(book);
+		setNewExemplarListing(bookID);
 		
 		deleteSession.getTransaction().commit();
 		System.out.println("Titel gelöscht");
@@ -150,19 +150,15 @@ public class BibController {
 		
 	}
 	
+	/**
+	 * vergleicht mögliche Veränderungen und uebernimmt diese für das Buch
+	 * 
+	 * @param bookID
+	 * @throws Exception
+	 */
 	public void changeTitle(int bookID) throws Exception{
-		/*
-		 * Parameter der Txtfelder aus View vergleichen
-		 * mit Parametern in DB
-		 * --> Änderungen übernehmen
-		 */
 		System.out.println("In BC - changeTitle");
 
-		
-		
-		//uebergebe aenderungen bei WHERE ID = buchID
-		
-		System.out.println("In BC");
 		factory = SingletonFactory.getFactory();
 		Session changeSession = factory.openSession();
 		
@@ -170,91 +166,81 @@ public class BibController {
 		//aendere Daten
 		Book book = (Book)changeSession.get(Book.class, bookID);
 	
+		System.out.println("Probiere Titel..");
 		if(!title.equals(book.getTitle())) {
 			book.setTitle(title);
 			System.out.println("neuer Titel: " + title);
 		}
 		
+		System.out.println("Probiere Genre..");
 		if(!genre.equals(book.getGenre())) {
 			book.setGenre(genre);
 			System.out.println("neues Genre: " + genre);
 		}
 		
+		System.out.println("Probiere Subgenre..");
 		if(!subGenre.equals(book.getSubGenre())) {
-			book.setGenre(subGenre);
+			book.setSubGenre(subGenre);
 			System.out.println("neues Subgenre: " + subGenre);
 		}
 		
+		System.out.println("Probiere Jahr..");
 		if(year != book.getYearOfPublication()) {
 			book.setYearOfPublication(year);
 			System.out.println("neues Erscheinungsjahr: " + year);
 		}
 		
+		System.out.println("Probiere Autor..");
 		if(!author.equals(book.getAuthor())) {
 			book.setAuthor(author);
 			System.out.println("neuer Autor: " + author);
 			}
 			
+		System.out.println("Probiere Verlag..");
 		if(!publisher.equals(book.getPublisher())) {
 			book.setPublisher(publisher);
 			System.out.println("neuer Verlag: " + publisher);
 		}
 		
-		if(content != "") {
+		System.out.println("Probiere Inhalt..");
+		if(!content.equals(book.getContent())) {
 			book.setContent(content);
 			System.out.println("neuer Inhalt: " + content);
 		}
 		
-		if(comment != "") {
+		System.out.println("Probiere Kommentar..");
+		if(!comment.equals(book.getComment())) {
 			book.setComment(comment);
 			System.out.println("neuer Kommentar: " + comment);
 		}
 		
+		System.out.println("Probiere Edition..");
 		if(edition != book.getEdition()) {
 			book.setEdition(edition);
 			System.out.println("andere Auflage: " + edition);
 		}
 		
-		
+		System.out.println("Transaction beginnen..");
 		changeSession.beginTransaction();
-		
+		System.out.println("Update beginnen..");
+		System.out.println("Buch vor update: " + book);
 		changeSession.update(book);
-		
+		System.out.println("Buch nach update: " + book);
+		System.out.println("Commit beginnen..");
 		changeSession.getTransaction().commit();
-		
+		System.out.println("Session schließen..");
 		changeSession.close();
 	
 	}
 	
-	public List<Integer> findBookId(ArrayList<Pair> searchParameters) throws Exception {
-		
-		/*
-		 * wird nur von SEARCHVIEW aufgerufen 
-		 * (id sonst immer von anderer View weitergegeben)
-		 * 
-		 * gibt Liste mit Ids zurück
-		 * 
-		 * 
-		 * switch case erstellen für verschiedene sql-query-Strings
-		 * abhängig von den übergebenen Suchparametern
-		 * 
-		 * mögliche Suchparameter:
-		 * 
-		 * ausgeliehen / nicht
-		 * Genre
-		 * title
-		 * autor
-		 * verlag
-		 * jahr 
-		 * auflage
-		 * exemplar
-		 * 
-		 * Sternebewertung (1-5)
-		 * 
-		 * 
-		 * 
-		 */
-		
+	/**
+	 * findet die id eines buchs anhand der suchparameter
+	 * 
+	 * @param searchParameters
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Integer> findBookId(ArrayList<Pair> searchParameters) throws Exception {		
 		System.out.println("In BC - findBookId");
 
 		for(int i = 0; i < searchParameters.size(); i++) {
@@ -340,6 +326,15 @@ public class BibController {
 			return idPassend;	
 	}
 	
+	/**
+	 * schaut ob es weitere exemplare eines Buchs gibt
+	 * 
+	 * @param authorSearch
+	 * @param titleSearch
+	 * @param editionSearch
+	 * @return
+	 * @throws Exception
+	 */
 	public int searchForOthers(String authorSearch, String titleSearch, int editionSearch) throws Exception {
 		System.out.println("BC - SearchForOthers");
 		int numberOfCopys = -1;
@@ -370,6 +365,13 @@ public class BibController {
 		return numberOfCopys;
 	}
 	
+	/**
+	 * holt das Buch anhand der id
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
 	public Book getBookData(int id) throws Exception {
 		System.out.println("In BC - getBookData");
 		Book book = null;
@@ -389,6 +391,12 @@ public class BibController {
 		return book;
 	}
 	
+	/**
+	 * holt die zuletzt zur db hinzugefügte id
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public int getLastId() throws Exception {
 		System.out.println("In BC - getLastId");
 
@@ -413,8 +421,54 @@ public class BibController {
 		return lastId;
 	}
 
+	/**
+	 * ordnet die Exemplarzahlen neu zu
+	 * wenn beispielsweise ein Buch gelöscht wurde
+	 * 
+	 * @param mediaId
+	 * @throws Exception
+	 */
+	public void setNewExemplarListing(int mediaId) throws Exception{
+		System.out.println("BC - setNewExemplarListing");
+//		Daten des Buchs besorgen
+		Book book = getBookData(mediaId);
+		
+//		Anzahl der uebrigen Exemplare herausfinden
+		int newExemplarnumber = searchForOthers(book.getAuthor(), book.getTitle(), book.getEdition());
+		
+//		Ids der uebrigen Exemplare holen
+		ArrayList<Pair> exemplarParameters = new ArrayList<>();
+		exemplarParameters.add(new Pair("title", book.getTitle()));
+		exemplarParameters.add(new Pair("author", book.getAuthor()));
+		List<Integer> exemplarIds = findBookId(exemplarParameters);
+		
+		factory = SingletonFactory.getFactory();
+
+//		Exemplarnummern der uebrigen exemplare neu zuordnen
+		for(int i = 0; i< newExemplarnumber; i++) {
+			System.out.println("Für exemplar " + i);
+//			session erstellen
+			Session exemplarSession = factory.openSession();
+			
+			int id = exemplarIds.get(i);
+//			hole das zu ändernde Buch
+			Book exemplar = (Book)exemplarSession.get(Book.class, id);
+//			setze exemplarVariable neu
+			exemplar.setExemplar(i+1);
+		
+			exemplarSession.beginTransaction();
+			
+			exemplarSession.update(exemplar);
+			
+			exemplarSession.getTransaction().commit();
+			
+			exemplarSession.close();
+		}
+	}
+
 	
-//	GETTER SETTER UND TOSTRING	
+	
+//	--------------------GETTER SETTER UND TOSTRING---------------------------------------	
 	public String getSubGenre() {
 		return subGenre;
 	}

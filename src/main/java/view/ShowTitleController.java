@@ -39,6 +39,8 @@ public class ShowTitleController {
 	@FXML RadioButton radioBtnBorrowed;
 	@FXML Label givenContent;
 	@FXML Label givenComment;
+	@FXML Label givenExemplar;
+	@FXML Label givenEdition;
 	@FXML ImageView image;
 	@FXML Button deleteTitleBtn;
 	@FXML Button changeTitleBtn;
@@ -55,6 +57,12 @@ public class ShowTitleController {
 		this.mainBib = mainBib;
 	}
 
+	/**
+	 * zurück zum StartMenu
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
 		System.out.println("STC - handleCancelButton");
 
@@ -66,6 +74,11 @@ public class ShowTitleController {
 		window.show();
 		}	
 	
+	/**
+	 * alert aufrufen und nach Bestätigung löschen des Titels
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleDeleteTitleButton(ActionEvent event) throws IOException{
 		System.out.println("STC - handleDeleteButton");
 
@@ -95,17 +108,31 @@ public class ShowTitleController {
 
 	}	
 	
+	/**
+	 * id an ChangeTitleView uebergeben und dorthin wechseln
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleChangeTitleButton(ActionEvent event) throws IOException{
 		System.out.println("STC - handleChangeTitleButton");
-
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/ChangeTitle.fxml"));
-		Scene searchScene = new Scene(searchPane);
 		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangeTitle.fxml"));
+		Parent root = (Parent) loader.load();
+		
+		//id an ResultsView uebergeben
+		ChangeTitleController changeTitle = loader.getController();
+		changeTitle.fillView(titleId);
+		
+		Stage stage = new Stage();
+		stage.setScene(new Scene(root));
+		stage.show();
 		}	
 	
+	/**
+	 * id an TitelAusleihe uebergeben und dahin wechseln
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleBorrowButton(ActionEvent event) throws IOException{
 		System.out.println("STC - handleBorrowButton");
 
@@ -137,12 +164,14 @@ public class ShowTitleController {
 			titleLabel.setText(book.getTitle().toUpperCase());
 			givenTitle.setText(book.getTitle());
 			givenAuthor.setText(book.getAuthor());
-			givenPublisher.setText(book.getPublisher());
-			givenYear.setText(String.valueOf(book.getYearOfPublication()));
+			givenPublisher.setText("Verlag: " + book.getPublisher());
+			givenYear.setText("Erscheinungsjahr: " + String.valueOf(book.getYearOfPublication()));
 			givenGenre.setText(book.getGenre());
 			givenSubgenre.setText(book.getSubGenre());
 			givenContent.setText(book.getContent());
 			givenComment.setText(book.getComment());
+			givenExemplar.setText("Exemplar: " + String.valueOf(book.getExemplar()));
+			givenEdition.setText("Auflage: " + String.valueOf(book.getEdition()));
 			
 			System.out.println("hole isBorrowed");
 			if(book.getIsBorrowed()) {
@@ -163,7 +192,6 @@ public class ShowTitleController {
 		
 	}
 	
-
 	/**
 	 * ermöglicht die uebergabe von daten von einem anderen FXController an diesen
 	 * 
