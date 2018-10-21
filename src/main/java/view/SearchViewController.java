@@ -21,13 +21,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -85,7 +88,6 @@ public class SearchViewController implements Initializable {
 		//ausserdem suchparameter weiter und an db geben
 		bc = new BibController();
 	
-		
 		title = txtFiTitle.getText().trim();
 		author = txtFiAuthor.getText().trim();
 		publisher = txtFiPublisher.getText().trim();
@@ -93,41 +95,33 @@ public class SearchViewController implements Initializable {
 		edition = txtFiEdition.getText().trim();
 		exemplar = txtFiExemplar.getText().trim();
 		
-
-		
-		
 //		ArrayListe mit key und value anlegen
 		ArrayList<Pair> parameters = new ArrayList<Pair>();
 		
-		System.out.println("Probiere Titel");
 		if(!title.isEmpty()) {
 			Pair titlePair = new Pair("title", title);
 			parameters.add(titlePair);
 			System.out.println("Setze Paar für Titel: "+title);
 		}
 		
-		System.out.println("Probiere Autor");
 		if(!author.isEmpty()) {
 			Pair authorPair = new Pair("author", author);
 			parameters.add(authorPair);
 			System.out.println(author);
 		}
 		
-		System.out.println("Probiere Verlag");
 		if(!publisher.isEmpty()) {
 			Pair publisherPair = new Pair("publisher", publisher);
 			parameters.add(publisherPair);		
 			System.out.println(publisher);	
 		}
 		
-		System.out.println("Probiere Jahr");
 		if(!year.isEmpty()) {
 			Pair yearPair = new Pair("year", year);
 			parameters.add(yearPair);
 			System.out.println(year);
 		}
 		
-		System.out.println("Probiere Genre");
 		System.out.println(genre);
 		if(genre != null) {
 			Pair genrePair = new Pair("genre", genre);
@@ -135,7 +129,6 @@ public class SearchViewController implements Initializable {
 			System.out.println(genre);
 		}
 		
-		System.out.println("Probiere Subgenre");
 		System.out.println(subGenre);
 		if(subGenre != null) {
 			Pair subGenrePair = new Pair("subGenre", subGenre);
@@ -144,21 +137,18 @@ public class SearchViewController implements Initializable {
 		}
 
 		
-		System.out.println("Probiere Auflage");
 		if(!edition.isEmpty()) {
 			Pair editionPair = new Pair("edition", edition);
 			parameters.add(editionPair);	
 			System.out.println(edition);
 			}
 		
-		System.out.println("Probiere Exemplar");
 		if(!exemplar.isEmpty()) {
 			Pair exemplarPair = new Pair("exemplar", exemplar);
 			parameters.add(exemplarPair);
 			System.out.println(exemplar);
 		}
 		
-		System.out.println("Probiere isBorrowed");
 		if(isBorrowed != null) {
 			Pair isBorrowedPair = new Pair("isBorrowed", isBorrowed);
 			parameters.add(isBorrowedPair);
@@ -170,28 +160,11 @@ public class SearchViewController implements Initializable {
 			System.out.println(parameters.get(j));
 		}
 	
-		try {
-			
-//			List mit Ids holen, die zu den Suchparametern passen
-			List<Integer> ids = bc.findBookId(parameters);
-			System.out.println("Ids: " + ids);
-
-		
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
-			Parent root = (Parent) loader.load();
-			
-			//Liste mit ids an ResultsView uebergeben
-			ResultsViewController resultsView = loader.getController();
-			resultsView.fillListAndView(ids, parameters);
-			
-			Stage stage = new Stage();
-			stage.setScene(new Scene(root));
-			stage.show();
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(parameters.size() <= 0) {
+			setWarning();
 		}
+		
+		findBook(parameters);
 	}
 
 	/**
@@ -273,5 +246,38 @@ public class SearchViewController implements Initializable {
 		
 	}	
 	
+	public void findBook(ArrayList<Pair> parameters) {
+		try {
+			
+//			List mit Ids holen, die zu den Suchparametern passen
+			List<Integer> ids = bc.findBookId(parameters);
+			System.out.println("Ids: " + ids);
+
+		
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
+			Parent root = (Parent) loader.load();
+			
+			//Liste mit ids an ResultsView uebergeben
+			ResultsViewController resultsView = loader.getController();
+			resultsView.fillListAndView(ids, parameters);
+			
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root));
+			stage.show();
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void setWarning() {
+//		Alert fuer moegliche fehlende Eingaben
+		Alert warning = new Alert(AlertType.WARNING, "Bitte füllen Sie mindestens einen Suchparameter aus. ", ButtonType.OK);
+		warning.setTitle("ACHTUNG");
+		warning.setHeaderText("Es wurden keine Suchangaben gemacht.");
+		warning.showAndWait();
+	}
+
 	
 }
