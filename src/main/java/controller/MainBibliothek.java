@@ -69,6 +69,9 @@ public class MainBibliothek extends Application{
 	}
 	
 
+	public Stage getStage() {
+		return primaryStage;
+	}
 	
 
 

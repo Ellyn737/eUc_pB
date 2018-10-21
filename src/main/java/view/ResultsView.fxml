@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ResultsViewController">
+<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ResultsViewController">
    <children>
       <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="SUCHERGEBNISSE" />
       <SplitPane dividerPositions="0.29797979797979796" layoutX="-2.0" layoutY="90.0" prefHeight="436.0" prefWidth="682.0">

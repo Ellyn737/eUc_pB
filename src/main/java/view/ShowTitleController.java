@@ -1,6 +1,8 @@
 package view;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import controller.BibController;
 import controller.MainBibliothek;
@@ -18,7 +20,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import models.Book;
 /**
  * 
@@ -27,7 +31,7 @@ import models.Book;
  *Werte werden von ResultsViewController oder AddNewTitleController uebergeben
  */
 public class ShowTitleController {
-
+	@FXML AnchorPane rootPane;
 	@FXML Label titleLabel;
 	
 	@FXML Label givenTitle;
@@ -53,6 +57,8 @@ public class ShowTitleController {
 	private BibController bc;
 	
 	private int titleId;
+	private List<Integer> resultIds;
+	ArrayList<Pair> oldParameters;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -66,13 +72,8 @@ public class ShowTitleController {
 	 */
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
 		System.out.println("STC - handleCancelButton");
-
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
+		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
+		rootPane.getChildren().setAll(startPane);
 		}	
 	
 	/**
@@ -88,19 +89,42 @@ public class ShowTitleController {
 		Book selection;
 		try {
 			selection = bc.getTheBook(titleId);
+			
 			Alert alert = new Alert(AlertType.CONFIRMATION, "Sind Sie sicher, dass sie " + selection.getTitle() + " löschen möchten?", ButtonType.YES, ButtonType.NO);
 			alert.showAndWait();
 			
 			if(alert.getResult() == ButtonType.YES) {
-				bc.deleteFromBib(titleId);
-				Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-				Scene searchScene = new Scene(searchPane);
 				
-				Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-				window.setScene(searchScene);
-				window.show();
+				bc.deleteFromBib(titleId);
+				List<Integer> remainingIds = bc.findBookId(oldParameters);
+				
+				if(remainingIds.size() > 0) {
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
+					AnchorPane pane = (AnchorPane) loader.load();
+					
+					//id an ResultsView uebergeben
+					ResultsViewController resultsView = loader.getController();
+					resultsView.fillListAndView(resultIds, oldParameters);
+					
+					Scene scene = new Scene(pane);
+					rootPane.getChildren().setAll(pane);
+				}else {
+					AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
+					rootPane.getChildren().setAll(startPane);
+				}
 			}
-			
+			if(alert.getResult() == ButtonType.NO) {
+				
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
+				AnchorPane pane = (AnchorPane) loader.load();
+				
+				//id an ResultsView uebergeben
+				ResultsViewController resultsView = loader.getController();
+				resultsView.fillListAndView(resultIds, oldParameters);
+				
+				Scene scene = new Scene(pane);
+				rootPane.getChildren().setAll(pane);
+			}
 //			nothing happens on no
 			
 		} catch (Exception e) {
@@ -118,15 +142,17 @@ public class ShowTitleController {
 		System.out.println("STC - handleChangeTitleButton");
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangeTitle.fxml"));
-		Parent root = (Parent) loader.load();
+		AnchorPane pane = (AnchorPane) loader.load();
+		
 		
 		//id an ResultsView uebergeben
 		ChangeTitleController changeTitle = loader.getController();
 		changeTitle.fillView(titleId);
+		changeTitle.setOldParametersForReturning(resultIds, oldParameters);
 		
-		Stage stage = new Stage();
-		stage.setScene(new Scene(root));
-		stage.show();
+		Scene scene = new Scene(pane);
+		rootPane.getChildren().setAll(pane);
+		
 		}	
 	
 	/**
@@ -137,14 +163,14 @@ public class ShowTitleController {
 	@FXML private void handleBorrowButton(ActionEvent event) throws IOException{
 		System.out.println("STC - handleBorrowButton");
 
-		//if IsThere --> go to TitleRückgabe, else TitleAusleihe
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/TitleAusleihe.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
+		if(radioBtnBorrowed.isSelected()) {
+			AnchorPane returnPane = FXMLLoader.load(getClass().getResource("../view/TitleRueckgabe.fxml"));
+			rootPane.getChildren().setAll(returnPane);
+		}else {
+			AnchorPane borrowPane = FXMLLoader.load(getClass().getResource("../view/TitleAusleihe.fxml"));
+			rootPane.getChildren().setAll(borrowPane);
 		}	
+	}
 
 	/**
 	 * uebernimmt die id des buches, das angezeigt werden soll
@@ -156,7 +182,7 @@ public class ShowTitleController {
 		System.out.println("ST - fillView");
 		
 		titleId = id;
-		
+
 		bc = new BibController();
 		try {
 			Book book = bc.getTheBook(titleId);
@@ -183,19 +209,22 @@ public class ShowTitleController {
 			if(book.getIsBorrowed()) {
 				radioBtnBorrowed.setSelected(true);
 				System.out.println("Buch ist ausgeliehen");
+				borrowBtn.setText("RÜCKGABE");
 			}else {
 				radioBtnBorrowed.setSelected(false);
 				System.out.println("Buch ist verfügbar");
+				borrowBtn.setText("AUSLEIHEN");
 			}
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
 		//es fehlen noch bild, bewertung
 
-		
-		
-		
+	}
+	
+	public void setOldParametersForReturning(List<Integer> ids, ArrayList<Pair> searchParams) {
+		resultIds = ids;
+		oldParameters = searchParams;
 	}
 	
 	/**

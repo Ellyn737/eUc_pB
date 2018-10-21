@@ -31,11 +31,13 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class SearchViewController implements Initializable {
 
+	@FXML AnchorPane rootPane;
 	@FXML Label titleLabel;
 	@FXML TextField txtFiTitle;
 	@FXML TextField txtFiAuthor;
@@ -74,13 +76,8 @@ public class SearchViewController implements Initializable {
 
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
 		System.out.println("SVC - handleCancelButton");
-
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
+		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
+		rootPane.getChildren().setAll(startPane);
 		}	
 	
 	@FXML private void handleSearchButton(ActionEvent event) throws IOException{
@@ -154,17 +151,12 @@ public class SearchViewController implements Initializable {
 			parameters.add(isBorrowedPair);
 			System.out.println(isBorrowed);
 		}
-		
-		System.out.println("Die Parameter: ");
-		for(int j = 0; j < parameters.size();j++) {
-			System.out.println(parameters.get(j));
-		}
 	
 		if(parameters.size() <= 0) {
 			setWarningNoSearchParameters();
+		}else {
+			findBook(parameters);
 		}
-		
-		findBook(parameters);
 	}
 
 	/**
@@ -191,8 +183,6 @@ public class SearchViewController implements Initializable {
 					
 				}
 			});
-			
-
 		}
 		
 		ObservableList<MenuItem> sbSubGenreItems = sbMenu.getItems();
@@ -253,17 +243,17 @@ public class SearchViewController implements Initializable {
 			List<Integer> ids = bc.findBookId(parameters);
 			
 			if(ids.size() >= 1) {
+				
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
-				Parent root = (Parent) loader.load();
+				AnchorPane pane = (AnchorPane) loader.load();
 				
-				//Liste mit ids an ResultsView uebergeben
+				
 				ResultsViewController resultsView = loader.getController();
-				
 				resultsView.fillListAndView(ids, parameters);
 				
-				Stage stage = new Stage();
-				stage.setScene(new Scene(root));
-				stage.show();
+				Scene scene = new Scene(pane);
+				rootPane.getChildren().setAll(pane);
+
 			}else {
 				setWarningNoResult();
 			}

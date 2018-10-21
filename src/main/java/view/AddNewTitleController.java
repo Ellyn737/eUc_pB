@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import controller.BibController;
 import controller.MainBibliothek;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -33,10 +34,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class AddNewTitleController implements Initializable{
 	
+	@FXML AnchorPane rootPane;
 	@FXML Label titleLabel;
 	@FXML Button addImageBtn;
 	@FXML ImageView image;
@@ -54,6 +57,7 @@ public class AddNewTitleController implements Initializable{
 	@FXML Button addTitleBtn;
 	@FXML Menu sbMenu;
 	@FXML Menu rMenu;
+	
 	
 	private Boolean isBorrowed = false;
 	private String title;
@@ -142,12 +146,8 @@ public class AddNewTitleController implements Initializable{
 	
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
 		System.out.println("ANTC - handleCancelButton");
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
+		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
+		rootPane.getChildren().setAll(startPane);
 		}	
 	
 	@FXML private void handleAddTitleButton(ActionEvent event) throws IOException{
@@ -156,7 +156,7 @@ public class AddNewTitleController implements Initializable{
 		int numberOfNecessaryFields = 9;
 		List txtFields = new ArrayList<>();
 
-		
+//		Ueberprüfen, ob alle nötigen Textfelder gesetzt sind
 		System.out.println("Setze Variablen");
 		if(!txtFiTitle.getText().isEmpty()) {
 			title = txtFiTitle.getText();
@@ -171,12 +171,20 @@ public class AddNewTitleController implements Initializable{
 			txtFields.add(publisher);
 		}
 		if(!txtFiYear.getText().isEmpty()) {
-			year = Integer.parseInt(txtFiYear.getText());
-			txtFields.add(year);
+			try {
+				year = Integer.parseInt(txtFiYear.getText());
+				txtFields.add(year);
+			}catch(NumberFormatException ex) {
+				setWarningNoInt();
+			}
 		}
 		if(!txtFiEdition.getText().isEmpty()) {
-			edition = Integer.parseInt(txtFiEdition.getText());
-			txtFields.add(edition);
+			try {
+				edition = Integer.parseInt(txtFiEdition.getText());
+				txtFields.add(edition);
+			}catch(NumberFormatException ex) {
+				setWarningNoInt();
+			}
 		}
 		if(!txtArContent.getText().isEmpty()) {
 			content = txtArContent.getText();
@@ -192,20 +200,18 @@ public class AddNewTitleController implements Initializable{
 		if(subGenre != null) {
 			txtFields.add("subGenre");
 		}
-	
-		
-		
+
 		if(txtFields.size() == numberOfNecessaryFields) {
 			System.out.println("Alles ausgefüllt");
 			addBook();
+		}else {
+			setWarningNeedToFill();
 		}
-		else {
-			setWarning();
-		}
+		
+
 		
 	}
 
-	
 	@FXML private void handleAddImageButton(ActionEvent event) throws IOException{
 		//add image to title in db
 		
@@ -237,29 +243,37 @@ public class AddNewTitleController implements Initializable{
 			bc.addToBib();
 			
 			//zu ShowTitle
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
-			Parent root = (Parent) loader.load();
 			
-			//id an ResultsView uebergeben
+			
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
+			AnchorPane pane = (AnchorPane) loader.load();
+			
 			ShowTitleController showTitle = loader.getController();
-
 			int id = bc.getLastId();
 			showTitle.fillView(id);
 			
+			Scene scene = new Scene(pane);
+			rootPane.getChildren().setAll(pane);
+		
 			
-			Stage stage = new Stage();
-			stage.setScene(new Scene(root));
-			stage.show();
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 	
-	public void setWarning() {
+	public void setWarningNeedToFill() {
 //		Alert fuer moegliche fehlende Eingaben
 		Alert warning = new Alert(AlertType.WARNING, "Bitte geben Sie alle erforderlichen Daten an. ", ButtonType.OK);
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText("Das Buch ist nicht vollständig.");
+		warning.showAndWait();
+	}
+	
+	public void setWarningNoInt() {
+//		Fehler, wenn bei Jahr oder Edition keine Zahle eingegeben wurde
+		Alert warning = new Alert(AlertType.WARNING, "Bitte geben Sie als Auflage oder Ersscheinungsjahr eine Zahl an. ", ButtonType.OK);
+		warning.setTitle("ACHTUNG");
+		warning.setHeaderText("Es wird eine Zahl benötigt.");
 		warning.showAndWait();
 	}
 

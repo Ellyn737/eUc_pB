@@ -1,6 +1,8 @@
 package view;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,7 +30,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import models.Lender;
 import models.Rating;
 import models.Book;
@@ -36,7 +40,7 @@ import models.Media;
 import models.BorrowMedia;
 
 public class ChangeTitleController {
-
+	@FXML AnchorPane rootPane;
 	@FXML Label titleLabel;
 	@FXML Button changeImageBtn;
 	@FXML ImageView image;
@@ -70,6 +74,9 @@ public class ChangeTitleController {
 	private MainBibliothek mainBib;
 	private BibController bc;
 	private ChangeTitleController ctc;
+	
+	private List<Integer> resultIds;
+	private ArrayList<Pair> oldParameters;
 
 	
 	public void setMain(MainBibliothek mainBib) {
@@ -77,12 +84,15 @@ public class ChangeTitleController {
 	}
 	
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-		Scene searchScene = new Scene(searchPane);
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
+		AnchorPane pane = (AnchorPane) loader.load();
 		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
+		//id an ResultsView uebergeben
+		ResultsViewController resultsView = loader.getController();
+		resultsView.fillListAndView(resultIds, oldParameters);
+		
+		Scene scene = new Scene(pane);
+		rootPane.getChildren().setAll(pane);
 		}	
 	
 	@FXML private void handleSaveChangeButton(ActionEvent event) throws IOException{
@@ -115,17 +125,16 @@ public class ChangeTitleController {
 			try {
 				bc.changeTitle(bookID);
 				
-				//zurück zu ShowTitle
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
-				Parent root = (Parent) loader.load();
+				AnchorPane pane = (AnchorPane) loader.load();
 				
 				//id an ResultsView uebergeben
 				ShowTitleController showTitle = loader.getController();
 				showTitle.fillView(bookID);
 				
-				Stage stage = new Stage();
-				stage.setScene(new Scene(root));
-				stage.show();
+				Scene scene = new Scene(pane);
+				rootPane.getChildren().setAll(pane);
+				
 			}catch(Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -202,6 +211,11 @@ public class ChangeTitleController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
+	}
+	
+	public void setOldParametersForReturning(List<Integer> ids, ArrayList<Pair> searchParams) {
+		resultIds = ids;
+		oldParameters = searchParams;
 	}
 	
 	/**
