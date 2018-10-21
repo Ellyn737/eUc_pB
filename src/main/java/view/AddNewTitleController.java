@@ -2,6 +2,8 @@ package view;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import controller.BibController;
@@ -18,7 +20,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -77,6 +82,7 @@ public class AddNewTitleController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("ANTC - initialize");
+
 
 		ObservableList<MenuItem> sbItems = sbMenu.getItems();
 		/**
@@ -146,63 +152,59 @@ public class AddNewTitleController implements Initializable{
 	
 	@FXML private void handleAddTitleButton(ActionEvent event) throws IOException{
 		System.out.println("ANTC - handleAddTitleButton");
+		
+		int numberOfNecessaryFields = 9;
+		List txtFields = new ArrayList<>();
 
-		bc = new BibController();
 		
-		//add the title to db
-		//hole Strings mit Textfeldinhalten
-		title = txtFiTitle.getText();
-		subTitle = txtFiSubTitle.getText();
-		author = txtFiAuthor.getText();
-		publisher = txtFiPublisher.getText();
-		year = Integer.parseInt(txtFiYear.getText());
-		content = txtArContent.getText();
-		comment = txtArComment.getText();
-		edition = Integer.parseInt(txtFiEdition.getText());
-		
-		System.out.println("Vor der Uebergabe an BC");
-		System.out.println("Genre: " +genre);
-		System.out.println("Subgenre: " +subGenre);
-		System.out.println("isBorrowed: " + isBorrowed);
-		
-		//values an bc uebergeben zur db-uebergabe
-		bc.setAuthor(author);
-		bc.setTitle(title);
-		if(!subTitle.isEmpty()) {
-			bc.setSubTitle(subTitle);
+		System.out.println("Setze Variablen");
+		if(!txtFiTitle.getText().isEmpty()) {
+			title = txtFiTitle.getText();
+			txtFields.add(title);
 		}
-		bc.setPublisher(publisher);
-		bc.setYear(year);
-		bc.setGenre(genre);
-		bc.setSubGenre(subGenre);
-		bc.setContent(content);
-		bc.setComment(comment);
-		bc.setIsBorrowed(isBorrowed);
-		bc.setEdition(edition);
-		
-		//buch an db uebergeben
-		try {
-			bc.addToBib();
-		}catch(Exception e) {
-			System.out.println(e.getMessage());
+		if(!txtFiAuthor.getText().isEmpty()) {
+			author = txtFiAuthor.getText();
+			txtFields.add(author);
 		}
-		//zu ShowTitle
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
-		Parent root = (Parent) loader.load();
-		
-		//id an ResultsView uebergeben
-		ShowTitleController showTitle = loader.getController();
-		try {
-			int id = bc.getLastId();
-			showTitle.fillView(id);
-		}catch(Exception e) {
-			System.out.println(e.getMessage());
+		if(!txtFiPublisher.getText().isEmpty()) {
+			publisher = txtFiPublisher.getText();
+			txtFields.add(publisher);
 		}
-		Stage stage = new Stage();
-		stage.setScene(new Scene(root));
-		stage.show();
+		if(!txtFiYear.getText().isEmpty()) {
+			year = Integer.parseInt(txtFiYear.getText());
+			txtFields.add(year);
+		}
+		if(!txtFiEdition.getText().isEmpty()) {
+			edition = Integer.parseInt(txtFiEdition.getText());
+			txtFields.add(edition);
+		}
+		if(!txtArContent.getText().isEmpty()) {
+			content = txtArContent.getText();
+			txtFields.add(content);
+		}
+		if(!txtArComment.getText().isEmpty()) {
+			comment = txtArComment.getText();
+			txtFields.add(comment);
+		}
+		if(genre != null) {
+			txtFields.add("genre");
+		}
+		if(subGenre != null) {
+			txtFields.add("subGenre");
+		}
+	
 		
-		}	
+		
+		if(txtFields.size() == numberOfNecessaryFields) {
+			System.out.println("Alles ausgefüllt");
+			addBook();
+		}
+		else {
+			setWarning();
+		}
+		
+	}
+
 	
 	@FXML private void handleAddImageButton(ActionEvent event) throws IOException{
 		//add image to title in db
@@ -211,5 +213,54 @@ public class AddNewTitleController implements Initializable{
 		
 	}
 
+	public void addBook() {
+		System.out.println("ANTC - addBook");
+		bc = new BibController();
+		try {
+
+			bc.setTitle(title);
+			bc.setAuthor(author);
+			bc.setPublisher(publisher);
+			bc.setYear(year);
+			bc.setContent(content);
+			bc.setComment(comment);
+			bc.setEdition(edition);
+			bc.setIsBorrowed(isBorrowed);
+			bc.setGenre(genre);
+			bc.setSubGenre(subGenre);
+			
+			if(!txtFiSubTitle.getText().isEmpty()) {
+				subTitle = txtFiSubTitle.getText();
+				bc.setSubTitle(subTitle);
+			}
+			
+			bc.addToBib();
+			
+			//zu ShowTitle
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
+			Parent root = (Parent) loader.load();
+			
+			//id an ResultsView uebergeben
+			ShowTitleController showTitle = loader.getController();
+
+			int id = bc.getLastId();
+			showTitle.fillView(id);
+			
+			
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root));
+			stage.show();
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void setWarning() {
+//		Alert fuer moegliche fehlende Eingaben
+		Alert warning = new Alert(AlertType.WARNING, "Bitte geben Sie alle erforderlichen Daten an. ", ButtonType.OK);
+		warning.setTitle("ACHTUNG");
+		warning.setHeaderText("Das Buch ist nicht vollständig.");
+		warning.showAndWait();
+	}
 
 }

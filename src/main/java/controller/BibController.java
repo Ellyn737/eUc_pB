@@ -56,10 +56,10 @@ public class BibController {
 		
 		System.out.println("Create a media/buch object");
 		Book book = new Book();
-		
+
+		book.setTitle(title);
 		book.setAuthor(author);
 		book.setPublisher(publisher);		
-		book.setTitle(title);
 		if(subTitle != null) {
 			book.setSubTitle(subTitle);
 		}

@@ -79,7 +79,7 @@
                            </children>
                         </Group>
                         <TextField fx:id="txtFiEdition" layoutX="162.0" layoutY="60.0" promptText="Auflage" />
-                        <TextField fx:id="txtFiSubtitle" layoutY="30.0" promptText="Untertitel" />
+                        <TextField fx:id="txtFiSubTitle" layoutY="30.0" promptText="Untertitel" />
                      </children>
                   </Pane>
                   <TextArea fx:id="txtArContent" layoutX="224.0" layoutY="183.0" prefHeight="85.0" prefWidth="456.0" promptText="Inhaltsangabe" />
