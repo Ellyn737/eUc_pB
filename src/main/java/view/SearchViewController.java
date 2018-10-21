@@ -161,7 +161,7 @@ public class SearchViewController implements Initializable {
 		}
 	
 		if(parameters.size() <= 0) {
-			setWarning();
+			setWarningNoSearchParameters();
 		}
 		
 		findBook(parameters);
@@ -251,31 +251,41 @@ public class SearchViewController implements Initializable {
 			
 //			List mit Ids holen, die zu den Suchparametern passen
 			List<Integer> ids = bc.findBookId(parameters);
-			System.out.println("Ids: " + ids);
-
-		
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
-			Parent root = (Parent) loader.load();
 			
-			//Liste mit ids an ResultsView uebergeben
-			ResultsViewController resultsView = loader.getController();
-			resultsView.fillListAndView(ids, parameters);
-			
-			Stage stage = new Stage();
-			stage.setScene(new Scene(root));
-			stage.show();
-			
+			if(ids.size() >= 1) {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
+				Parent root = (Parent) loader.load();
+				
+				//Liste mit ids an ResultsView uebergeben
+				ResultsViewController resultsView = loader.getController();
+				
+				resultsView.fillListAndView(ids, parameters);
+				
+				Stage stage = new Stage();
+				stage.setScene(new Scene(root));
+				stage.show();
+			}else {
+				setWarningNoResult();
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void setWarning() {
+	public void setWarningNoSearchParameters() {
 //		Alert fuer moegliche fehlende Eingaben
 		Alert warning = new Alert(AlertType.WARNING, "Bitte füllen Sie mindestens einen Suchparameter aus. ", ButtonType.OK);
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText("Es wurden keine Suchangaben gemacht.");
+		warning.showAndWait();
+	}
+	
+	public void setWarningNoResult() {
+//		Alert fuer moegliche fehlende Eingaben
+		Alert warning = new Alert(AlertType.WARNING, "Bitte überprüfen Sie Ihre Sucheingabe.", ButtonType.OK);
+		warning.setTitle("ACHTUNG");
+		warning.setHeaderText("Es wurden keine passenden Titel gefunden.");
 		warning.showAndWait();
 	}
 
