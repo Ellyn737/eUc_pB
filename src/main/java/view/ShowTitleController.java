@@ -164,11 +164,25 @@ public class ShowTitleController {
 		System.out.println("STC - handleBorrowButton");
 
 		if(radioBtnBorrowed.isSelected()) {
-			AnchorPane returnPane = FXMLLoader.load(getClass().getResource("../view/TitleRueckgabe.fxml"));
-			rootPane.getChildren().setAll(returnPane);
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("TitleReturn.fxml"));
+			AnchorPane pane = (AnchorPane) loader.load();
+			
+			TitleReturnController trc = loader.getController();
+			trc.setOldParametersForReturning(resultIds, oldParameters);
+//			trc.fillView()
+			
+			Scene scene = new Scene(pane);
+			rootPane.getChildren().setAll(pane);
 		}else {
-			AnchorPane borrowPane = FXMLLoader.load(getClass().getResource("../view/TitleAusleihe.fxml"));
-			rootPane.getChildren().setAll(borrowPane);
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("TitleBorrow.fxml"));
+			AnchorPane pane = (AnchorPane) loader.load();
+			
+			TitleBorrowController tbc = loader.getController();
+			tbc.setOldParametersForReturning(resultIds, oldParameters);
+			tbc.fillView(titleId);
+			
+			Scene scene = new Scene(pane);
+			rootPane.getChildren().setAll(pane);
 		}	
 	}
 

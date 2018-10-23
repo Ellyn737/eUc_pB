@@ -1,5 +1,13 @@
 package controller;
 
+import java.time.LocalDate;
+import java.util.Date;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import models.BorrowMedia;
+
 /**
  * 
  * @author ellyn
@@ -9,12 +17,38 @@ package controller;
  */
 public class BorrowController {
 
-	public void buchAusleihen(int buchID, int ausleiherID) {
+	private SessionFactory factory;
+	private java.sql.Date date;
+	
+	public void buchAusleihen(int buchID, int ausleiherID, LocalDate returnDate) {
 		/*
 		 * sucht das Buch heraus und 
 		 * ordnet in DB den ausleiher dem Buch zu
 		 * aendert istInBib auf false
 		 */
+		
+		factory = SingletonFactory.getFactory();
+		Session newBorrowingSession = factory.openSession();
+		
+		BorrowMedia borrowing = new BorrowMedia();
+		date = java.sql.Date.valueOf(returnDate);
+		
+		borrowing.setIdMedia(buchID);
+		borrowing.setIdLender(ausleiherID);
+		borrowing.setBorrowDate(date);
+		
+		//start transaction
+		newBorrowingSession.beginTransaction();
+		
+		//save the book
+		newBorrowingSession.save(borrowing);
+		
+		//commit the transaction
+		newBorrowingSession.getTransaction().commit();
+		
+		System.out.println("Book borrowed");
+		newBorrowingSession.close();	
+		
 		
 	}
 	

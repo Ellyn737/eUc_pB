@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class BibController {
  * 	
  * @throws Exception
  */
-	public void addToBib() throws Exception{				
+	public void addToBib(){				
 		System.out.println("In BC - addToBib");
 		
 		factory = SingletonFactory.getFactory();
@@ -105,7 +106,7 @@ public class BibController {
 	 * @param bookID
 	 * @throws Exception
 	 */
-	public void deleteFromBib(int bookID) throws Exception {
+	public void deleteFromBib(int bookID){
 		System.out.println("In BC - deleteFromBib");
 
 		factory = SingletonFactory.getFactory();
@@ -129,7 +130,7 @@ public class BibController {
 	 * @param bookID
 	 * @throws Exception
 	 */
-	public void changeTitle(int bookID) throws Exception{
+	public void changeTitle(int bookID){
 		System.out.println("In BC - changeTitle");
 
 		factory = SingletonFactory.getFactory();
@@ -207,7 +208,7 @@ public class BibController {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Integer> findBookId(ArrayList<Pair> searchParameters) throws Exception {		
+	public List<Integer> findBookId(ArrayList<Pair> searchParameters){		
 		System.out.println("In BC - findBookId");
 	
 		factory = SingletonFactory.getFactory();
@@ -292,7 +293,7 @@ public class BibController {
 	 * @return
 	 * @throws Exception
 	 */
-	public int searchForOthers(String authorSearch, String titleSearch, int editionSearch) throws Exception {
+	public int searchForOthers(String authorSearch, String titleSearch, int editionSearch) {
 		System.out.println("BC - SearchForOthers");
 		int numberOfCopys = -1;
 	
@@ -330,21 +331,23 @@ public class BibController {
 	 * @return
 	 * @throws Exception
 	 */
-	public Book getTheBook(int id) throws Exception {
-		System.out.println("In BC - getTheBook");
-		Book book = null;
-		
-		factory = SingletonFactory.getFactory();
-		Session findBookSession = factory.openSession();
+	public Book getTheBook(int id) {
 
-		book = (Book) findBookSession.get(Book.class, id);
-		
-		findBookSession.beginTransaction();
-		findBookSession.getTransaction().commit();
-		System.out.println("Found Book: " + book);
-		findBookSession.close();
-		
-		return book;
+			System.out.println("In BC - getTheBook");
+			Book book = null;
+			
+			factory = SingletonFactory.getFactory();
+			Session findBookSession = factory.openSession();
+	
+			book = (Book) findBookSession.get(Book.class, id);
+			
+			findBookSession.beginTransaction();
+			findBookSession.getTransaction().commit();
+			System.out.println("Found Book: " + book);
+			findBookSession.close();
+			
+			return book;
+
 	}
 	
 	/**
@@ -353,27 +356,25 @@ public class BibController {
 	 * @return
 	 * @throws Exception
 	 */
-	public int getLastId() throws Exception {
-		System.out.println("In BC - getLastId");
-		int lastId = -1;
-
-		factory = SingletonFactory.getFactory();
-		Session findMaxIdSession = factory.openSession();
-		findMaxIdSession.beginTransaction();
+	public int getLastId() {
 		
-		String hql = "select max(m.idmedia) from Media m ";
-		Query query = findMaxIdSession.createQuery(hql);
-
-		ArrayList<Integer> lastIds = (ArrayList<Integer>) query.getResultList();
-		for(int r: lastIds) {
-			lastId = r;
-			System.out.println("Gesammelte ids: " + r);
-		}
-		
-		findMaxIdSession.getTransaction().commit();
-		findMaxIdSession.close();
+			System.out.println("In BC - getLastId");
+			int lastId = -1;
 	
-		return lastId;
+			factory = SingletonFactory.getFactory();
+			Session findMaxIdSession = factory.openSession();
+			findMaxIdSession.beginTransaction();
+			
+			String hql = "select max(m.idmedia) from Media m ";
+			Query query = findMaxIdSession.createQuery(hql);
+	
+			int lastIds = query.getFirstResult();
+			
+			findMaxIdSession.getTransaction().commit();
+			findMaxIdSession.close();
+		
+			return lastId;
+
 	}
 
 	/**
@@ -383,43 +384,65 @@ public class BibController {
 	 * @param mediaId
 	 * @throws Exception
 	 */
-	public void setNewExemplarListing(int mediaId) throws Exception{
-		System.out.println("BC - setNewExemplarListing");
-//		Daten des Buchs besorgen
-		Book book = getTheBook(mediaId);
-		
-//		Anzahl der uebrigen Exemplare herausfinden
-		int newExemplarnumber = searchForOthers(book.getAuthor(), book.getTitle(), book.getEdition());
-		
-//		Ids der uebrigen Exemplare holen
-		ArrayList<Pair> exemplarParameters = new ArrayList<>();
-		exemplarParameters.add(new Pair("title", book.getTitle()));
-		exemplarParameters.add(new Pair("author", book.getAuthor()));
-		List<Integer> exemplarIds = findBookId(exemplarParameters);
-		
-		factory = SingletonFactory.getFactory();
+	public void setNewExemplarListing(int mediaId){
 
-//		Exemplarnummern der uebrigen exemplare neu zuordnen
-		for(int i = 0; i< newExemplarnumber; i++) {
-//			session erstellen
-			Session exemplarSession = factory.openSession();
+			System.out.println("BC - setNewExemplarListing");
+	//		Daten des Buchs besorgen
+			Book book = getTheBook(mediaId);
 			
-			int id = exemplarIds.get(i);
-//			hole das zu ändernde Buch
-			Book exemplar = (Book)exemplarSession.get(Book.class, id);
-//			setze exemplarVariable neu
-			exemplar.setExemplar(i+1);
-		
-			exemplarSession.beginTransaction();
+	//		Anzahl der uebrigen Exemplare herausfinden
+			int newExemplarnumber = searchForOthers(book.getAuthor(), book.getTitle(), book.getEdition());
 			
-			exemplarSession.update(exemplar);
+	//		Ids der uebrigen Exemplare holen
+			ArrayList<Pair> exemplarParameters = new ArrayList<>();
+			exemplarParameters.add(new Pair("title", book.getTitle()));
+			exemplarParameters.add(new Pair("author", book.getAuthor()));
+			List<Integer> exemplarIds = findBookId(exemplarParameters);
 			
-			exemplarSession.getTransaction().commit();
-			System.out.println("exemplarnumbers sorted");
-			exemplarSession.close();
-		}
+			factory = SingletonFactory.getFactory();
+	
+	//		Exemplarnummern der uebrigen exemplare neu zuordnen
+			for(int i = 0; i< newExemplarnumber; i++) {
+	//			session erstellen
+				Session exemplarSession = factory.openSession();
+				
+				int id = exemplarIds.get(i);
+	//			hole das zu ändernde Buch
+				Book exemplar = (Book)exemplarSession.get(Book.class, id);
+	//			setze exemplarVariable neu
+				exemplar.setExemplar(i+1);
+			
+				exemplarSession.beginTransaction();
+				
+				exemplarSession.update(exemplar);
+				
+				exemplarSession.getTransaction().commit();
+				System.out.println("exemplarnumbers sorted");
+				exemplarSession.close();
+			}
+
 	}
 
+	public void setBookToBorrowed(int id) {
+		try {
+//			isBorrowed wird gesetzt, rest siehe BorrowMedia
+			factory = SingletonFactory.getFactory();
+			Session isBorrowedSession = factory.openSession();
+			isBorrowedSession.beginTransaction();
+			
+			Book book = getTheBook(id);
+			
+			book.setIsBorrowed(true);
+			
+			isBorrowedSession.update(book);
+			
+			isBorrowedSession.getTransaction().commit();
+			isBorrowedSession.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 //	--------------------GETTER SETTER --------------------------------------------------------	
