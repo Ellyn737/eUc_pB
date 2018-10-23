@@ -423,7 +423,7 @@ public class BibController {
 
 	}
 
-	public void setBookToBorrowed(int id) {
+	public void setBookToBorrowed(int id, Boolean isBorrowed) {
 		try {
 //			isBorrowed wird gesetzt, rest siehe BorrowMedia
 			factory = SingletonFactory.getFactory();
@@ -432,7 +432,7 @@ public class BibController {
 			
 			Book book = getTheBook(id);
 			
-			book.setIsBorrowed(true);
+			book.setIsBorrowed(isBorrowed);
 			
 			isBorrowedSession.update(book);
 			
@@ -442,6 +442,8 @@ public class BibController {
 			e.printStackTrace();
 		}
 	}
+	
+	
 	
 	
 	

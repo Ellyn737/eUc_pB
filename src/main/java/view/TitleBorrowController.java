@@ -162,8 +162,6 @@ public class TitleBorrowController {
 					System.out.println("borrow the book");
 //					set borrowMedia
 					borC.borrowBook(titleId, lenderId, returnDate, message);
-//					set book as borrowed
-					bc.setBookToBorrowed(titleId);
 						
 					System.out.println("Go To ShowTitle");
 //					go to ShowTitle
@@ -294,12 +292,15 @@ public class TitleBorrowController {
 //			neue email uebernehmen
 //			veraenderugnen speichern und uebergeben
 			ArrayList<Pair> changes = new ArrayList<Pair>();
-			changes.add(new Pair("Email", emailTxt.getText()));
-			lc.changeLender(id, changes);
-			
-//			setze TextFeld auf neue Email
-			txtFiEmail.setText(lc.getLender(id).getEmail());
-			
+			if(!emailTxt.getText().isEmpty()) {
+				changes.add(new Pair("Email", emailTxt.getText()));
+				lc.changeLender(id, changes);
+				
+	//			setze TextFeld auf neue Email
+				txtFiEmail.setText(lc.getLender(id).getEmail());
+			}else {
+				setWarningFields();
+			}
 		}else {
 //			alte email behalten
 //			setze TextFeld auf alte Email
@@ -334,12 +335,15 @@ public class TitleBorrowController {
 //			neue email uebernehmen
 //			veraenderugnen speichern und uebergeben
 			ArrayList<Pair> changes = new ArrayList<Pair>();
-			changes.add(new Pair("Lastname", lastName));
-			lc.changeLender(id, changes);
-			
-//			setze TextFeld auf neue Email
-			txtFiLastName.setText(lc.getLender(id).getLastName());
-			
+			if(!lNTxt.getText().isEmpty()) {
+				changes.add(new Pair("Lastname", lNTxt.getText()));
+				lc.changeLender(id, changes);
+				
+	//			setze TextFeld auf neue Email
+				txtFiLastName.setText(lc.getLender(id).getLastName());
+			}else {
+				setWarningFields();
+			}
 		}else {
 //			alten nachnamen benutzen
 			txtFiLastName.setText(lc.getLender(id).getLastName());
@@ -383,12 +387,25 @@ public class TitleBorrowController {
 		if(dialog.getResult() == ButtonType.YES) {
 			ArrayList<Pair> params = new ArrayList<>();
 	
-			params.add(new Pair("Firstname", firstNameTxt.getText()));
-			params.add(new Pair("Lastname", lastNameTxt.getText()));
-			params.add(new Pair("Email", emailTxt.getText()));
+			if(!firstNameTxt.getText().isEmpty()) {
+				params.add(new Pair("Firstname", firstNameTxt.getText()));
+			}else {
+				setWarningFields();
+			}
+			if(!lastNameTxt.getText().isEmpty()) {
+				params.add(new Pair("Lastname", lastNameTxt.getText()));
+			}else {
+				setWarningFields();
+			}
+			if(!emailTxt.getText().isEmpty()) {
+				params.add(new Pair("Email", emailTxt.getText()));
+			}else {
+				setWarningFields();
+			}
 			
 			lc.addNewLender(params);
 			int newLenderId = lc.getLastLenderId();
+			
 		}else {
 			dialog.close();
 		}

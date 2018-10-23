@@ -169,7 +169,7 @@ public class ShowTitleController {
 			
 			TitleReturnController trc = loader.getController();
 			trc.setOldParametersForReturning(resultIds, oldParameters);
-//			trc.fillView()
+			trc.fillView(titleId);
 			
 			Scene scene = new Scene(pane);
 			rootPane.getChildren().setAll(pane);

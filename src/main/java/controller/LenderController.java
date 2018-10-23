@@ -219,6 +219,11 @@ public class LenderController {
 		return emailIds;
 	}
 
+	/**
+	 * get ids of lender with this firstName
+	 * @param firstName
+	 * @return
+	 */
 	public ArrayList<Integer> findLenderIdByFirstName(String firstName){
 		System.out.println("LC - findLenderIdByFirstName");
 		factory = SingletonFactory.getFactory();

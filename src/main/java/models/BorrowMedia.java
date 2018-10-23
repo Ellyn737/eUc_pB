@@ -1,6 +1,6 @@
 package models;
 
-import java.util.Date;
+import java.sql.Date;
 import java.io.Serializable;
 import java.text.MessageFormat;
 
@@ -31,6 +31,9 @@ public class BorrowMedia implements Serializable {
 	
 	@Column(name="message")
 	private String message;
+	
+	@Column(name="is_returned")
+	private Boolean isReturned;
 
 	public BorrowMedia() {}
 
@@ -64,6 +67,14 @@ public class BorrowMedia implements Serializable {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Boolean getIsReturned() {
+		return isReturned;
+	}
+
+	public void setIsReturned(Boolean isReturned) {
+		this.isReturned = isReturned;
 	}
 
 	@Override
