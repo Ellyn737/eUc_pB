@@ -20,7 +20,7 @@ public class BorrowController {
 	private SessionFactory factory;
 	private java.sql.Date date;
 	
-	public void buchAusleihen(int buchID, int ausleiherID, LocalDate returnDate) {
+	public void borrowBook(int buchID, int ausleiherID, LocalDate returnDate, String message) {
 		/*
 		 * sucht das Buch heraus und 
 		 * ordnet in DB den ausleiher dem Buch zu
@@ -35,7 +35,8 @@ public class BorrowController {
 		
 		borrowing.setIdMedia(buchID);
 		borrowing.setIdLender(ausleiherID);
-		borrowing.setBorrowDate(date);
+		borrowing.setReturnDate(date);
+		borrowing.setMessage(message);
 		
 		//start transaction
 		newBorrowingSession.beginTransaction();

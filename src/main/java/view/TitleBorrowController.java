@@ -111,6 +111,7 @@ public class TitleBorrowController {
 		System.out.println("TBoC - handleBorrowButton");
 		ArrayList<Pair> params = new ArrayList<>();
 		
+		System.out.println("check if all fields are filled");
 //		check if all textFields are filled
 		if(!txtFiEmail.getText().isEmpty()) {
 			email = txtFiEmail.getText();	
@@ -132,46 +133,67 @@ public class TitleBorrowController {
 			params.add(new Pair("Message", message));
 		}
 			
+		
+//		all fields are filled out
 		if(params.size() == 4) {
-			
+			System.out.println("All fields are filled");
+
+			lc = new LenderController();
+			System.out.println("get matching ids to name");
 //			search for list of lenders --> by name (first + last)
 			List<Integer> lenderIds = lc.findLenderId(firstName, lastName);
 
 //			if there is only one lender with this name
-			if(lenderIds.size() == 1) {			
+			if(lenderIds.size() == 1) {		
+				System.out.println("there is just 1 matching lender");
+
 				borC = new BorrowController();
 				bc = new BibController();
 				
+				System.out.println("get lenders id");
 				int lenderId = lenderIds.get(0);
 
+				System.out.println("check if input.email matches id.email");
 //				check if email is the same
 //				if NOT: ask if email should be changed or old one should be used
 //				if YES: close dialog and continue
-				checkForDifferentEmail(lenderId);
-				
-//				set borrowMedia
-				borC.buchAusleihen(titleId, lenderId, returnDate);
-//				set book as borrowed
-				bc.setBookToBorrowed(titleId);
-					
-//				go to ShowTitle
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
-				AnchorPane pane = (AnchorPane) loader.load();
-				ShowTitleController showTitle = loader.getController();
-				showTitle.setOldParametersForReturning(resultIds, oldParameters);
-				showTitle.fillView(titleId);
-				Scene scene = new Scene(pane);
-				rootPane.getChildren().setAll(pane);
+				if(!checkIfEmailDiffersFromInput(lenderId)) {
+					System.out.println("emails do NOT differ");
+					System.out.println("borrow the book");
+//					set borrowMedia
+					borC.borrowBook(titleId, lenderId, returnDate, message);
+//					set book as borrowed
+					bc.setBookToBorrowed(titleId);
+						
+					System.out.println("Go To ShowTitle");
+//					go to ShowTitle
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
+					AnchorPane pane = (AnchorPane) loader.load();
+					ShowTitleController showTitle = loader.getController();
+					showTitle.setOldParametersForReturning(resultIds, oldParameters);
+					showTitle.fillView(titleId);
+					Scene scene = new Scene(pane);
+					rootPane.getChildren().setAll(pane);
+				}else {
+					System.out.println("Emails differ");
+					System.out.println("Set changeEmailDialog");
+					setChangeEmailDialog(lenderId);
+				}
 			}
 			else if(lenderIds.size() == 0){
-//				keine ids gefunden --> neu anlegen?
+				System.out.println("there are no matching lenders");
+				System.out.println("Set AddNewLenderDialog");
 				setAddNewLenderDialog();
 			}
 			else {
+				System.out.println("There are multiple lenders with this name");
 //				show list with all possible lenders with this name --> let them choose
+				System.out.println("Show a list of ids");
 			}
 		}else {
+			System.out.println("Not all Fields are filled out");
 //			nicht alle Felder sind ausgefüllt
+			System.out.println("Set WarningFields");
 			setWarningFields();
 		}
 	}
@@ -211,8 +233,9 @@ public class TitleBorrowController {
 	 * every lender can only have one email address
 	 * @param id
 	 */
-	public void checkForDifferentEmail(int id) {
+	public Boolean checkIfEmailDiffersFromInput(int id) {
 		System.out.println("TBoC - checkForDifferentEmail");
+		Boolean differs = false;
 //		check if email is the same
 //		if NOT: ask if email should be changed or old one should be used
 //		if YES: close dialog and continue
@@ -220,8 +243,9 @@ public class TitleBorrowController {
 		lc = new LenderController();
 		Lender lender = lc.getLender(id);
 		if(!email.equals(lender.getEmail())) {
-			setChangeEmailDialog(id);
+			differs = true;
 		}
+		return differs;
 	}
 	
 	/**
@@ -233,10 +257,9 @@ public class TitleBorrowController {
 		lc = new LenderController();
 		
 //		Dialog<> dialog = new Dialog<>();
-		Alert dialog = new Alert(AlertType.CONFIRMATION);
+		Alert dialog = new Alert(AlertType.WARNING, "Möchten Sie die alte Email-Adresse ersetzen?", ButtonType.YES, ButtonType.NO);
 		dialog.setTitle("Email anpassen");
-		dialog.setHeaderText("Die Email-Adresse des Ausleihers unterscheidet sich von der eingegebenen. "
-				+ "\r\nMöchten Sie die Email-Adresse verändern?");
+		dialog.setHeaderText("Die Email-Adresse des Ausleihers unterscheidet sich von der eingegebenen.");
 		
 		Label emailLabel = new Label("Email ");
 		TextField emailTxt = new TextField();
@@ -248,12 +271,6 @@ public class TitleBorrowController {
 		
 		dialog.getDialogPane().setContent(grid);
 		emailTxt.setText(email);
-
-		ButtonType saveBtn = new ButtonType("Ja", ButtonData.YES);
-		ButtonType cancelBtn = new ButtonType("Nein", ButtonData.NO);
-		
-		dialog.getDialogPane().getButtonTypes().add(saveBtn);
-		dialog.getDialogPane().getButtonTypes().add(cancelBtn);
 		
 		dialog.showAndWait();
 		if(dialog.getResult() == ButtonType.YES){
@@ -281,10 +298,9 @@ public class TitleBorrowController {
 		System.out.println("TBoC - setAddNewLenderDialog");
 		lc = new LenderController();
 
-		Dialog<Integer> dialog = new Dialog<>();
+		Alert dialog = new Alert(AlertType.WARNING, "Möchten Sie den neuen Ausleiher speichern?", ButtonType.YES, ButtonType.NO);
 		dialog.setTitle("Der Ausleiher existiert nicht.");
 		dialog.setHeaderText("Füllen Sie bitte alle Felder aus und legen so einen neuen Ausleiher an.");
-		
 		
 		Label firstNameLbl = new Label("Vorname ");
 		Label lastNameLbl = new Label("Nachname ");
@@ -303,35 +319,24 @@ public class TitleBorrowController {
 		grid.add(emailTxt, 2, 3);
 		dialog.getDialogPane().setContent(grid);
 		
-		ButtonType saveBtn = new ButtonType("Speichern", ButtonData.APPLY);
-		ButtonType cancelBtn = new ButtonType("Abbrechen", ButtonData.CANCEL_CLOSE);
-		dialog.getDialogPane().getButtonTypes().add(saveBtn);
-		dialog.getDialogPane().getButtonTypes().add(cancelBtn);
+		firstNameTxt.setText(firstName);
+		lastNameTxt.setText(lastName);
+		emailTxt.setText(email);
 		
-		dialog.setResultConverter(new Callback<ButtonType, Integer>() {
+		dialog.showAndWait();
+		
+		if(dialog.getResult() == ButtonType.YES) {
+			ArrayList<Pair> params = new ArrayList<>();
+	
+			params.add(new Pair("Firstname", firstNameTxt.getText()));
+			params.add(new Pair("Lastname", lastNameTxt.getText()));
+			params.add(new Pair("Email", emailTxt.getText()));
 			
-			@Override
-			public Integer call(ButtonType b) {
-				if(b == ButtonType.APPLY) {
-					ArrayList<Pair> params = new ArrayList<>();
-
-					params.add(new Pair("Firstname", firstNameTxt.getText()));
-					params.add(new Pair("Lastname", lastNameTxt.getText()));
-					params.add(new Pair("Email", emailTxt.getText()));
-					
-					lc.addNewLender(params);
-					int newLenderId = lc.getLastLenderId();
-					
-					return newLenderId;
-				}
-				return null;
-			}
-		});
-
-		
-		
-		
-		
+			lc.addNewLender(params);
+			int newLenderId = lc.getLastLenderId();
+		}else {
+			dialog.close();
+		}
 	}
 	
 	/**

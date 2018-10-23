@@ -103,6 +103,9 @@ public class LenderController {
 		 * felder vergleichen
 		 * aenderungen uebernehmen
 		 */
+		
+		
+		
 		return 0;
 		
 	}
