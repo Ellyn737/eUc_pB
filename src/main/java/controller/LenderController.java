@@ -95,19 +95,41 @@ public class LenderController {
 	/*
 	 * updates the lender with new parameters
 	 */
-	public int changeLender(int lenderID, ArrayList<Pair> changes) {
+	public void changeLender(int lenderID, ArrayList<Pair> changes) {
 		System.out.println("LC - changeLender");
 		/*
 		 * ausleiher per id suchen
-		 * anzeigen in view
-		 * felder vergleichen
 		 * aenderungen uebernehmen
 		 */
 		
+		System.out.println("LC - getLender");
+		factory = SingletonFactory.getFactory();
+		Session changeLenderSession = factory.openSession();
+		changeLenderSession.beginTransaction();
+
+		Lender lender = getLender(lenderID);
 		
+		for(int i = 0; i < changes.size(); i++) {
+			String key = changes.get(i).getKey().toString();
+			switch(key) {
+			case "Email":
+				lender.setEmail(changes.get(i).getValue().toString());
+				break;
+			case "FirstName":
+				lender.setFirstName(changes.get(i).getValue().toString());
+				break;
+			case "LastName":
+				lender.setLastName(changes.get(i).getValue().toString());
+				break;
+			}
+		}
 		
-		return 0;
+		changeLenderSession.update(lender);
 		
+		changeLenderSession.getTransaction().commit();
+		
+		System.out.println("Lender changed");
+		changeLenderSession.close();		
 	}
 
 	/**
