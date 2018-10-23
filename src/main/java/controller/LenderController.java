@@ -77,21 +77,7 @@ public class LenderController {
 		
 		
 	}
-	
-	/**
-	 * delets the lender
-	 * @param ausleiherID
-	 */
-	public void deleteLender(int ausleiherID) {
-		System.out.println("LC - deleteLender");
-		/*
-		 * nutzer mit id suchen
-		 * eingaben in txtfeldern vergleichen
-		 * nachfragen ob sicher
-		 * aus db löschen
-		 */
-	}
-	
+
 	/*
 	 * updates the lender with new parameters
 	 */
@@ -115,10 +101,10 @@ public class LenderController {
 			case "Email":
 				lender.setEmail(changes.get(i).getValue().toString());
 				break;
-			case "FirstName":
+			case "Firstname":
 				lender.setFirstName(changes.get(i).getValue().toString());
 				break;
-			case "LastName":
+			case "Lastname":
 				lender.setLastName(changes.get(i).getValue().toString());
 				break;
 			}
@@ -186,7 +172,7 @@ public class LenderController {
 	 * @param lN
 	 * @return
 	 */
-	public List<Integer> findLenderId(String fN, String lN) {
+	public List<Integer> findLenderIdByName(String fN, String lN) {
 		System.out.println("LC - findLenderId");
 		factory = SingletonFactory.getFactory();
 		Session findSession = factory.openSession();
@@ -213,8 +199,8 @@ public class LenderController {
 	 * @param email
 	 * @return
 	 */
-	public ArrayList<Integer> searchForSameLenderEmail(String email) {
-		System.out.println("LC - searchForSameLenderEmail");
+	public ArrayList<Integer> findLenderIdByEmail(String email) {
+		System.out.println("LC - findLenderIdByName");
 		factory = SingletonFactory.getFactory();
 		Session searchEmailSession = factory.openSession();
 		
@@ -233,4 +219,22 @@ public class LenderController {
 		return emailIds;
 	}
 
+	public ArrayList<Integer> findLenderIdByFirstName(String firstName){
+		System.out.println("LC - findLenderIdByFirstName");
+		factory = SingletonFactory.getFactory();
+		Session searchForFirstNameSession = factory.openSession();
+		searchForFirstNameSession.beginTransaction();
+		
+		String hql = "select l.idLender from Lender l where l.firstName = '" + firstName + "'";		
+		Query query = searchForFirstNameSession.createQuery(hql);
+		ArrayList<Integer> emailIds = (ArrayList<Integer>) query.getResultList();	
+		
+		//commit the transaction
+		searchForFirstNameSession.getTransaction().commit();
+		
+		searchForFirstNameSession.close();	
+		
+		return emailIds;
+	}
+	
 }

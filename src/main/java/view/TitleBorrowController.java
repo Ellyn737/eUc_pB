@@ -141,17 +141,17 @@ public class TitleBorrowController {
 			lc = new LenderController();
 			System.out.println("get matching ids to name");
 //			search for list of lenders --> by name (first + last)
-			List<Integer> lenderIds = lc.findLenderId(firstName, lastName);
-
+			List<Integer> lenderNameIds = lc.findLenderIdByName(firstName, lastName);
+			
 //			if there is only one lender with this name
-			if(lenderIds.size() == 1) {		
+			if(lenderNameIds.size() == 1) {		
 				System.out.println("there is just 1 matching lender");
-
+				
 				borC = new BorrowController();
 				bc = new BibController();
 				
 				System.out.println("get lenders id");
-				int lenderId = lenderIds.get(0);
+				int lenderId = lenderNameIds.get(0);
 
 				System.out.println("check if input.email matches id.email");
 //				check if email is the same
@@ -180,19 +180,36 @@ public class TitleBorrowController {
 					setChangeEmailDialog(lenderId);
 				}
 			}
-			else if(lenderIds.size() == 0){
+			else if(lenderNameIds.size() == 0){
 				System.out.println("there are no matching lenders");
-				System.out.println("Set AddNewLenderDialog");
-				setAddNewLenderDialog();
-			}
-			else {
-				System.out.println("There are multiple lenders with this name");
-//				show list with all possible lenders with this name --> let them choose
-				System.out.println("Show a list of ids");
+				
+				List<Integer> lenderEmailIds = lc.findLenderIdByEmail(email);
+				ArrayList<Integer> firstNameIds = lc.findLenderIdByFirstName(firstName);
+				ArrayList<Integer> emailAndFirstNameMatchIds = new ArrayList<>();
+				int matchingNameAndEmailId = -1;
+				for(int id: firstNameIds) {
+					if(lenderEmailIds.contains(id)) {
+						System.out.println("ids mit gleicher email und vorname gefunden");
+						emailAndFirstNameMatchIds.add(id);
+						matchingNameAndEmailId = id;
+					}
+				}
+				
+//				wenn es ids mit übereinstimmendem namen und email gibt
+				if(emailAndFirstNameMatchIds.size() > 0) {
+//					fragen ob nachname geändert werden soll
+					setChangeLenderDialog(matchingNameAndEmailId);
+				}else {
+//					wenn es keine übereinstimmenden email und name gibt
+//					fragen, ob neuer ausleiher angelegt werden soll
+					System.out.println("Set AddNewLenderDialog");
+					setAddNewLenderDialog();
+				}
+				
 			}
 		}else {
+//			wenn nicht alle Felder ausgefüllt sind
 			System.out.println("Not all Fields are filled out");
-//			nicht alle Felder sind ausgefüllt
 			System.out.println("Set WarningFields");
 			setWarningFields();
 		}
@@ -291,6 +308,44 @@ public class TitleBorrowController {
 		}
 	}
 	
+	
+	public void setChangeLenderDialog(int id) {
+		System.out.println("TBoC - setChangeLenderDialog");
+		lc = new LenderController();
+		
+//		Dialog<> dialog = new Dialog<>();
+		Alert dialog = new Alert(AlertType.WARNING, "Möchten Sie einen neuen Nachnamen eingeben?", ButtonType.YES, ButtonType.NO);
+		dialog.setTitle("Nachname anpassen");
+		dialog.setHeaderText("Der Nachname des Ausleihers unterscheidet sich von dem eingegebenen.");
+		
+		Label lNLbl = new Label("Nachname ");
+		TextField lNTxt = new TextField();
+		
+		GridPane grid = new GridPane();
+//		Spalte, Zeile
+		grid.add(lNLbl, 1, 1);
+		grid.add(lNTxt, 2, 1);
+		
+		dialog.getDialogPane().setContent(grid);
+		lNTxt.setText(lastName);
+		
+		dialog.showAndWait();
+		if(dialog.getResult() == ButtonType.YES){
+//			neue email uebernehmen
+//			veraenderugnen speichern und uebergeben
+			ArrayList<Pair> changes = new ArrayList<Pair>();
+			changes.add(new Pair("Lastname", lastName));
+			lc.changeLender(id, changes);
+			
+//			setze TextFeld auf neue Email
+			txtFiLastName.setText(lc.getLender(id).getLastName());
+			
+		}else {
+//			alten nachnamen benutzen
+			txtFiLastName.setText(lc.getLender(id).getLastName());
+			dialog.close();
+		}
+	}
 	/**
 	 * shows a dialog for adding a new lender
 	 */
