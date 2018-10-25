@@ -37,16 +37,6 @@ public class Lender implements Serializable{
 	public Lender() {}
 
 
-	public int getIdLender() {
-		return idLender;
-	}
-
-
-	public void setIdLender(int idLender) {
-		this.idLender = idLender;
-	}
-
-
 	public String getFirstName() {
 		return firstName;
 	}

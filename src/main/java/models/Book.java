@@ -24,10 +24,24 @@ public class Book extends Media implements Serializable{
 	private String publisher;
 	@Column(name="edition")
 	private int edition;
+	@Column(name="genre")
+	private String genre;
 	@Column(name="sub_genre")
 	private String subGenre;
+	@Column(name="sub_title")
+	private String subTitle;
 	
 	public Book() {super();}
+
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
 
 
 	public String getSubGenre() {
@@ -39,6 +53,15 @@ public class Book extends Media implements Serializable{
 		this.subGenre = subGenre;
 	}
 
+
+	public String getGenre() {
+		return genre;
+	}
+
+
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
 
 	public String getAuthor() {
 		return author;
@@ -73,8 +96,8 @@ public class Book extends Media implements Serializable{
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: autor={1}, verlag={2}, auflage={3}", 
-				new Object[] {getClass().getSimpleName(), author, publisher, edition});
+		return MessageFormat.format("{0}: autor={1}, verlag={2}, auflage={3}, genre={4}, subgenre={5}", 
+				new Object[] {getClass().getSimpleName(), author, publisher, edition, genre, subGenre});
 	}
 	
 	

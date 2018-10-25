@@ -24,12 +24,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import models.Book;
 
 public class ResultsViewController{
-
+	@FXML AnchorPane rootPane;
 	@FXML Label titleLabel;
 	@FXML Button cancelBtn;
 	@FXML Label searchParametersLabel;
@@ -52,6 +53,7 @@ public class ResultsViewController{
 	private String isBorrowedString;
 	
 	private List<Integer> theIds;
+	ArrayList<Pair> oldParameters;
 		
 	private ResultsViewController resContr;
 	
@@ -65,13 +67,8 @@ public class ResultsViewController{
 	
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
 		System.out.println("RVC - handleCancelButton");
-
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
+		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
+		rootPane.getChildren().setAll(startPane);
 		}
 
 
@@ -86,9 +83,10 @@ public class ResultsViewController{
 		System.out.println("RVC - FillListAndView");
 		
 		theIds = ids;
+		oldParameters = searchParams;
 		
 		System.out.println("Setze die gesuchten Parameter");
-		setSearchParameters(searchParams);
+		setSearchParameters(oldParameters);
 		
 		System.out.println("Setzte die ListView");
 		setListView();
@@ -143,9 +141,9 @@ public class ResultsViewController{
 				case "isBorrowed":
 					isBorrowedString = parameters.get(i).getValue().toString();
 					if(isBorrowedString == "0") {
-						isBorrowedString = "ja";
-					}else {
 						isBorrowedString = "nein";
+					}else {
+						isBorrowedString = "ja";
 					}
 					result += "Ausgeliehen: " + isBorrowedString + "\r\n";
 					break;
@@ -190,21 +188,18 @@ public class ResultsViewController{
 			public void handle(MouseEvent event) {
 				try {
 					Integer listIndex = listView.getSelectionModel().getSelectedIndex(); 
-					System.out.println("index: " + listIndex);
-					
 					Integer clickedId = theIds.get(listIndex);
-					System.out.println(clickedId);
 					
 					FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
-					Parent root = (Parent) loader.load();
+					AnchorPane pane = (AnchorPane) loader.load();
 					
 					//id an ResultsView uebergeben
 					ShowTitleController showTitle = loader.getController();
 					showTitle.fillView(clickedId);
+					showTitle.setOldParametersForReturning(theIds, oldParameters);
 					
-					Stage stage = new Stage();
-					stage.setScene(new Scene(root));
-					stage.show();
+					Scene scene = new Scene(pane);
+					rootPane.getChildren().setAll(pane);
 
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -229,34 +224,37 @@ public class ResultsViewController{
 			
 			System.out.println(id);
 			bc = new BibController();
-			Book book = bc.getBookData(id);
+			try {
+				Book book = bc.getTheBook(id);
 			
-//			setze variablen
-			title = book.getTitle();
-			System.out.println(title);
-			
-			author = book.getAuthor();
-			System.out.println(author);
-			
-			publisher = book.getPublisher();
-			System.out.println(publisher);
-			
-			year = book.getYearOfPublication();
-			System.out.println(year);
-			
-			isBorrowed = book.getIsBorrowed();
-			System.out.println(isBorrowed);
-			
-			if(isBorrowed) {
-				isB = "ausgeliehen";
-			}else {
-				isB = "verfügbar";
+	//			setze variablen
+				title = book.getTitle();
+				System.out.println(title);
+				
+				author = book.getAuthor();
+				System.out.println(author);
+				
+				publisher = book.getPublisher();
+				System.out.println(publisher);
+				
+				year = book.getYearOfPublication();
+				System.out.println(year);
+				
+				isBorrowed = book.getIsBorrowed();
+				System.out.println(isBorrowed);
+				
+				if(isBorrowed) {
+					isB = "ausgeliehen";
+				}else {
+					isB = "verfügbar";
+				}
+	
+	//			setze String
+				resultListString += title + ", " + author + ", " + year + ", " + publisher + ", " + isB;
+				System.out.println(resultListString);
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
 			}
-
-//			setze String
-			resultListString += title + ", " + author + ", " + year + ", " + publisher + ", " + isB;
-			System.out.println(resultListString);
-			
 			return resultListString;
 			
 		}	

@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.hibernate.SessionFactory;
 
 import javafx.util.Pair;
 import models.Book;
+import models.Media;
 
 
 
@@ -26,6 +28,7 @@ public class BibController {
 	private Boolean isBorrowed;
 	private String isBorrowedString;
 	private String title;
+	private String subTitle;
 	private String author;
 	private String publisher;
 	private int year;
@@ -39,231 +42,175 @@ public class BibController {
 	private int edition;
 	private String editionString;
 	
-	private SessionFactory factory;
-
-	
-	public void addToBib() {
-		/*
-		 * neues Buch erstellen
-		 * 		Parameter aus den textfeldern der View
-		 * 
-		 * Buch an DB uebergeben
-		 */
+	private SessionFactory factory;	
+/**
+ * fügt einen neuen titel zur bibliothek hinzu
+ * 	
+ * @throws Exception
+ */
+	public void addToBib(){				
+		System.out.println("In BC - addToBib");
 		
-		//SessionFactory holen
-		try {
-			System.out.println("In BC - addToBib");
-			factory = SingletonFactory.getFactory();
-			//session starten
-			Session newTitleSession = factory.openSession();
-			
-			
-			//use the session object to save/retrieve Java objects
-			//create a media/buch object
-			System.out.println("Create a media/buch object");
-			Book book = new Book();
-			
-			System.out.println("Autor: " + author);
-			book.setAuthor(author);
-			
-			System.out.println("Verlag: " + publisher);
-			book.setPublisher(publisher);
-			
-			System.out.println("Titel: " + title);
-			book.setTitle(title);
-			
-			System.out.println("Jahr: "+ year);
-			book.setYearOfPublication(year);
-			
-			System.out.println("Genre:" + genre);
-			book.setGenre(genre);
-			
-			System.out.println("Subgenre:" + subGenre);
-			book.setSubGenre(subGenre);
-			
-			System.out.println("inBib:" + isBorrowed);
-			book.setIsBorrowed(isBorrowed);			
-			
-			System.out.println("inhalt: " + content);
-			book.setContent(content);
-
-			System.out.println("kommentar: "+ comment);
-			book.setComment(comment);
-			
-			System.out.println("auflage: " + edition);
-			book.setEdition(edition);
-			
-			//herausfinden, ob es den Titel mit dem Autoren und der Auflage schon gibt
-			int numberOfOthers = searchForOthers(author, title, edition);
-			
-			// wenn ja, das neue Exemplar mit nächst höherer Exemplarzahl austatten
-			if(numberOfOthers > 0) {
-				exemplar = numberOfOthers++;
-			
-			}else {
-				//wenn es das erste Exemplar ist --> mit 1 ausstatten
-				exemplar = 1;
-			}
-			
-			System.out.println("Anzahl der Exemplare: " + exemplar);
-			book.setExemplar(exemplar);
-			
-			//start transaction
-			System.out.println("Beginn transaction");
-			newTitleSession.beginTransaction();
-			
-			//save the book
-			System.out.println("Saving the book");
-			newTitleSession.save(book);
-			
-			//commit the transaction
-			System.out.println("Commiting");
-			newTitleSession.getTransaction().commit();
-			
-			System.out.println("Done Fine");
-			newTitleSession.close();
-
-		}catch (Exception e) {}
+		factory = SingletonFactory.getFactory();
+		Session newTitleSession = factory.openSession();
 		
+		System.out.println("Create a media/buch object");
+		Book book = new Book();
+
+		book.setTitle(title);
+		book.setAuthor(author);
+		book.setPublisher(publisher);		
+		if(subTitle != null) {
+			book.setSubTitle(subTitle);
+		}
+		book.setYearOfPublication(year);
+		book.setGenre(genre);
+		book.setSubGenre(subGenre);
+		book.setIsBorrowed(isBorrowed);			
+		book.setContent(content);
+		book.setComment(comment);
+		book.setEdition(edition);
 		
+		System.out.println(book);
+		
+//		herausfinden, ob es den Titel mit dem Autoren und der Auflage schon gibt
+		int numberOfOthers = searchForOthers(author, title, edition);
+		
+//		wenn ja, das neue Exemplar mit nächst höherer Exemplarzahl austatten
+		if(numberOfOthers > 0) {
+			exemplar = numberOfOthers + 1;		
+		}else {
+//			wenn es das erste Exemplar ist --> mit 1 ausstatten
+			exemplar = 1;
+		}
+		
+		book.setExemplar(exemplar);
+		
+		//start transaction
+		newTitleSession.beginTransaction();
+		
+		//save the book
+		newTitleSession.save(book);
+		
+		//commit the transaction
+		newTitleSession.getTransaction().commit();
+		
+		System.out.println("Book added");
+		newTitleSession.close();	
 		
 	}
 	
-	public void deleteFromBib(int bookID) {
-		/* 
-		 * Buch mit ID suchen und aus DB entfernen
-		 * 
-		 * AlarmFenster --> wirklich löschen?
-		 * 		bestätigen lassen
-		 * 
-		 */
+	/**
+	 * löscht buch anhand der id aus der db
+	 * 
+	 * @param bookID
+	 * @throws Exception
+	 */
+	public void deleteFromBib(int bookID){
 		System.out.println("In BC - deleteFromBib");
 
+		factory = SingletonFactory.getFactory();
+		Session deleteSession = factory.openSession();
+		deleteSession.beginTransaction();
+		
+		Book book = getTheBook(bookID);
+		deleteSession.delete(book);
+		setNewExemplarListing(bookID);
+		
+		deleteSession.getTransaction().commit();
+		System.out.println("Book deleted");
+		deleteSession.close();
+	
+		
 	}
 	
-	public void changeTitle(int bookID) {
-		/*
-		 * Parameter der Txtfelder aus View vergleichen
-		 * mit Parametern in DB
-		 * --> Änderungen übernehmen
-		 */
+	/**
+	 * vergleicht mögliche Veränderungen und uebernimmt diese für das Buch
+	 * 
+	 * @param bookID
+	 * @throws Exception
+	 */
+	public void changeTitle(int bookID){
 		System.out.println("In BC - changeTitle");
 
+		factory = SingletonFactory.getFactory();
+		Session changeSession = factory.openSession();
 		
 		
-		//uebergebe aenderungen bei WHERE ID = buchID
-		try {
-			System.out.println("In BC");
-			factory = SingletonFactory.getFactory();
-			Session changeSession = factory.openSession();
-			
-			
-			//aendere Daten
-			Book book = (Book)changeSession.get(Book.class, bookID);
-		
-			if(!title.equals(book.getTitle())) {
-				book.setTitle(title);
-				System.out.println("neuer Titel: " + title);
-			}
-			
-			if(!genre.equals(book.getGenre())) {
-				book.setGenre(genre);
-				System.out.println("neues Genre: " + genre);
-			}
-			
-			if(year != book.getYearOfPublication()) {
-				book.setYearOfPublication(year);
-				System.out.println("neues Erscheinungsjahr: " + year);
-			}
-			
-			if(!author.equals(book.getAuthor())) {
-				book.setAuthor(author);
-				System.out.println("neuer Autor: " + author);
-				}
-				
-			if(!publisher.equals(book.getPublisher())) {
-				book.setPublisher(publisher);
-				System.out.println("neuer Verlag: " + publisher);
-			}
-			
-			if(content != "") {
-				book.setContent(content);
-				System.out.println("neuer Inhalt: " + content);
-			}
-			
-			if(comment != "") {
-				book.setComment(comment);
-				System.out.println("neuer Kommentar: " + comment);
-			}
-			
-			if(edition != book.getEdition()) {
-				book.setEdition(edition);
-				System.out.println("andere Auflage: " + edition);
-			}
-			
-			
-			changeSession.beginTransaction();
-			
-			changeSession.update(book);
-			
-			changeSession.getTransaction().commit();
-			
-			changeSession.close();
-		}catch (Exception e) {
-			System.out.println("Fehler!");
-
+		//aendere Daten
+		Book book = (Book)changeSession.get(Book.class, bookID);
+	
+		if(!title.equals(book.getTitle())) {
+			book.setTitle(title);
+			System.out.println("neuer Titel: " + title);
 		}
+		
+//		nur einen neuen untertitel setzten, wenn
+//		NICHT(der untertitel leer ist UND er auch vorher schon leer war) UND
+//		sich die untertitel unterscheiden
+		if(!subTitle.equals(book.getSubTitle()) && !(subTitle == "" && book.getSubTitle() == null)) {
+			book.setSubTitle(subTitle);
+			System.out.println("neuer Untertitel: " + subTitle);
+		}
+		
+		if(!genre.equals(book.getGenre())) {
+			book.setGenre(genre);
+			System.out.println("neues Genre: " + genre);
+		}
+		
+		if(!subGenre.equals(book.getSubGenre())) {
+			book.setSubGenre(subGenre);
+			System.out.println("neues Subgenre: " + subGenre);
+		}
+		
+		if(year != book.getYearOfPublication()) {
+			book.setYearOfPublication(year);
+			System.out.println("neues Erscheinungsjahr: " + year);
+		}
+		
+		if(!author.equals(book.getAuthor())) {
+			book.setAuthor(author);
+			System.out.println("neuer Autor: " + author);
+			}
+			
+		if(!publisher.equals(book.getPublisher())) {
+			book.setPublisher(publisher);
+			System.out.println("neuer Verlag: " + publisher);
+		}
+		
+		if(!content.equals(book.getContent())) {
+			book.setContent(content);
+			System.out.println("neuer Inhalt: " + content);
+		}
+		
+		if(!comment.equals(book.getComment())) {
+			book.setComment(comment);
+			System.out.println("neuer Kommentar: " + comment);
+		}
+		
+		if(edition != book.getEdition()) {
+			book.setEdition(edition);
+			System.out.println("andere Auflage: " + edition);
+		}
+		
+		changeSession.beginTransaction();
+		changeSession.update(book);
+		changeSession.getTransaction().commit();
+		System.out.println("Book updated");
+		changeSession.close();
+	
 	}
 	
-	public boolean checkIfBorrowed(int bookID) {
-		boolean isInBib = true;
-		/*
-		 * buch in DB suchen und istInBib überprüfen
-		 * wenn da --> true
-		 * wenn nicht da --> false
-		 */
-		System.out.println("In BC - checkIfBorrowed");
-
-		return isInBib;
-	}
-	
-	public List<Integer> findBookId(ArrayList<Pair> searchParameters) throws Exception {
-		
-		/*
-		 * wird nur von SEARCHVIEW aufgerufen 
-		 * (id sonst immer von anderer View weitergegeben)
-		 * 
-		 * gibt Liste mit Ids zurück
-		 * 
-		 * 
-		 * switch case erstellen für verschiedene sql-query-Strings
-		 * abhängig von den übergebenen Suchparametern
-		 * 
-		 * mögliche Suchparameter:
-		 * 
-		 * ausgeliehen / nicht
-		 * Genre
-		 * title
-		 * autor
-		 * verlag
-		 * jahr 
-		 * auflage
-		 * exemplar
-		 * 
-		 * Sternebewertung (1-5)
-		 * 
-		 * 
-		 * 
-		 */
-		
+	/**
+	 * findet die id eines buchs anhand der suchparameter
+	 * 
+	 * @param searchParameters
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Integer> findBookId(ArrayList<Pair> searchParameters){		
 		System.out.println("In BC - findBookId");
-
-		for(int i = 0; i < searchParameters.size(); i++) {
-			System.out.println(searchParameters.get(i));
-		}
-		
-		
-//		factory holen und session erstellen
+	
 		factory = SingletonFactory.getFactory();
 		Session findSession = factory.openSession();
 		findSession.beginTransaction();
@@ -279,6 +226,10 @@ public class BibController {
 				case "title":
 					title = searchParameters.get(i).getValue().toString();
 					hql += "m.title = '" + title + "'";
+					break;
+				case "subTitle":
+					subTitle = searchParameters.get(i).getValue().toString();
+					hql = "m.subTitle = '" + subTitle + "'";
 					break;
 				case "author":
 					author = searchParameters.get(i).getValue().toString();
@@ -317,116 +268,197 @@ public class BibController {
 				hql += " and ";
 			}
 			System.out.println(hql);
-		}
+				
+			}
+			
+	//		uebergebe hql an query
+			Query query = findSession.createQuery(hql);
+			
+	//		hole Ids
+			ArrayList<Integer> idPassend = (ArrayList<Integer>) query.getResultList();		
+						
+			findSession.getTransaction().commit();
+			System.out.println("Ids collected");
+			findSession.close();
 		
-		
-		
-		
-		
-//		uebergebe hql an query
-		System.out.println("erstelle Query");
-		Query query = findSession.createQuery(hql);
-		System.out.println("Query erstellt..");		
-		
-//		hole Ids
-		ArrayList<Integer> idPassend = (ArrayList<Integer>) query.getResultList();
-		for(int r: idPassend) {
-			System.out.println("Gesammelte ids: ");
-			System.out.println(r);
-		}
-		
-//		Fehler auffangen, wenn nichts geeignetes in der DB ist
-		
-		findSession.getTransaction().commit();
-		
-		findSession.close();
-		
-		return idPassend;	
+			return idPassend;	
 	}
 	
+	/**
+	 * schaut ob es weitere exemplare eines Buchs gibt
+	 * 
+	 * @param authorSearch
+	 * @param titleSearch
+	 * @param editionSearch
+	 * @return
+	 * @throws Exception
+	 */
 	public int searchForOthers(String authorSearch, String titleSearch, int editionSearch) {
 		System.out.println("BC - SearchForOthers");
 		int numberOfCopys = -1;
-		
-		try {
-			System.out.println("In BC - searchForOthers");
-			factory = SingletonFactory.getFactory();
-			Session findSession = factory.openSession();
-			
-			//holt die id der Buecher mit diesem Titel und Autor
-			List<Integer> passendeIds = findSession.createQuery("select m.id_media from Media m "
-					+ "where m.title like ?0 and m.autor like ?1 and m.auflage like ?2")
-					.setParameter(0, titleSearch)
-					.setParameter(1, authorSearch)
-					.setParameter(2, editionSearch).list();
-			
-			
-			
-			findSession.beginTransaction();
-			
-			findSession.getTransaction().commit();
-			
-			System.out.println("PassendeIds: " + passendeIds);
-			
-			if(passendeIds.size() < 1) {
-				numberOfCopys = 0;
-			}else {
-				numberOfCopys = passendeIds.get(passendeIds.size());
-			}
-			
-			findSession.close();
-		}catch(Exception e) {}
+	
+		factory = SingletonFactory.getFactory();
+		Session findSession = factory.openSession();
+		findSession.beginTransaction();
 
+		//holt die id der Buecher mit diesem Titel und Autor
+		String hql = "select m.idmedia from Media m where m.title = '" + titleSearch 
+				+ "' and m.author = '" + authorSearch 
+				+ "' and m.edition = '" + editionSearch + "'";
+		System.out.println(hql);
+		Query query = findSession.createQuery(hql);
+		
+		
+		List<Integer> matchingIds = query.getResultList();
+		
+		if(matchingIds.size() < 1) {
+			numberOfCopys = 0;
+		}else {
+			numberOfCopys = matchingIds.size();
+		}
+		
+		findSession.getTransaction().commit();
+		System.out.println("other copys: " + numberOfCopys);
+		findSession.close();
+		
 		return numberOfCopys;
 	}
 	
-	public Book getBookData(int id) {
-		System.out.println("In BC - getBookData");
-		Book book = null;
-		
-		try {
+	/**
+	 * holt das Buch anhand der id
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public Book getTheBook(int id) {
+
+			System.out.println("In BC - getTheBook");
+			Book book = null;
+			
 			factory = SingletonFactory.getFactory();
 			Session findBookSession = factory.openSession();
-			//mit id suchen
-//			book = (Book) findBookSession.createQuery("select Media m where m.id_media = ?0").setParameter(0, id).uniqueResult();
+	
 			book = (Book) findBookSession.get(Book.class, id);
 			
 			findBookSession.beginTransaction();
-			
 			findBookSession.getTransaction().commit();
-			System.out.println(book);
-		}catch(Exception e) {}
-		return book;
+			System.out.println("Found Book: " + book);
+			findBookSession.close();
+			
+			return book;
+
 	}
 	
+	/**
+	 * holt die zuletzt zur db hinzugefügte id
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public int getLastId() {
-		System.out.println("In BC - getLastId");
+		
+			System.out.println("In BC - getLastId");
+			int lastId = -1;
+	
+			factory = SingletonFactory.getFactory();
+			Session findMaxIdSession = factory.openSession();
+			findMaxIdSession.beginTransaction();
+			
+			String hql = "select max(m.idmedia) from Media m ";
+			Query query = findMaxIdSession.createQuery(hql);
+	
+			int lastIds = query.getFirstResult();
+			
+			findMaxIdSession.getTransaction().commit();
+			findMaxIdSession.close();
+		
+			return lastId;
 
-		int lastId = -1;
-		
-//		factory holen und session erstellen
-		factory = SingletonFactory.getFactory();
-		Session findMaxIdSession = factory.openSession();
-		findMaxIdSession.beginTransaction();
-		
-		String hql = "select max(m.idmedia) from Media m ";
-		Query query = findMaxIdSession.createQuery(hql);
-
-		ArrayList<Integer> idPassend = (ArrayList<Integer>) query.getResultList();
-		for(int r: idPassend) {
-			lastId = r;
-			System.out.println("Gesammelte ids: ");
-			System.out.println(r);
-		}
-		
-		findMaxIdSession.getTransaction().commit();
-		findMaxIdSession.close();
-		
-		return lastId;
 	}
 
+	/**
+	 * ordnet die Exemplarzahlen neu zu
+	 * wenn beispielsweise ein Buch gelöscht wurde
+	 * 
+	 * @param mediaId
+	 * @throws Exception
+	 */
+	public void setNewExemplarListing(int mediaId){
+
+			System.out.println("BC - setNewExemplarListing");
+	//		Daten des Buchs besorgen
+			Book book = getTheBook(mediaId);
+			
+	//		Anzahl der uebrigen Exemplare herausfinden
+			int newExemplarnumber = searchForOthers(book.getAuthor(), book.getTitle(), book.getEdition());
+			
+	//		Ids der uebrigen Exemplare holen
+			ArrayList<Pair> exemplarParameters = new ArrayList<>();
+			exemplarParameters.add(new Pair("title", book.getTitle()));
+			exemplarParameters.add(new Pair("author", book.getAuthor()));
+			List<Integer> exemplarIds = findBookId(exemplarParameters);
+			
+			factory = SingletonFactory.getFactory();
 	
-//	GETTER SETTER UND TOSTRING	
+	//		Exemplarnummern der uebrigen exemplare neu zuordnen
+			for(int i = 0; i< newExemplarnumber; i++) {
+	//			session erstellen
+				Session exemplarSession = factory.openSession();
+				
+				int id = exemplarIds.get(i);
+	//			hole das zu ändernde Buch
+				Book exemplar = (Book)exemplarSession.get(Book.class, id);
+	//			setze exemplarVariable neu
+				exemplar.setExemplar(i+1);
+			
+				exemplarSession.beginTransaction();
+				
+				exemplarSession.update(exemplar);
+				
+				exemplarSession.getTransaction().commit();
+				System.out.println("exemplarnumbers sorted");
+				exemplarSession.close();
+			}
+
+	}
+
+	public void setBookToBorrowed(int id, Boolean isBorrowed) {
+		try {
+//			isBorrowed wird gesetzt, rest siehe BorrowMedia
+			factory = SingletonFactory.getFactory();
+			Session isBorrowedSession = factory.openSession();
+			isBorrowedSession.beginTransaction();
+			
+			Book book = getTheBook(id);
+			
+			book.setIsBorrowed(isBorrowed);
+			
+			isBorrowedSession.update(book);
+			
+			isBorrowedSession.getTransaction().commit();
+			isBorrowedSession.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+//	--------------------GETTER SETTER --------------------------------------------------------	
+	
+
+
+	public String getSubTitle() {
+		return subTitle;
+	}
+
+	public void setSubTitle(String subTitle) {
+		this.subTitle = subTitle;
+	}
+	
 	public String getSubGenre() {
 		return subGenre;
 	}
