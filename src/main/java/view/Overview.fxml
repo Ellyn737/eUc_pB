@@ -5,7 +5,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.OverviewController">
    <children>
       <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="STATISTIKEN" />
       <SplitPane dividerPositions="0.8318" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">
@@ -14,7 +14,7 @@
                <children>
                   <Button fx:id="publisherBtn" layoutX="67.0" layoutY="179.0" mnemonicParsing="false" onAction="#handlePublisherButton" prefHeight="36.0" prefWidth="200.0" text="VERLAGE" />
                   <Label fx:id="titleLabel1" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="KATEGORIEAUSWAHL" />
-                  <Button fx:id="editionBtn" layoutX="67.0" layoutY="270.0" mnemonicParsing="false" onAction="#handleEditionButton" prefHeight="36.0" prefWidth="200.0" text="AUFLAGE" />
+                  <Button fx:id="ratingBtn" layoutX="67.0" layoutY="270.0" mnemonicParsing="false" onAction="#handleRatingButton" prefHeight="36.0" prefWidth="200.0" text="BEWERTUNGEN" />
                   <Button fx:id="genreBtn" layoutX="413.0" layoutY="99.0" mnemonicParsing="false" onAction="#handleGenreButton" prefHeight="36.0" prefWidth="200.0" text="GENRE" />
                   <Button fx:id="authorBtn" layoutX="67.0" layoutY="99.0" mnemonicParsing="false" onAction="#handleAuthorButton" prefHeight="36.0" prefWidth="200.0" text="AUTOREN" />
                   <Button fx:id="yearBtn" layoutX="413.0" layoutY="179.0" mnemonicParsing="false" onAction="#handleYearButton" prefHeight="36.0" prefWidth="200.0" text="JAHRE" />

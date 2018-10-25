@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="STATISTIKEN" />
+      <SplitPane dividerPositions="0.8318" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">
+         <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Button fx:id="publisherBtn" layoutX="67.0" layoutY="179.0" mnemonicParsing="false" onAction="#handlePublisherButton" prefHeight="36.0" prefWidth="200.0" text="VERLAGE" />
+                  <Label fx:id="titleLabel1" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="KATEGORIEAUSWAHL" />
+                  <Button fx:id="editionBtn" layoutX="67.0" layoutY="270.0" mnemonicParsing="false" onAction="#handleEditionButton" prefHeight="36.0" prefWidth="200.0" text="BEWERTUNGEN" />
+                  <Button fx:id="genreBtn" layoutX="413.0" layoutY="99.0" mnemonicParsing="false" onAction="#handleGenreButton" prefHeight="36.0" prefWidth="200.0" text="GENRE" />
+                  <Button fx:id="authorBtn" layoutX="67.0" layoutY="99.0" mnemonicParsing="false" onAction="#handleAuthorButton" prefHeight="36.0" prefWidth="200.0" text="AUTOREN" />
+                  <Button fx:id="yearBtn" layoutX="413.0" layoutY="179.0" mnemonicParsing="false" onAction="#handleYearButton" prefHeight="36.0" prefWidth="200.0" text="JAHRE" />
+                  <Button fx:id="languageBtn" layoutX="413.0" layoutY="270.0" mnemonicParsing="false" onAction="#handleLanguageButton" prefHeight="36.0" prefWidth="200.0" text="SPRACHEN" />
+                  <Label fx:id="titleLabel11" alignment="CENTER" contentDisplay="TOP" layoutX="265.0" layoutY="42.0" opacity="0.6" prefHeight="36.0" prefWidth="150.0" text="BITTE WÄHLEN SIE AUS:" />
+               </children>
+            </AnchorPane>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="113.0" prefWidth="681.0">
+               <children>
+                  <Button fx:id="backBtn" layoutX="265.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="36.0" prefWidth="150.0" text="ZURÜCK" />
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
