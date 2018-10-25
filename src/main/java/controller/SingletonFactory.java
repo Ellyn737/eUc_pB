@@ -1,8 +1,10 @@
 package controller;
 
+import org.apache.tools.ant.taskdefs.Exec;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
 import models.Lender;
 import models.Rating;
@@ -25,6 +27,7 @@ public final class SingletonFactory {
 					addAnnotatedClass(Media.class).addAnnotatedClass(Book.class).
 					addAnnotatedClass(Lender.class).addAnnotatedClass(Rating.class).
 					addAnnotatedClass(BorrowMedia.class).buildSessionFactory();
+
 		}
 		return factoryReal;
 	}

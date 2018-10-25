@@ -149,7 +149,7 @@ public class LenderController {
 	 */
 	public int getLastLenderId(){
 		System.out.println("LC - getLastLenderId");
-		int lastId = -1;
+		int lastId = 0;
 
 		factory = SingletonFactory.getFactory();
 		Session findMaxIdSession = factory.openSession();
@@ -159,7 +159,9 @@ public class LenderController {
 		Query query = findMaxIdSession.createQuery(hql);
 
 		List<Integer> ids = query.getResultList();
-		lastId = ids.get(ids.size()-1);
+		if(!ids.isEmpty()) {
+			lastId = (ids.size()-1);
+		}
 		
 		findMaxIdSession.getTransaction().commit();
 		findMaxIdSession.close();
