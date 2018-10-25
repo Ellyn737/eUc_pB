@@ -27,6 +27,7 @@ import javafx.util.Pair;
 import models.Book;
 import models.BorrowMedia;
 import models.Lender;
+import models.Rating;
 
 public class TitleReturnController {
 	@FXML AnchorPane rootPane;
@@ -41,6 +42,7 @@ public class TitleReturnController {
 	@FXML Label messageLbl;
 	@FXML Button giveBackBtn;
 	@FXML Button cancelBtn;
+	@FXML Rating ratingStars;
 	
 	
 	private MainBibliothek mainBib;

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.controlsfx.control.Rating;
+
 import controller.BibController;
 import controller.MainBibliothek;
 import javafx.event.ActionEvent;
@@ -51,6 +53,8 @@ public class ShowTitleController {
 	@FXML Button changeTitleBtn;
 	@FXML Button cancelBtn;
 	@FXML Button borrowBtn;
+	@FXML Rating ratingStars;
+
 
 	private MainBibliothek mainBib;
 	private ShowTitleController showTitleC;

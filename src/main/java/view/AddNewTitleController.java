@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.Rating;
+
 import controller.BibController;
 import controller.MainBibliothek;
+import controller.RatingController;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -57,7 +60,7 @@ public class AddNewTitleController implements Initializable{
 	@FXML Button addTitleBtn;
 	@FXML Menu sbMenu;
 	@FXML Menu rMenu;
-	
+	@FXML Rating ratingStars;
 	
 	private Boolean isBorrowed = false;
 	private String title;
@@ -70,10 +73,11 @@ public class AddNewTitleController implements Initializable{
 	private String content;
 	private String comment;
 	private int edition;
+	private double rating;
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
-		
+	private RatingController rC;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -87,7 +91,7 @@ public class AddNewTitleController implements Initializable{
 	public void initialize(URL location, ResourceBundle resources) {
 		System.out.println("ANTC - initialize");
 
-
+//		sachbuch auf OnAction
 		ObservableList<MenuItem> sbItems = sbMenu.getItems();
 		/**
 		 * subgenre wird auf das ausgewählte subgenre gesetzt
@@ -109,6 +113,7 @@ public class AddNewTitleController implements Initializable{
 			});
 		}
 		
+//		romane auf OnAction
 		ObservableList<MenuItem> rItems = rMenu.getItems();
 		
 		for(MenuItem rItem: rItems) {
@@ -141,6 +146,11 @@ public class AddNewTitleController implements Initializable{
 				}				
 			}
 		});
+		
+//		rating auf hover und onAction
+//		ratingStars.setUpdateOnHover(true);
+		ratingStars.setPartialRating(true);
+		
 		
 	}
 	
@@ -200,6 +210,10 @@ public class AddNewTitleController implements Initializable{
 		if(subGenre != null) {
 			txtFields.add("subGenre");
 		}
+		
+//		getRating
+		rating = ratingStars.getRating();
+		
 
 		if(txtFields.size() == numberOfNecessaryFields) {
 			System.out.println("Alles ausgefüllt");
@@ -222,8 +236,10 @@ public class AddNewTitleController implements Initializable{
 	public void addBook() {
 		System.out.println("ANTC - addBook");
 		bc = new BibController();
+		rC = new RatingController();
 		try {
 
+//			setze variablen für das Buch
 			bc.setTitle(title);
 			bc.setAuthor(author);
 			bc.setPublisher(publisher);
@@ -235,16 +251,26 @@ public class AddNewTitleController implements Initializable{
 			bc.setGenre(genre);
 			bc.setSubGenre(subGenre);
 			
+			
 			if(!txtFiSubTitle.getText().isEmpty()) {
 				subTitle = txtFiSubTitle.getText();
 				bc.setSubTitle(subTitle);
 			}
 			
+//			füge das buch der bib hinzu
 			bc.addToBib();
 			
+//			setze variablen für die bewertung
+			rC.setRating(rating);
+			rC.setIdMedia(bc.getLastId());
+//			bei erstellen eines buchs = admin ist der bewerter (== lender(0))
+//			erster Lender ist der Admin --> erstellen bei installation (immer der erste)
+			rC.setIdLender(1);
+			
+//			speichere bewertung
+			rC.addToRatings();
+			
 			//zu ShowTitle
-			
-			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
 			

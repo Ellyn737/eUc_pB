@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.text.MessageFormat;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Table(name="rating")
@@ -19,11 +19,8 @@ public class Rating implements Serializable {
 	@Column(name="is_rating")
 	private int idRating;
 	
-	@Column(name="rating_text")
-	private String ratingText;
-	
 	@Column(name="rating_stars")
-	private int ratingStars;
+	private double ratingStars;
 	
 	@Column(name="id_lender")
 	private  int idLender;
@@ -36,41 +33,42 @@ public class Rating implements Serializable {
 	
 	public Rating() {}
 
-
-	public int getIdRating() {
-		return idRating;
-	}
-
-
-	public void setIdRating(int idRating) {
-		this.idRating = idRating;
-	}
-
-
-	public String getRatingText() {
-		return ratingText;
-	}
-
-
-	public void setRatingText(String ratingText) {
-		this.ratingText = ratingText;
-	}
-
-
-	public int getRatingStars() {
+	public double getRatingStars() {
 		return ratingStars;
 	}
 
-
-	public void setRatingStars(int ratingStars) {
+	public void setRatingStars(double ratingStars) {
 		this.ratingStars = ratingStars;
 	}
 
+	public int getIdLender() {
+		return idLender;
+	}
+
+	public void setIdLender(int idLender) {
+		this.idLender = idLender;
+	}
+
+	public int getIdMedia() {
+		return idMedia;
+	}
+
+	public void setIdMedia(int idMedia) {
+		this.idMedia = idMedia;
+	}
+
+	public Date getRatingDate() {
+		return ratingDate;
+	}
+
+	public void setRatingDate(Date ratingDate) {
+		this.ratingDate = ratingDate;
+	}
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: idBewertung={1}, bewertungsText={2}, bewertungsSterne={3}", 
-				new Object[] {getClass().getSimpleName(), idRating, ratingText, ratingStars});
+		return MessageFormat.format("{0}: idBewertung={1}, bewertungsSterne={3}", 
+				new Object[] {getClass().getSimpleName(), idRating, ratingStars});
 	}
 	
 	

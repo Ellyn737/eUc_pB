@@ -158,7 +158,8 @@ public class LenderController {
 		String hql = "select max(l.idLender) from Lender l ";
 		Query query = findMaxIdSession.createQuery(hql);
 
-		int lastIds = query.getFirstResult();
+		List<Integer> ids = query.getResultList();
+		lastId = ids.get(ids.size()-1);
 		
 		findMaxIdSession.getTransaction().commit();
 		findMaxIdSession.close();
