@@ -57,6 +57,8 @@ public class ChangeTitleController {
 	@FXML TextArea txtArComment;
 	@FXML Button cancelBtn;
 	@FXML Button saveChangeBtn;
+	@FXML Rating ratingStars;
+
 		
 	private int bookID;
 	

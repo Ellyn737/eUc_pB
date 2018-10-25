@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.Rating;
+
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 import controller.BibController;
@@ -51,6 +53,8 @@ public class SearchViewController implements Initializable {
 	@FXML RadioButton radioBtnBorrowed;
 	@FXML Button cancelBtn;
 	@FXML Button searchBtn;
+	@FXML Rating ratingStars;
+
 	
 	
 	private int bookID;

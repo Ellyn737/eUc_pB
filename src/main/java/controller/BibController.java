@@ -42,8 +42,7 @@ public class BibController {
 	private int edition;
 	private String editionString;
 	
-	private SessionFactory factory;
-
+	private SessionFactory factory;	
 /**
  * fügt einen neuen titel zur bibliothek hinzu
  * 	
@@ -71,6 +70,7 @@ public class BibController {
 		book.setContent(content);
 		book.setComment(comment);
 		book.setEdition(edition);
+		
 		System.out.println(book);
 		
 //		herausfinden, ob es den Titel mit dem Autoren und der Auflage schon gibt
