@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import org.controlsfx.control.Rating?>
 
-<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.AddNewTitleController">
+<AnchorPane prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.AddNewTitleController">
    <children>
       <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="TITEL HINZUFÜGEN" />
       <SplitPane dividerPositions="0.8317972350230415" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">
