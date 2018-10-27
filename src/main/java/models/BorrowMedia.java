@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="borrow_media")
+@Table(name="borrow_media", schema="ellynhb")
 public class BorrowMedia implements Serializable {
 
 	@Id

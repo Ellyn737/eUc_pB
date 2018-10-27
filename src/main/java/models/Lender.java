@@ -18,7 +18,7 @@ import java.text.MessageFormat;
  */
 
 @Entity
-@Table(name="lender")
+@Table(name="lender", schema="ellynhb")
 public class Lender implements Serializable{
 
 	@Id

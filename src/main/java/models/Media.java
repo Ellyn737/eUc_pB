@@ -22,7 +22,7 @@ import java.text.MessageFormat;
  * 
  */
 @Entity
-@Table(name="media")
+@Table(name="media", schema="ellynhb")
 /*
  * single_table == the entities from different classes 
  * with a common ancestor are placed in a single table

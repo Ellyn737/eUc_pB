@@ -11,7 +11,7 @@ import java.text.MessageFormat;
 import java.sql.Date;
 
 @Entity
-@Table(name="rating")
+@Table(name="rating", schema="ellynhb")
 public class Rating implements Serializable {
 	
 	@Id
