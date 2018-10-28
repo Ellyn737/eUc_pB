@@ -86,6 +86,8 @@ public class TitleReturnController {
 		
 		//id an ResultsView uebergeben
 		ShowTitleController showPane = loader.getController();
+		
+		showPane.fillView(titleId);
 		showPane.setOldParametersForReturning(resultIds, oldParameters);
 		
 		Scene scene = new Scene(pane);

@@ -11,7 +11,9 @@ import javax.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import javafx.util.Pair;
 import models.BorrowMedia;
+import models.Rating;
 
 /**
  * 
@@ -108,17 +110,80 @@ public class BorrowController {
 		Session findMaxIdWithDateSession = factory.openSession();
 		findMaxIdWithDateSession.beginTransaction();
 		
+//		hole borrowIds von diesem titel
 		String hql = "select bm.borrowId from BorrowMedia bm where bm.idMedia = '" + titleID + "'";
 		Query query = findMaxIdWithDateSession.createQuery(hql);
 		ArrayList<Integer> lastBorrowedIds = (ArrayList<Integer>) query.getResultList();
 		
+//		hole letzte der ids
 		int lastBorrowedId = lastBorrowedIds.get(lastBorrowedIds.size()-1);
 		
+//		hole das ganze borrowing
 		BorrowMedia bm = findMaxIdWithDateSession.get(BorrowMedia.class, lastBorrowedId);
+		
+		findMaxIdWithDateSession.getTransaction().commit();
+		findMaxIdWithDateSession.close();
 		
 		return bm;
 		
 		
+	}
+	
+	public BorrowMedia getTheBorrowing(int bookID) {
+		System.out.println("In BOC - getTheBorrowing");
+		
+		factory = SingletonFactory.getFactory();
+		Session findBorrowingSession = factory.openSession();
+		
+		BorrowMedia bm = (BorrowMedia) findBorrowingSession.get(BorrowMedia.class, bookID);
+		
+		findBorrowingSession.beginTransaction();
+		findBorrowingSession.getTransaction().commit();
+		findBorrowingSession.close();
+		
+		return bm;
+	}
+	
+	
+	public List<Integer> findBorrowingIds(int bookID) {
+		System.out.println("BoC - findBorrowingIds");
+		
+		factory = SingletonFactory.getFactory();
+		Session findIdSession = factory.openSession();
+		findIdSession.beginTransaction();
+		
+//		hole borrowIds von diesem titel
+		String hql = "select bm.borrowId from BorrowMedia bm where bm.idMedia = '" + bookID + "'";
+		Query query = findIdSession.createQuery(hql);
+		List<Integer> lastBorrowedIds = query.getResultList();
+		
+		return lastBorrowedIds;
+
+	}
+	
+	public void deleteBorrowingsOfTitle(int bookID) {
+		System.out.println("BOC - deleteBorrowingOfTitle");
+		
+//		get borrowingids of this book
+		List<Integer> borrowIds = findBorrowingIds(bookID);
+		
+//		hole ratings für diese ratingIds und lösche alle ratings zu diesem titel
+		for(int bId: borrowIds) {
+			System.out.println(bId);
+//			hole das borrowing der id
+			BorrowMedia bm = getTheBorrowing(bookID);
+			
+//			lösche das borrowing
+			factory = SingletonFactory.getFactory();
+			Session deleteSession = factory.openSession();
+			deleteSession.beginTransaction();
+			
+			deleteSession.delete(bm);
+			
+			deleteSession.getTransaction().commit();
+			System.out.println("Rating deleted");
+			deleteSession.close();			
+		}
 	}
 	
 	/**

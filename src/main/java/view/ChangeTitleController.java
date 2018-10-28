@@ -201,16 +201,18 @@ public class ChangeTitleController {
 			genre = book.getGenre();
 			
 //			hole bewertungen fuer den titel
+			ratingStars.setPartialRating(false);
 			rc = new RatingController();
 			ArrayList<Pair> searchParam = new ArrayList<>();
 			searchParam.add(new Pair("idMedia", id));
 			List<Integer> ratings = rc.findRatingIds(searchParam);
 			
-//			hole letztes rating fuer den titel (nur der Admin kann bewerten, aber sich eventuell umentscheiden)
-			Rating rating = rc.getRating(ratings.get(ratings.size()));
+
+//			hole neuestes rating fuer den titel (nur der Admin kann bewerten, aber sich eventuell umentscheiden)
+			Rating rating = rc.getTheRating(ratings.get(ratings.size()-1));
+			
 			int oldStars = rating.getRatingStars();
 //			altes rating setzen
-			ratingStars.setPartialRating(false);
 			ratingStars.setRating(oldStars);
 			
 			

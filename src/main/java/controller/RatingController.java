@@ -19,7 +19,7 @@ public class RatingController {
 	private String ratingString;
 	private int idLender;
 	private String idLenderString;
-	private int idMedia;
+	private int mediaId;
 	private String idMediaString;
 	private LocalDate ratingDate;
 	private String ratingDateString;
@@ -30,13 +30,14 @@ public class RatingController {
 	 * adds a new rating to the db
 	 */
 	public void addToRatings() {
+		System.out.println("RC - addToRatings");
 		factory = SingletonFactory.getFactory();
 		Session newRatingSession = factory.openSession();
 		
 		Rating newRating = new Rating();
 		
 		newRating.setIdLender(idLender);
-		newRating.setIdMedia(idMedia);
+		newRating.setIdMedia(mediaId);
 		newRating.setRatingStars(rating);
 		newRating.setRatingDate(Date.valueOf(ratingDate));
 		
@@ -47,13 +48,44 @@ public class RatingController {
 		newRatingSession.close();		
 	}
 	
+	
+	/**
+	 * delets allr ratings for a bookid
+	 * @param bookID
+	 */
+	public void deleteRatings(int bookID) {
+		System.out.println("RC - deleteRatings");
+		
+//		get rating ids of this book
+		ArrayList<Pair> searchParams = new ArrayList<>();
+		searchParams.add(new Pair("idMedia", bookID));
+		List<Integer> ratingIds = findRatingIds(searchParams);
+		
+//		hole ratings für diese ratingIds und lösche alle ratings zu diesem titel
+		for(int rId: ratingIds) {
+			System.out.println(rId);
+			Rating rating = getTheRating(rId);
+			factory = SingletonFactory.getFactory();
+			Session deleteSession = factory.openSession();
+			deleteSession.beginTransaction();
+			
+			deleteSession.delete(rating);
+			
+			deleteSession.getTransaction().commit();
+			System.out.println("Rating deleted");
+			deleteSession.close();			
+		}
+
+	}
+	
+	
 	/**
 	 * returns a list of ids of books that have the same rating
 	 * @param ratingStars
 	 * @return
 	 */
 	public List<Integer> findRatingIds(ArrayList<Pair> searchParams) {
-		
+		System.out.println("RC - findRatingIds");
 		factory = SingletonFactory.getFactory();
 		Session findSession = factory.openSession();
 		findSession.beginTransaction();
@@ -97,7 +129,8 @@ public class RatingController {
 
 	}
 
-	public Rating getRating(int id) {
+	public Rating getTheRating(int id) {
+		System.out.println("RC - getRating");
 		factory = SingletonFactory.getFactory();
 		Session findSession = factory.openSession();
 		findSession.beginTransaction();
@@ -109,6 +142,7 @@ public class RatingController {
 		
 		return aRating;
 	}
+
 	
 	
 	
@@ -131,11 +165,11 @@ public class RatingController {
 	}
 
 	public int getIdMedia() {
-		return idMedia;
+		return mediaId;
 	}
 
 	public void setIdMedia(int idMedia) {
-		this.idMedia = idMedia;
+		this.mediaId = idMedia;
 	}
 
 	public LocalDate getRatingDate() {

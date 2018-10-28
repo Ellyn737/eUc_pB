@@ -31,7 +31,7 @@ import java.text.MessageFormat;
 @DiscriminatorColumn(name="media_type", discriminatorType=DiscriminatorType.STRING)
 public class Media implements Serializable {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id_media")
 	private int idmedia;
 	

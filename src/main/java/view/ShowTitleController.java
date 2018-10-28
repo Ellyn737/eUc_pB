@@ -7,6 +7,7 @@ import java.util.List;
 import org.controlsfx.control.Rating;
 
 import controller.BibController;
+import controller.BorrowController;
 import controller.MainBibliothek;
 import controller.RatingController;
 import javafx.event.ActionEvent;
@@ -61,6 +62,7 @@ public class ShowTitleController {
 	private ShowTitleController showTitleC;
 	private BibController bc;
 	private RatingController rc;
+	private BorrowController boc;
 	
 	private int titleId;
 	private List<Integer> resultIds;
@@ -78,15 +80,8 @@ public class ShowTitleController {
 	 */
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
 		System.out.println("STC - handleCancelButton");
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
-		AnchorPane pane = (AnchorPane) loader.load();
-		
-		//id an ResultsView uebergeben
-		ResultsViewController resultsView = loader.getController();
-		resultsView.fillListAndView(resultIds, oldParameters);
-		
-		Scene scene = new Scene(pane);
-		rootPane.getChildren().setAll(pane);
+		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
+		rootPane.getChildren().setAll(startPane);
 		}	
 	
 	/**
@@ -96,42 +91,51 @@ public class ShowTitleController {
 	 */
 	@FXML private void handleDeleteTitleButton(ActionEvent event) throws IOException{
 		System.out.println("STC - handleDeleteButton");
-
-		//show warning
-		//delete title from db then go to menu
-		Book selection;
 		try {
-			selection = bc.getTheBook(titleId);
+			//show warning
+			//delete title from db then go to menu
+			Book selection = bc.getTheBook(titleId);
+			int exemplars = selection.getExemplar();
+			System.out.println(exemplars);
 			
 			Alert alert = new Alert(AlertType.CONFIRMATION, "Sind Sie sicher, dass sie " + selection.getTitle() + " löschen möchten?", ButtonType.YES, ButtonType.NO);
 			alert.showAndWait();
 			
 			if(alert.getResult() == ButtonType.YES) {
-				
-				bc.deleteFromBib(titleId);
-				List<Integer> remainingIds = bc.findBookId(oldParameters);
-				
-				if(remainingIds.size() > 0) {
+
+//				checken ob noch andere exemplare vom titel existieren
+				if(exemplars > 1) {
+//					zu ResultsView
 					FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
 					AnchorPane pane = (AnchorPane) loader.load();
 					
-					//id an ResultsView uebergeben
 					ResultsViewController resultsView = loader.getController();
 					resultsView.fillListAndView(resultIds, oldParameters);
 					
 					Scene scene = new Scene(pane);
 					rootPane.getChildren().setAll(pane);
 				}else {
+//					rating löschen
+					rc = new RatingController();
+					rc.deleteRatings(titleId);
+					
+//					borrowings löschen
+					boc = new BorrowController();
+					boc.deleteBorrowingsOfTitle(titleId);
+					
+//					buch löschen
+					bc.deleteFromBib(titleId);
+					
+//					zu StartMenu
 					AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 					rootPane.getChildren().setAll(startPane);
 				}
 			}
 			if(alert.getResult() == ButtonType.NO) {
-				
+//				zu ShowTitle
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 				AnchorPane pane = (AnchorPane) loader.load();
 				
-				//id an ShowTitle uebergeben
 				ShowTitleController showTitle = loader.getController();
 				showTitle.fillView(titleId);
 				showTitle.setOldParametersForReturning(resultIds, oldParameters);
@@ -139,7 +143,6 @@ public class ShowTitleController {
 				Scene scene = new Scene(pane);
 				rootPane.getChildren().setAll(pane);
 			}
-//			nothing happens on no
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -253,7 +256,7 @@ public class ShowTitleController {
 			searchParam.add(new Pair("idMedia", titleId));
 			List<Integer> rIds = rc.findRatingIds(searchParam);
 //			hole das letzte rating dieses titels
-			models.Rating rating = rc.getRating(rIds.size());
+			models.Rating rating = rc.getTheRating(rIds.get(rIds.size()-1));
 			
 //			set rating
 			int stars = rating.getRatingStars();
