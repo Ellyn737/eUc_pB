@@ -41,8 +41,11 @@ public class BibController {
 	private String exemplarString;
 	private int edition;
 	private String editionString;
+	private Integer rating;
+	private String ratingString;
 	
 	private SessionFactory factory;	
+	private RatingController rc;
 /**
  * fügt einen neuen titel zur bibliothek hinzu
  * 	
@@ -210,15 +213,16 @@ public class BibController {
 	 */
 	public List<Integer> findBookId(ArrayList<Pair> searchParameters){		
 		System.out.println("In BC - findBookId");
-	
+		ArrayList<Integer> matchingBookIds = new ArrayList<>();
+		List <Integer> ratings = new ArrayList<>(); 
+		
 		factory = SingletonFactory.getFactory();
 		Session findSession = factory.openSession();
 		findSession.beginTransaction();
 		
 //		String und query erstellen zur Uebergabe der Parameter
 		String hql = "select m.idmedia from Media m where ";		
-		
-		
+
 //		setze den hql-String je nach vorhandenen keys
 		for(int i = 0; i < searchParameters.size(); i++) {
 			String key = searchParameters.get(i).getKey().toString();
@@ -263,6 +267,10 @@ public class BibController {
 					isBorrowedString = searchParameters.get(i).getValue().toString();
 					hql += "m.isBorrowed = '" + isBorrowedString + "'";
 					break;
+				case "rating":
+					System.out.println("set rating");
+					rating = (int) searchParameters.get(i).getValue();
+					break;
 			}
 			if (i < searchParameters.size() -1) {
 				hql += " and ";
@@ -271,17 +279,69 @@ public class BibController {
 				
 			}
 			
-	//		uebergebe hql an query
-			Query query = findSession.createQuery(hql);
+			// wenn nur rating uebergeben wird
+			if(searchParameters.size() == 1 && (rating != null)) {
+				//holen der ids wo buecher dieses rating hatten
+				rc = new RatingController();
+				ArrayList<Pair> ratingList = new ArrayList<>();
+				ratingList.add(new Pair("rating", rating));
+//				get the ids of rating with this number of stars
+				System.out.println("Find ratingIds");
+				ratings = rc.findRatingIds(ratingList);
+				
+				matchingBookIds = (ArrayList<Integer>) ratings;
+			}
 			
-	//		hole Ids
-			ArrayList<Integer> idPassend = (ArrayList<Integer>) query.getResultList();		
-						
-			findSession.getTransaction().commit();
-			System.out.println("Ids collected");
-			findSession.close();
+			//wenn rating und andere uebergeben werden
+//			ERROR wegen AND in hql abfangen!!!!!!
+			else if(searchParameters.size() >= 1 && (rating != null)) {
+				//holen der ids wo buecher dieses rating hatten
+				rc = new RatingController();
+				ArrayList<Pair> ratingList = new ArrayList<>();
+				ratingList.add(new Pair("rating", rating));
+//				get the ids of rating with this number of stars
+				System.out.println("Find ratingIds");
+				ratings = rc.findRatingIds(ratingList);
+				
+//				holen der ids der buecher, die auf die parameter passen
+				System.out.println("Query");
+				Query query = findSession.createQuery(hql);
+				System.out.println("getResultList");
+				List<Integer> idPassend = query.getResultList();
+				System.out.println("BookIds collected");
+				findSession.getTransaction().commit();
+				
+//				vergleichen der ids und nur die uebergeben, die in beiden listen vorhanden sind
+				if(ratings.size() > 0) {
+					for(int ratingId: ratings) {
+						if(idPassend.size() > 0 && idPassend.contains(ratingId)){
+							matchingBookIds.add(ratingId);
+						}else if(idPassend.size() < 0) {
+							matchingBookIds.add(ratingId);
+						}
+					}
+				}else {
+					matchingBookIds = (ArrayList<Integer>) idPassend;
+				}
+			}
+			
+			//wenn kein rating uebergeben wird
+			else if(searchParameters.size() >= 1 && (rating == null)) {
+//				holen der ids der buecher, die auf die parameter passen
+				System.out.println("Query");
+				Query query = findSession.createQuery(hql);
+				System.out.println("getResultList");
+				List<Integer> idPassend = query.getResultList();
+				System.out.println("BookIds collected");
+				findSession.getTransaction().commit();
+				matchingBookIds = (ArrayList<Integer>) idPassend;
+			}
 		
-			return idPassend;	
+
+			findSession.close();
+
+			return matchingBookIds;	
+			
 	}
 	
 	/**
@@ -359,7 +419,7 @@ public class BibController {
 	public int getLastId() {
 		
 			System.out.println("In BC - getLastId");
-			int lastId = -1;
+			int lastId = 0;
 	
 			factory = SingletonFactory.getFactory();
 			Session findMaxIdSession = factory.openSession();
@@ -368,7 +428,11 @@ public class BibController {
 			String hql = "select max(m.idmedia) from Media m ";
 			Query query = findMaxIdSession.createQuery(hql);
 	
-			int lastIds = query.getFirstResult();
+			List<Integer> lastIds = query.getResultList();
+			
+			if(!lastIds.isEmpty()) {
+				lastId = (lastIds.size());
+			}
 			
 			findMaxIdSession.getTransaction().commit();
 			findMaxIdSession.close();

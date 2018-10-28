@@ -10,7 +10,10 @@ import controller.BibController;
 import controller.BorrowController;
 import controller.LenderController;
 import controller.MainBibliothek;
+import controller.RatingController;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -27,7 +30,7 @@ import javafx.util.Pair;
 import models.Book;
 import models.BorrowMedia;
 import models.Lender;
-import models.Rating;
+
 
 public class TitleReturnController {
 	@FXML AnchorPane rootPane;
@@ -42,7 +45,6 @@ public class TitleReturnController {
 	@FXML Label messageLbl;
 	@FXML Button giveBackBtn;
 	@FXML Button cancelBtn;
-	@FXML Rating ratingStars;
 	
 	
 	private MainBibliothek mainBib;
@@ -50,7 +52,8 @@ public class TitleReturnController {
 	private TitleReturnController trc;
 	private BorrowController boC;
 	private LenderController lc;
-	
+	private RatingController rc;
+
 	private List<Integer> resultIds;
 	private ArrayList<Pair> oldParameters;
 	private int titleId;
@@ -127,7 +130,7 @@ public class TitleReturnController {
 		System.out.println("Setze message");
 		String msg = borrowing.getMessage();
 		messageLbl.setText(msg);
-
+		
 	}
 	
 	public void setOldParametersForReturning(List<Integer> ids, ArrayList<Pair> searchParams) {

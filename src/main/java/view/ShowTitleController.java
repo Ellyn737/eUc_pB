@@ -8,6 +8,7 @@ import org.controlsfx.control.Rating;
 
 import controller.BibController;
 import controller.MainBibliothek;
+import controller.RatingController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -59,6 +60,7 @@ public class ShowTitleController {
 	private MainBibliothek mainBib;
 	private ShowTitleController showTitleC;
 	private BibController bc;
+	private RatingController rc;
 	
 	private int titleId;
 	private List<Integer> resultIds;
@@ -69,15 +71,22 @@ public class ShowTitleController {
 	}
 
 	/**
-	 * zurück zum StartMenu
+	 * zurück zu ResultsView
 	 * 
 	 * @param event
 	 * @throws IOException
 	 */
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
 		System.out.println("STC - handleCancelButton");
-		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-		rootPane.getChildren().setAll(startPane);
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
+		AnchorPane pane = (AnchorPane) loader.load();
+		
+		//id an ResultsView uebergeben
+		ResultsViewController resultsView = loader.getController();
+		resultsView.fillListAndView(resultIds, oldParameters);
+		
+		Scene scene = new Scene(pane);
+		rootPane.getChildren().setAll(pane);
 		}	
 	
 	/**
@@ -119,12 +128,13 @@ public class ShowTitleController {
 			}
 			if(alert.getResult() == ButtonType.NO) {
 				
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 				AnchorPane pane = (AnchorPane) loader.load();
 				
-				//id an ResultsView uebergeben
-				ResultsViewController resultsView = loader.getController();
-				resultsView.fillListAndView(resultIds, oldParameters);
+				//id an ShowTitle uebergeben
+				ShowTitleController showTitle = loader.getController();
+				showTitle.fillView(titleId);
+				showTitle.setOldParametersForReturning(resultIds, oldParameters);
 				
 				Scene scene = new Scene(pane);
 				rootPane.getChildren().setAll(pane);
@@ -149,7 +159,7 @@ public class ShowTitleController {
 		AnchorPane pane = (AnchorPane) loader.load();
 		
 		
-		//id an ResultsView uebergeben
+		//id an ChangeTitle uebergeben
 		ChangeTitleController changeTitle = loader.getController();
 		changeTitle.fillView(titleId);
 		changeTitle.setOldParametersForReturning(resultIds, oldParameters);
@@ -203,7 +213,7 @@ public class ShowTitleController {
 
 		bc = new BibController();
 		try {
-			Book book = bc.getTheBook(titleId);
+			Book book = bc.getTheBook(id);
 			
 			System.out.println("Setze variablen in die Felder");
 			titleLabel.setText(book.getTitle().toUpperCase());
@@ -233,12 +243,54 @@ public class ShowTitleController {
 				System.out.println("Buch ist verfügbar");
 				borrowBtn.setText("AUSLEIHEN");
 			}
+			
+			
+			ratingStars.setPartialRating(false);
+//			get last rating for this bookID
+			rc = new RatingController();
+//			suche nach Ids mit diesem titel
+			ArrayList<Pair> searchParam = new ArrayList<>();
+			searchParam.add(new Pair("idMedia", titleId));
+			List<Integer> rIds = rc.findRatingIds(searchParam);
+//			hole das letzte rating dieses titels
+			models.Rating rating = rc.getRating(rIds.size());
+			
+//			set rating
+			int stars = rating.getRatingStars();
+			ratingStars.setRating(stars);
+			
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-		//es fehlen noch bild, bewertung
-
+		
+//		WENN WIR ANDEREN ALS DEM ADMIN ERLAUBEN BEWERTUNGEN ABZUGEBEN
+//		
+////		get ratings for this bookID
+//		rc = new RatingController();
+//		ArrayList<Pair> searchParameters = new ArrayList<>();
+//		searchParameters.add(new Pair("idMedia", id));
+//		List <Integer> ratingIdsOfThisBook = rc.findRatingIds(searchParameters);
+//		
+////		get ratingStars
+//		List<Integer> stars = new ArrayList<>();
+//		for(int ratingId: ratingIdsOfThisBook) {
+//			models.Rating thisRating = rc.getRating(ratingId);
+//			stars.add(thisRating.getRatingStars());
+//		}
+//		
+////		errechne Durchschnittswert -->auf oder abrunden zu int
+//		int starter = 0;
+//		for(int starRating: stars) {
+//			starter += starRating;
+//		}
+//		double averageStar = (double) (starter / stars.size());
+//		System.out.println("Average rating for this book: " + averageStar);
+//		
+////		anzeigen
+//		ratingStars.setRating(averageStar);
 	}
+		
+		
 	
 	public void setOldParametersForReturning(List<Integer> ids, ArrayList<Pair> searchParams) {
 		resultIds = ids;

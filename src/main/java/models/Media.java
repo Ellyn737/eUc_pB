@@ -71,8 +71,6 @@ public class Media implements Serializable {
 	}
 
 
-
-
 	public int getYearOfPublication() {
 		return year;
 	}

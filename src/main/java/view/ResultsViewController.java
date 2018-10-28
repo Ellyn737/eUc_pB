@@ -51,14 +51,14 @@ public class ResultsViewController{
 	private String exemplarString;
 	private boolean isBorrowed;
 	private String isBorrowedString;
+	private String ratingString;
 	
 	private List<Integer> theIds;
 	ArrayList<Pair> oldParameters;
 		
-	private ResultsViewController resContr;
-	
 	private MainBibliothek mainBib;
 	private BibController bc;
+	private ResultsViewController resContr;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -86,10 +86,10 @@ public class ResultsViewController{
 		oldParameters = searchParams;
 		
 		System.out.println("Setze die gesuchten Parameter");
-		setSearchParameters(oldParameters);
+		setSearchParameters(searchParams);
 		
 		System.out.println("Setzte die ListView");
-		setListView();
+		setListView(ids);
 		
 	}
 	
@@ -147,10 +147,15 @@ public class ResultsViewController{
 					}
 					result += "Ausgeliehen: " + isBorrowedString + "\r\n";
 					break;
+				case "rating":
+					ratingString = parameters.get(i).getValue().toString();
+					result += "Bewertungssterne: " + ratingString + "\r\n";
+					break;
+					
 			}
+				
 		}
 			
-		System.out.println(result);
 		txtArSearchParams.setText(result);
 		
 	}
@@ -160,22 +165,20 @@ public class ResultsViewController{
 	 * 
 	 * @param ids
 	 */
-	public void setListView() {
+	public void setListView(List<Integer> ids) {
 		System.out.println("RVC - setListView");
-		System.out.println(theIds);
+		System.out.println(ids);
 		
 //		panel an die liste mit panels uebergeben
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
 //		hole die buchdaten und setze sie in die listView
-		for(int i = 0; i < theIds.size(); i++) {					
-			System.out.println("Setze Ergebnisstring in Liste für id: " + theIds.get(i));
-	 		list.add(getTheBookDataForList(theIds.get(i)));
+		for(int i = 0; i < ids.size(); i++) {					
+	 		list.add(getTheBookDataForList(ids.get(i)));
 		}
 		
 		System.out.println("Setze Liste");
 		listView.setItems(list);	
-		System.out.println(list);
 
 		System.out.println("setze MouseEvent");
 		/**

@@ -2,6 +2,7 @@ package view;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -39,6 +40,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 public class AddNewTitleController implements Initializable{
 	
@@ -73,7 +75,8 @@ public class AddNewTitleController implements Initializable{
 	private String content;
 	private String comment;
 	private int edition;
-	private double rating;
+	private int rating;
+	private Boolean isRated = false;
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
@@ -147,9 +150,17 @@ public class AddNewTitleController implements Initializable{
 			}
 		});
 		
-//		rating auf hover und onAction
-//		ratingStars.setUpdateOnHover(true);
-		ratingStars.setPartialRating(true);
+//		set rating as whole stars
+		ratingStars.setPartialRating(false);
+		ratingStars.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				isRated = true;
+				rating = (int) ratingStars.getRating();
+			}
+		});
+		
 		
 		
 	}
@@ -210,10 +221,6 @@ public class AddNewTitleController implements Initializable{
 		if(subGenre != null) {
 			txtFields.add("subGenre");
 		}
-		
-//		getRating
-		rating = ratingStars.getRating();
-		
 
 		if(txtFields.size() == numberOfNecessaryFields) {
 			System.out.println("Alles ausgefüllt");
@@ -260,16 +267,20 @@ public class AddNewTitleController implements Initializable{
 //			füge das buch der bib hinzu
 			bc.addToBib();
 			
-//			setze variablen für die bewertung
-			rC.setRating(rating);
-			rC.setIdMedia(bc.getLastId());
-//			bei erstellen eines buchs = admin ist der bewerter (== lender(0))
-//			erster Lender ist der Admin --> erstellen bei installation (immer der erste)
-			rC.setIdLender(1);
-			
-//			speichere bewertung
-			rC.addToRatings();
-			
+			if(isRated) {
+	//			setze variablen für die bewertung
+				rC.setRating(rating);
+				rC.setIdMedia(bc.getLastId());
+	//			bei erstellen eines buchs = admin ist der bewerter (== lender(0))
+	//			erster Lender ist der Admin --> erstellen bei installation (immer der erste)
+				rC.setIdLender(1);
+	//			setze das aktuelle Datum
+				LocalDate now = LocalDate.now();
+				rC.setRatingDate(now);
+				
+	//			speichere bewertung
+				rC.addToRatings();
+			}
 			//zu ShowTitle
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
@@ -277,6 +288,14 @@ public class AddNewTitleController implements Initializable{
 			ShowTitleController showTitle = loader.getController();
 			int id = bc.getLastId();
 			showTitle.fillView(id);
+			
+//			set Parameters to show at the side and give list with this id
+			List<Integer> ids = new ArrayList<>();
+			ids.add(id);
+			ArrayList<Pair> searchParams = new ArrayList<>();
+			searchParams.add(new Pair("title", title));
+			
+			showTitle.setOldParametersForReturning(ids, searchParams);
 			
 			Scene scene = new Scene(pane);
 			rootPane.getChildren().setAll(pane);

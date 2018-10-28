@@ -25,7 +25,6 @@ public class Lender implements Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id_lender")
 	private int idLender;
-	
 	@Column(name="firstname")
 	private String firstName;
 	@Column(name="lastname")
@@ -65,6 +64,16 @@ public class Lender implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public int getIdLender() {
+		return idLender;
+	}
+
+
+	public void setIdLender(int idLender) {
+		this.idLender = idLender;
+	}
+
 
 	@Override
 	public String toString() {

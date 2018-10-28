@@ -1,6 +1,7 @@
 package view;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +11,10 @@ import org.hibernate.cfg.Configuration;
 
 import controller.BibController;
 import controller.MainBibliothek;
+import controller.RatingController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,7 +60,7 @@ public class ChangeTitleController {
 	@FXML TextArea txtArComment;
 	@FXML Button cancelBtn;
 	@FXML Button saveChangeBtn;
-	@FXML Rating ratingStars;
+	@FXML org.controlsfx.control.Rating ratingStars;
 
 		
 	private int bookID;
@@ -72,10 +75,13 @@ public class ChangeTitleController {
 	private String content;
 	private String comment;
 	private int edition;
+	private int stars;
+	private Boolean ratingIsChanged = false;
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
 	private ChangeTitleController ctc;
+	private RatingController rc;
 	
 	private List<Integer> resultIds;
 	private ArrayList<Pair> oldParameters;
@@ -86,12 +92,12 @@ public class ChangeTitleController {
 	}
 	
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 		AnchorPane pane = (AnchorPane) loader.load();
 		
-		//id an ResultsView uebergeben
-		ResultsViewController resultsView = loader.getController();
-		resultsView.fillListAndView(resultIds, oldParameters);
+		//id an ShowTitle uebergeben
+		ShowTitleController showTitle = loader.getController();
+		showTitle.fillView(bookID);
 		
 		Scene scene = new Scene(pane);
 		rootPane.getChildren().setAll(pane);
@@ -99,8 +105,8 @@ public class ChangeTitleController {
 	
 	@FXML private void handleSaveChangeButton(ActionEvent event) throws IOException{
 			System.out.println("CTC - handleSaveChangeButton");
-//			bc = new BibController();
-			
+			bc = new BibController();
+		
 			title = txtFiTitle.getText();
 			subTitle = txtFiSubTitle.getText();
 			author = txtFiAuthor.getText();
@@ -124,22 +130,38 @@ public class ChangeTitleController {
 //			inBIb nur über Ausleihe ändern
 //			exemplar nur ueber hinzufügen oder löschen ändern
 			
-			try {
-				bc.changeTitle(bookID);
+			bc.changeTitle(bookID);
+			
+			if(ratingIsChanged) {
+				rc = new RatingController();
+//				set ratingStars
+				rc.setRating(stars);
 				
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
-				AnchorPane pane = (AnchorPane) loader.load();
+//				set IdLender --> Admin
+				rc.setIdLender(1);
 				
-				//id an ResultsView uebergeben
-				ShowTitleController showTitle = loader.getController();
-				showTitle.fillView(bookID);
+//				set IdMedia
+				rc.setIdMedia(bookID);
 				
-				Scene scene = new Scene(pane);
-				rootPane.getChildren().setAll(pane);
+//				set today as date
+				LocalDate now = LocalDate.now();
+				rc.setRatingDate(now);
 				
-			}catch(Exception e) {
-				System.out.println(e.getMessage());
+				rc.addToRatings();
 			}
+			
+			
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
+			AnchorPane pane = (AnchorPane) loader.load();
+			
+			//id an ShowTitle uebergeben
+			ShowTitleController showTitle = loader.getController();
+			showTitle.fillView(bookID);
+			
+			Scene scene = new Scene(pane);
+			rootPane.getChildren().setAll(pane);
+				
+		
 			
 		
 		}	
@@ -150,14 +172,17 @@ public class ChangeTitleController {
 	}	
 	
 	public void fillView(int id) {
+		try {
 		System.out.println("CTC - fillView");
 		bc = new BibController();
 
 		bookID = id;
+		System.out.println("uebergebene id: " + id);
 		
-		try {
-			Book book = bc.getTheBook(bookID);
+		
+			Book book = bc.getTheBook(id);
 			
+//			setzen der variablen in die Felder
 			txtFiTitle.setText(book.getTitle());
 			txtFiAuthor.setText(book.getAuthor());
 			txtFiPublisher.setText(book.getPublisher());
@@ -175,6 +200,21 @@ public class ChangeTitleController {
 			subGenre = book.getSubGenre();
 			genre = book.getGenre();
 			
+//			hole bewertungen fuer den titel
+			rc = new RatingController();
+			ArrayList<Pair> searchParam = new ArrayList<>();
+			searchParam.add(new Pair("idMedia", id));
+			List<Integer> ratings = rc.findRatingIds(searchParam);
+			
+//			hole letztes rating fuer den titel (nur der Admin kann bewerten, aber sich eventuell umentscheiden)
+			Rating rating = rc.getRating(ratings.get(ratings.size()));
+			int oldStars = rating.getRatingStars();
+//			altes rating setzen
+			ratingStars.setPartialRating(false);
+			ratingStars.setRating(oldStars);
+			
+			
+//			anklicken ueberwachen
 			ObservableList<MenuItem> sbItems = sbMenu.getItems();
 			for(MenuItem item: sbItems) {
 				item.setOnAction(new EventHandler<ActionEvent>() {
@@ -209,6 +249,17 @@ public class ChangeTitleController {
 			
 				});
 			}
+			
+			ratingStars.setOnMouseClicked(new EventHandler<Event>() {
+
+				@Override
+				public void handle(Event event) {
+					ratingIsChanged = true;
+					stars = (int) ratingStars.getRating();
+				}
+			});
+			
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

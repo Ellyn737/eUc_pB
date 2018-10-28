@@ -160,7 +160,7 @@ public class LenderController {
 
 		List<Integer> ids = query.getResultList();
 		if(!ids.isEmpty()) {
-			lastId = (ids.size()-1);
+			lastId = (ids.size());
 		}
 		
 		findMaxIdSession.getTransaction().commit();

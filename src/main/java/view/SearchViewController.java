@@ -12,10 +12,12 @@ import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 import controller.BibController;
 import controller.MainBibliothek;
+import controller.RatingController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,11 +56,9 @@ public class SearchViewController implements Initializable {
 	@FXML Button cancelBtn;
 	@FXML Button searchBtn;
 	@FXML Rating ratingStars;
-
 	
 	
 	private int bookID;
-	
 	private String title;
 	private String author;
 	private String publisher;
@@ -70,99 +70,17 @@ public class SearchViewController implements Initializable {
 	private String edition;
 	private String exemplar;
 	private String isBorrowed;
+	private int rating;
+	private Boolean ratingIsClicked = false;
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
+	private RatingController rc;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
 	}
-
-	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
-		System.out.println("SVC - handleCancelButton");
-		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-		rootPane.getChildren().setAll(startPane);
-		}	
 	
-	@FXML private void handleSearchButton(ActionEvent event) throws IOException{
-		System.out.println("SVC - handleSearchButton");
-		//ausserdem suchparameter weiter und an db geben
-		bc = new BibController();
-	
-		title = txtFiTitle.getText().trim();
-		author = txtFiAuthor.getText().trim();
-		publisher = txtFiPublisher.getText().trim();
-		year = txtFiYear.getText().trim();
-		edition = txtFiEdition.getText().trim();
-		exemplar = txtFiExemplar.getText().trim();
-		
-//		ArrayListe mit key und value anlegen
-		ArrayList<Pair> parameters = new ArrayList<Pair>();
-		
-		if(!title.isEmpty()) {
-			Pair titlePair = new Pair("title", title);
-			parameters.add(titlePair);
-			System.out.println("Setze Paar für Titel: "+title);
-		}
-		
-		if(!author.isEmpty()) {
-			Pair authorPair = new Pair("author", author);
-			parameters.add(authorPair);
-			System.out.println(author);
-		}
-		
-		if(!publisher.isEmpty()) {
-			Pair publisherPair = new Pair("publisher", publisher);
-			parameters.add(publisherPair);		
-			System.out.println(publisher);	
-		}
-		
-		if(!year.isEmpty()) {
-			Pair yearPair = new Pair("year", year);
-			parameters.add(yearPair);
-			System.out.println(year);
-		}
-		
-		System.out.println(genre);
-		if(genre != null) {
-			Pair genrePair = new Pair("genre", genre);
-			parameters.add(genrePair);
-			System.out.println(genre);
-		}
-		
-		System.out.println(subGenre);
-		if(subGenre != null) {
-			Pair subGenrePair = new Pair("subGenre", subGenre);
-			parameters.add(subGenrePair);
-			System.out.println(subGenre);
-		}
-
-		
-		if(!edition.isEmpty()) {
-			Pair editionPair = new Pair("edition", edition);
-			parameters.add(editionPair);	
-			System.out.println(edition);
-			}
-		
-		if(!exemplar.isEmpty()) {
-			Pair exemplarPair = new Pair("exemplar", exemplar);
-			parameters.add(exemplarPair);
-			System.out.println(exemplar);
-		}
-		
-		if(isBorrowed != null) {
-			Pair isBorrowedPair = new Pair("isBorrowed", isBorrowed);
-			parameters.add(isBorrowedPair);
-			System.out.println(isBorrowed);
-		}
-	
-		if(parameters.size() <= 0) {
-			setWarningNoSearchParameters();
-		}else {
-			findBook(parameters);
-		}
-	}
-
 	/**
 	 * genre, subgenre und isBorrowed auswerten
 	 * @param location
@@ -238,33 +156,131 @@ public class SearchViewController implements Initializable {
 			}
 		});
 		
-	}	
-	
-	public void findBook(ArrayList<Pair> parameters) {
-		try {
+		
+//		setzen von rating on click
+		ratingStars.setOnMouseClicked(new EventHandler<Event>() {
+
+			@Override
+			public void handle(Event event) {
+				ratingIsClicked = true;
+				rating = (int) ratingStars.getRating();
+			}
 			
+		});
+		
+	}	
+
+	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
+		System.out.println("SVC - handleCancelButton");
+		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
+		rootPane.getChildren().setAll(startPane);
+		}	
+	
+	@FXML private void handleSearchButton(ActionEvent event) throws IOException{
+		System.out.println("SVC - handleSearchButton");
+		//ausserdem suchparameter weiter und an db geben
+		bc = new BibController();
+	
+		title = txtFiTitle.getText().trim();
+		author = txtFiAuthor.getText().trim();
+		publisher = txtFiPublisher.getText().trim();
+		year = txtFiYear.getText().trim();
+		edition = txtFiEdition.getText().trim();
+		exemplar = txtFiExemplar.getText().trim();
+		
+//		ArrayListe mit key und value anlegen
+		ArrayList <Pair> parameters = new ArrayList<Pair>();
+		
+		if(!title.isEmpty()) {
+			Pair titlePair = new Pair("title", title);
+			parameters.add(titlePair);
+			System.out.println("Setze Paar für Titel: "+title);
+		}
+		
+		if(!author.isEmpty()) {
+			Pair authorPair = new Pair("author", author);
+			parameters.add(authorPair);
+			System.out.println(author);
+		}
+		
+		if(!publisher.isEmpty()) {
+			Pair publisherPair = new Pair("publisher", publisher);
+			parameters.add(publisherPair);		
+			System.out.println(publisher);	
+		}
+		
+		if(!year.isEmpty()) {
+			Pair yearPair = new Pair("year", year);
+			parameters.add(yearPair);
+			System.out.println(year);
+		}
+		
+		System.out.println(genre);
+		if(genre != null) {
+			Pair genrePair = new Pair("genre", genre);
+			parameters.add(genrePair);
+			System.out.println(genre);
+		}
+		
+		System.out.println(subGenre);
+		if(subGenre != null) {
+			Pair subGenrePair = new Pair("subGenre", subGenre);
+			parameters.add(subGenrePair);
+			System.out.println(subGenre);
+		}
+
+		
+		if(!edition.isEmpty()) {
+			Pair editionPair = new Pair("edition", edition);
+			parameters.add(editionPair);	
+			System.out.println(edition);
+			}
+		
+		if(!exemplar.isEmpty()) {
+			Pair exemplarPair = new Pair("exemplar", exemplar);
+			parameters.add(exemplarPair);
+			System.out.println(exemplar);
+		}
+		
+		if(isBorrowed != null) {
+			Pair isBorrowedPair = new Pair("isBorrowed", isBorrowed);
+			parameters.add(isBorrowedPair);
+			System.out.println(isBorrowed);
+		}
+	
+		if(ratingIsClicked) {
+			parameters.add(new Pair("rating", rating));
+		}
+		
+//		wenn parameter gesetzt wurden
+		if(parameters.size() <= 0) {
+			setWarningNoSearchParameters();
+		}else {
 //			List mit Ids holen, die zu den Suchparametern passen
 			List<Integer> ids = bc.findBookId(parameters);
-			
-			if(ids.size() >= 1) {
-				
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
-				AnchorPane pane = (AnchorPane) loader.load();
-				
-				
-				ResultsViewController resultsView = loader.getController();
-				resultsView.fillListAndView(ids, parameters);
-				
-				Scene scene = new Scene(pane);
-				rootPane.getChildren().setAll(pane);
+			findBook(ids, parameters);
+		}
+	}
 
+
+	public void findBook(List<Integer> ids, ArrayList<Pair> searchParameters) {
+		
+			if(ids.size() >= 1) {
+				try {
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
+					AnchorPane pane = (AnchorPane) loader.load();
+	
+					ResultsViewController resultsView = loader.getController();
+					resultsView.fillListAndView(ids, searchParameters);
+					
+					Scene scene = new Scene(pane);
+					rootPane.getChildren().setAll(pane);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}else {
 				setWarningNoResult();
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void setWarningNoSearchParameters() {
