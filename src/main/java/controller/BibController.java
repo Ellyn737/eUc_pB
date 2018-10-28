@@ -425,13 +425,14 @@ public class BibController {
 			Session findMaxIdSession = factory.openSession();
 			findMaxIdSession.beginTransaction();
 			
-			String hql = "select max(m.idmedia) from Media m ";
+			String hql = "select m.idmedia from Media m ";
 			Query query = findMaxIdSession.createQuery(hql);
 	
 			List<Integer> lastIds = query.getResultList();
 			
-			if(!lastIds.isEmpty()) {
-				lastId = (lastIds.size());
+			if(lastIds.size() != 0) {
+//				get value from list with bookIDs that we have in the bib on index size-1
+				lastId = lastIds.get(lastIds.size()-1);
 			}
 			
 			findMaxIdSession.getTransaction().commit();

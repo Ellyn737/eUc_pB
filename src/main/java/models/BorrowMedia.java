@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class BorrowMedia implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="borrow_id")
 	private int borrowId;
 	

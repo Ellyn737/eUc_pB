@@ -109,8 +109,6 @@ public class AddNewTitleController implements Initializable{
 					menuGenre.setText(genreItem);
 					genre = "Sachbuch";
 					subGenre = genreItem;
-					System.out.println(genre);
-					System.out.println(subGenre);
 				}
 		
 			});
@@ -128,8 +126,6 @@ public class AddNewTitleController implements Initializable{
 					menuGenre.setText(genreItem);
 					genre = "Roman";
 					subGenre = genreItem;
-					System.out.println(genre);
-					System.out.println(subGenre);
 				}
 		
 			});
@@ -281,22 +277,27 @@ public class AddNewTitleController implements Initializable{
 	//			speichere bewertung
 				rC.addToRatings();
 			}
+			
+			
+//			set Parameters to show at the side and give list with this id
+			int id = bc.getLastId();
+			System.out.println(id);
+			
+			List<Integer> ids = new ArrayList<>();
+			ids.add(id);
+			
+			ArrayList<Pair> searchParams = new ArrayList<>();
+			searchParams.add(new Pair("title", title));
+			
 			//zu ShowTitle
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
 			
 			ShowTitleController showTitle = loader.getController();
-			int id = bc.getLastId();
+			
 			showTitle.fillView(id);
-			
-//			set Parameters to show at the side and give list with this id
-			List<Integer> ids = new ArrayList<>();
-			ids.add(id);
-			ArrayList<Pair> searchParams = new ArrayList<>();
-			searchParams.add(new Pair("title", title));
-			
 			showTitle.setOldParametersForReturning(ids, searchParams);
-			
+
 			Scene scene = new Scene(pane);
 			rootPane.getChildren().setAll(pane);
 		

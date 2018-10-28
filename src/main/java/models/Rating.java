@@ -15,7 +15,7 @@ import java.sql.Date;
 public class Rating implements Serializable {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id_rating")
 	private int idRating;
 	
