@@ -77,6 +77,14 @@ public class BorrowMedia implements Serializable {
 		this.isReturned = isReturned;
 	}
 
+	public int getBorrowId() {
+		return borrowId;
+	}
+
+	public void setBorrowId(int borrowId) {
+		this.borrowId = borrowId;
+	}
+
 	@Override
 	public String toString() {
 		return MessageFormat.format("{0}: ausleihId={1}, idMedium={2}, idAusleiher={3}, ausleihDatum={4}", 

@@ -16,11 +16,11 @@ public class Rating implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="is_rating")
+	@Column(name="id_rating")
 	private int idRating;
 	
 	@Column(name="rating_stars")
-	private double ratingStars;
+	private int ratingStars;
 	
 	@Column(name="id_lender")
 	private  int idLender;
@@ -33,20 +33,20 @@ public class Rating implements Serializable {
 	
 	public Rating() {}
 
-	public double getRatingStars() {
-		return ratingStars;
-	}
-
-	public void setRatingStars(double ratingStars) {
-		this.ratingStars = ratingStars;
-	}
-
 	public int getIdLender() {
 		return idLender;
 	}
 
 	public void setIdLender(int idLender) {
 		this.idLender = idLender;
+	}
+	
+	public int getRatingStars() {
+		return ratingStars;
+	}
+
+	public void setRatingStars(int ratingStars) {
+		this.ratingStars = ratingStars;
 	}
 
 	public int getIdMedia() {
@@ -63,6 +63,14 @@ public class Rating implements Serializable {
 
 	public void setRatingDate(Date ratingDate) {
 		this.ratingDate = ratingDate;
+	}
+
+	public int getIdRating() {
+		return idRating;
+	}
+
+	public void setIdRating(int idRating) {
+		this.idRating = idRating;
 	}
 
 	@Override
