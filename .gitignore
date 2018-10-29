@@ -32,3 +32,6 @@ local.properties
 .classpath
 .settings/
 .loadpath
+/bin/
+
+pom\.xml
