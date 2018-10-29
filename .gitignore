@@ -32,3 +32,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+
+pom\.xml
+
+*.prefs

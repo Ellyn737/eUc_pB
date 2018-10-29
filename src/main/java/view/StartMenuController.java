@@ -60,6 +60,14 @@ public class StartMenuController{
 //		Platform.exit();
 		System.exit(0);
 		}	
+	
+	@FXML private void handleStatisticsButton(ActionEvent event) throws IOException{
+		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/Overview.fxml"));
+		rootPane.getChildren().setAll(addPane);
+		}	
+	
+	public void setTitleOfStartMenu(String title) {
+		titleLabel.setText(title);
 	}
 	
 	}
