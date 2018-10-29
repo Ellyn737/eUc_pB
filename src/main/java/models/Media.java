@@ -47,6 +47,8 @@ public class Media implements Serializable {
 	private String comment;
 	@Column(name="exemplar")
 	private int exemplar;
+	@Column(name="rating")
+	private Integer stars;
 	
 	
 	public Media() {}
@@ -114,6 +116,14 @@ public class Media implements Serializable {
 
 	public void setExemplar(int exemplar) {
 		this.exemplar = exemplar;
+	}
+
+	public Integer getStars() {
+		return stars;
+	}
+
+	public void setStars(Integer stars) {
+		this.stars = stars;
 	}
 
 	@Override

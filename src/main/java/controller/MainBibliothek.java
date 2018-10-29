@@ -27,7 +27,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import models.Lender;
-import models.Rating;
 import models.Book;
 import models.Media;
 import models.BorrowMedia;
@@ -69,14 +68,19 @@ public class MainBibliothek extends Application{
 	
 	public void showStartMenu() {
 		try {
+			Lender librarian = lc.getLender(1);
+			String librarianName = librarian.getFirstName();
+			String title = librarianName.toUpperCase() + "'s BIBLIOTHEK";	
+			
 			FXMLLoader loader = new FXMLLoader(MainBibliothek.class.getResource("/view/StartMenu.fxml"));
 			Parent pane = loader.load();
 	
 			StartMenuController startMenuController = loader.getController();
-			startMenuController.setMain(this);
+			startMenuController.setMain(this);	
+			startMenuController.setTitleOfStartMenu(title);
 			
 			Scene scene = new Scene(pane);
-			primaryStage.setTitle("Ellyns Bib");
+			primaryStage.setTitle(title);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		}catch(IOException e) {

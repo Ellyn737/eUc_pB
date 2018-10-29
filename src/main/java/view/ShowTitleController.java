@@ -9,7 +9,6 @@ import org.controlsfx.control.Rating;
 import controller.BibController;
 import controller.BorrowController;
 import controller.MainBibliothek;
-import controller.RatingController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -61,7 +60,6 @@ public class ShowTitleController {
 	private MainBibliothek mainBib;
 	private ShowTitleController showTitleC;
 	private BibController bc;
-	private RatingController rc;
 	private BorrowController boc;
 	
 	private int titleId;
@@ -114,11 +112,7 @@ public class ShowTitleController {
 					
 					Scene scene = new Scene(pane);
 					rootPane.getChildren().setAll(pane);
-				}else {
-//					rating löschen
-					rc = new RatingController();
-					rc.deleteRatings(titleId);
-					
+				}else {					
 //					borrowings löschen
 					boc = new BorrowController();
 					boc.deleteBorrowingsOfTitle(titleId);
@@ -149,6 +143,7 @@ public class ShowTitleController {
 		}
 
 	}	
+	
 	
 	/**
 	 * id an ChangeTitleView uebergeben und dorthin wechseln
@@ -247,50 +242,17 @@ public class ShowTitleController {
 				borrowBtn.setText("AUSLEIHEN");
 			}
 			
-			
-			ratingStars.setPartialRating(false);
-//			get last rating for this bookID
-			rc = new RatingController();
-//			suche nach Ids mit diesem titel
-			ArrayList<Pair> searchParam = new ArrayList<>();
-			searchParam.add(new Pair("idMedia", titleId));
-			List<Integer> rIds = rc.findRatingIds(searchParam);
-//			hole das letzte rating dieses titels
-			models.Rating rating = rc.getTheRating(rIds.get(rIds.size()-1));
-			
 //			set rating
-			int stars = rating.getRatingStars();
-			ratingStars.setRating(stars);
+			ratingStars.setPartialRating(false);
+			if(book.getStars() != null) {
+				ratingStars.setRating(book.getStars());
+			}else {
+				ratingStars.setRating(0);
+			}
 			
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
-//		WENN WIR ANDEREN ALS DEM ADMIN ERLAUBEN BEWERTUNGEN ABZUGEBEN
-//		
-////		get ratings for this bookID
-//		rc = new RatingController();
-//		ArrayList<Pair> searchParameters = new ArrayList<>();
-//		searchParameters.add(new Pair("idMedia", id));
-//		List <Integer> ratingIdsOfThisBook = rc.findRatingIds(searchParameters);
-//		
-////		get ratingStars
-//		List<Integer> stars = new ArrayList<>();
-//		for(int ratingId: ratingIdsOfThisBook) {
-//			models.Rating thisRating = rc.getRating(ratingId);
-//			stars.add(thisRating.getRatingStars());
-//		}
-//		
-////		errechne Durchschnittswert -->auf oder abrunden zu int
-//		int starter = 0;
-//		for(int starRating: stars) {
-//			starter += starRating;
-//		}
-//		double averageStar = (double) (starter / stars.size());
-//		System.out.println("Average rating for this book: " + averageStar);
-//		
-////		anzeigen
-//		ratingStars.setRating(averageStar);
 	}
 		
 		

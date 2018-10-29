@@ -12,7 +12,6 @@ import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 import controller.BibController;
 import controller.MainBibliothek;
-import controller.RatingController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -75,7 +74,6 @@ public class SearchViewController implements Initializable {
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
-	private RatingController rc;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -158,8 +156,11 @@ public class SearchViewController implements Initializable {
 		
 		
 //		setzen von rating on click
+		ratingStars.setPartialRating(false);
+		ratingStars.setRating(0);
+		
 		ratingStars.setOnMouseClicked(new EventHandler<Event>() {
-
+		
 			@Override
 			public void handle(Event event) {
 				ratingIsClicked = true;

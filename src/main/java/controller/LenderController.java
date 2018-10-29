@@ -137,7 +137,6 @@ public class LenderController {
 		//commit the transaction
 		getLenderSession.getTransaction().commit();
 		
-		System.out.println("Lender added");
 		getLenderSession.close();	
 	
 		return lender;

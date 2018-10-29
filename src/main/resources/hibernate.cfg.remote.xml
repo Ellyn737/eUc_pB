@@ -21,7 +21,6 @@
         <mapping class="models.Book"/>
         <mapping class="models.Media"/>
 		<mapping class="models.Lender"/>
-        <mapping class="models.Rating"/>
         <mapping class="models.BorrowMedia"/>
     </session-factory>
 </hibernate-configuration>

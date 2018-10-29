@@ -13,7 +13,6 @@ import org.hibernate.SessionFactory;
 
 import javafx.util.Pair;
 import models.BorrowMedia;
-import models.Rating;
 
 /**
  * 
@@ -157,6 +156,9 @@ public class BorrowController {
 		Query query = findIdSession.createQuery(hql);
 		List<Integer> lastBorrowedIds = query.getResultList();
 		
+		findIdSession.getTransaction().commit();
+		findIdSession.close();
+		
 		return lastBorrowedIds;
 
 	}
@@ -173,16 +175,18 @@ public class BorrowController {
 //			hole das borrowing der id
 			BorrowMedia bm = getTheBorrowing(bookID);
 			
-//			lösche das borrowing
-			factory = SingletonFactory.getFactory();
-			Session deleteSession = factory.openSession();
-			deleteSession.beginTransaction();
-			
-			deleteSession.delete(bm);
-			
-			deleteSession.getTransaction().commit();
-			System.out.println("Rating deleted");
-			deleteSession.close();			
+			if(bm != null) {
+	//			lösche das borrowing
+				factory = SingletonFactory.getFactory();
+				Session deleteSession = factory.openSession();
+				deleteSession.beginTransaction();
+				
+				deleteSession.delete(bm);
+				
+				deleteSession.getTransaction().commit();
+				System.out.println("Rating deleted");
+				deleteSession.close();			
+			}
 		}
 	}
 	
