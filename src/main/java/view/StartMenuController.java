@@ -1,7 +1,10 @@
 package view;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
+import controller.LenderController;
 import controller.MainBibliothek;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -13,13 +16,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import models.Lender;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 
 
-public class StartMenuController {
+public class StartMenuController{
 	
 	@FXML private AnchorPane rootPane;
 	@FXML private Label titleLabel;
@@ -29,6 +33,7 @@ public class StartMenuController {
 	@FXML private Button exitBtn;
 	
 	private MainBibliothek mainBib;
+	private LenderController lc;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -46,11 +51,16 @@ public class StartMenuController {
 	
 	@FXML private void handleExitButton(ActionEvent event) throws IOException{
 			//close the app
-		Platform.exit();
+//		Platform.exit();
+		System.exit(0);
 		}	
 	
 	@FXML private void handleStatisticsButton(ActionEvent event) throws IOException{
 			// Go To Statistics
-		}	
+		}
+	
+	public void setTitleOfStartMenu(String title) {
+		titleLabel.setText(title);
+	}
 	
 	}

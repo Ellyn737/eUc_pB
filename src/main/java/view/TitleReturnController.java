@@ -10,7 +10,6 @@ import controller.BibController;
 import controller.BorrowController;
 import controller.LenderController;
 import controller.MainBibliothek;
-import controller.RatingController;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -52,7 +51,6 @@ public class TitleReturnController {
 	private TitleReturnController trc;
 	private BorrowController boC;
 	private LenderController lc;
-	private RatingController rc;
 
 	private List<Integer> resultIds;
 	private ArrayList<Pair> oldParameters;

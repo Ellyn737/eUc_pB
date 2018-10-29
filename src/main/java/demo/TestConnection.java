@@ -13,7 +13,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 import models.Lender;
-import models.Rating;
+//import models.Rating;
 import models.Book;
 import models.Media;
 import models.BorrowMedia;
@@ -33,7 +33,7 @@ public class TestConnection {
 		//wird nur einmal erstellt
 		SessionFactory factory = new Configuration().configure("hibernate.cfg.remote.xml").addPackage("models").
 				addAnnotatedClass(Media.class).addAnnotatedClass(Book.class).
-				addAnnotatedClass(Lender.class).addAnnotatedClass(Rating.class).
+				addAnnotatedClass(Lender.class).
 				addAnnotatedClass(BorrowMedia.class).buildSessionFactory();
 		
 		

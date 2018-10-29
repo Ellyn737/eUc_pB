@@ -11,7 +11,6 @@ import org.controlsfx.control.Rating;
 
 import controller.BibController;
 import controller.MainBibliothek;
-import controller.RatingController;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -80,7 +79,6 @@ public class AddNewTitleController implements Initializable{
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
-	private RatingController rC;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -148,6 +146,7 @@ public class AddNewTitleController implements Initializable{
 		
 //		set rating as whole stars
 		ratingStars.setPartialRating(false);
+		ratingStars.setRating(0);
 		ratingStars.setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
@@ -170,6 +169,7 @@ public class AddNewTitleController implements Initializable{
 	@FXML private void handleAddTitleButton(ActionEvent event) throws IOException{
 		System.out.println("ANTC - handleAddTitleButton");
 		
+//		not necessary: rating
 		int numberOfNecessaryFields = 9;
 		List txtFields = new ArrayList<>();
 
@@ -239,7 +239,6 @@ public class AddNewTitleController implements Initializable{
 	public void addBook() {
 		System.out.println("ANTC - addBook");
 		bc = new BibController();
-		rC = new RatingController();
 		try {
 
 //			setze variablen für das Buch
@@ -254,6 +253,9 @@ public class AddNewTitleController implements Initializable{
 			bc.setGenre(genre);
 			bc.setSubGenre(subGenre);
 			
+			if(isRated) {
+				bc.setRating(rating);
+			}
 			
 			if(!txtFiSubTitle.getText().isEmpty()) {
 				subTitle = txtFiSubTitle.getText();
@@ -261,23 +263,7 @@ public class AddNewTitleController implements Initializable{
 			}
 			
 //			füge das buch der bib hinzu
-			bc.addToBib();
-			
-			if(isRated) {
-	//			setze variablen für die bewertung
-				rC.setRating(rating);
-				rC.setIdMedia(bc.getLastId());
-	//			bei erstellen eines buchs = admin ist der bewerter (== lender(0))
-	//			erster Lender ist der Admin --> erstellen bei installation (immer der erste)
-				rC.setIdLender(1);
-	//			setze das aktuelle Datum
-				LocalDate now = LocalDate.now();
-				rC.setRatingDate(now);
-				
-	//			speichere bewertung
-				rC.addToRatings();
-			}
-			
+			bc.addToBib();			
 			
 //			set Parameters to show at the side and give list with this id
 			int id = bc.getLastId();
