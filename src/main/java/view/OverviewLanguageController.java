@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
@@ -25,7 +26,7 @@ import javafx.event.ActionEvent;
 public class OverviewLanguageController implements Initializable{
 	
 	@FXML private Button backBtn;
-	
+	@FXML AnchorPane rootPane;
 	@FXML Menu sbMenu;
 	@FXML Menu rMenu;
 	
