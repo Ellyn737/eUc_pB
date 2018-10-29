@@ -56,6 +56,7 @@ public class MainBibliothek extends Application{
 //		wenn admin noch nicht existiert --> tabelle lender.isEmpty --> dann Dialog zum erstellen des admins
 		lc = new LenderController();
 		int lastID = lc.getLastLenderId();
+		
 		System.out.println(lastID);
 		if(lastID >= 1) {
 			showStartMenu();
