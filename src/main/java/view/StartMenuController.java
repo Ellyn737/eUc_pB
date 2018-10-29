@@ -60,13 +60,6 @@ public class StartMenuController{
 //		Platform.exit();
 		System.exit(0);
 		}	
-	
-	@FXML private void handleStatisticsButton(ActionEvent event) throws IOException{
-			// Go To Statistics
-		}
-	
-	public void setTitleOfStartMenu(String title) {
-		titleLabel.setText(title);
 	}
 	
 	}
