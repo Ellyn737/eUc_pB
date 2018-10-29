@@ -37,6 +37,7 @@ public class StartMenuController{
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
+		System.out.println(System.getProperties());
 	}
 	
 	@FXML private void handleSearchButton(ActionEvent event) throws IOException{
@@ -49,18 +50,16 @@ public class StartMenuController{
 		rootPane.getChildren().setAll(addPane);
 		}	
 	
-	@FXML private void handleExitButton(ActionEvent event) throws IOException{
+	@FXML private void handleStatisticsButton(ActionEvent event) throws IOException{
+		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/Overview.fxml"));
+		rootPane.getChildren().setAll(addPane);
+		}	
+	
+		@FXML private void handleExitButton(ActionEvent event) throws IOException{
 			//close the app
 //		Platform.exit();
 		System.exit(0);
 		}	
-	
-	@FXML private void handleStatisticsButton(ActionEvent event) throws IOException{
-			// Go To Statistics
-		}
-	
-	public void setTitleOfStartMenu(String title) {
-		titleLabel.setText(title);
 	}
 	
 	}
