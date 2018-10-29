@@ -16,12 +16,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
 
 public class OverviewController implements Initializable{
 	
+	@FXML AnchorPane rootPane;
 	@FXML private Label titleLabel;
 	@FXML private Button authorBtn;
 	@FXML private Button genreBtn;

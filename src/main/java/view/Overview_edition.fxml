@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="STATISTIKEN: AUFLAGE" />
       <SplitPane dividerPositions="0.8318" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">

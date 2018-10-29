@@ -45,19 +45,13 @@ public class StartMenuController {
 		rootPane.getChildren().setAll(addPane);
 		}	
 	
-	@FXML private void handleExitButton(ActionEvent event) throws IOException{
+	@FXML private void handleStatisticsButton(ActionEvent event) throws IOException{
+		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/Overview.fxml"));
+		rootPane.getChildren().setAll(addPane);
+		}	
+	
+		@FXML private void handleExitButton(ActionEvent event) throws IOException{
 			//close the app
 		Platform.exit();
 		}	
-	
-	@FXML private void handleStatisticsButton(ActionEvent event) throws IOException{
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/Overview.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
-		}	
-	
 	}
