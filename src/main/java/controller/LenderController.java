@@ -16,7 +16,7 @@ import models.Lender;
  * 
  * @author ellyn
  *
- * Klasse verwaltet die Ausleiher
+ * this class manages the lenders
  */
 public class LenderController {
 	
@@ -31,13 +31,9 @@ public class LenderController {
 	 * @param params
 	 */
 	public void addNewLender(ArrayList<Pair> params) {
-		System.out.println("LC - addNewLender");
-		/*
-		 * Werte aus Txtfeldern 
-		 * einem neuen Ausleiherobjekt hinzufügen
-		 * dieses zur DB hinzufügen
-		 */
-//		parameter auswerten
+		System.out.println("LenderController - addNewLender");
+
+//		analyse textfields parameters by key
 		for(int i= 0; i<params.size(); i++) {
 			String key = params.get(i).getKey().toString();
 					switch(key) {
@@ -54,47 +50,41 @@ public class LenderController {
 		}
 		factory = SingletonFactory.getFactory();
 		Session newLenderSession = factory.openSession();
+		newLenderSession.beginTransaction();
 		
+//		add parameters to a new lender object
 		Lender lender = new Lender();
 		
 		lender.setFirstName(firstName);
 		lender.setLastName(lastName);
 		lender.setEmail(email);
-		
-		//start transaction
-		newLenderSession.beginTransaction();
-		
-		//save the book
+
+
 		newLenderSession.save(lender);
 		
-		//commit the transaction
 		newLenderSession.getTransaction().commit();
-		
-		System.out.println("Lender added");
 		newLenderSession.close();	
-		
-		
-		
-		
+
 	}
 
-	/*
-	 * updates the lender with new parameters
+	
+	/**
+	 * updates the lender with changed parameters
+	 * 
+	 * @param lenderID
+	 * @param changes
 	 */
 	public void changeLender(int lenderID, ArrayList<Pair> changes) {
-		System.out.println("LC - changeLender");
-		/*
-		 * ausleiher per id suchen
-		 * aenderungen uebernehmen
-		 */
-		
-		System.out.println("LC - getLender");
+		System.out.println("LenderController - changeLender");
+
 		factory = SingletonFactory.getFactory();
 		Session changeLenderSession = factory.openSession();
 		changeLenderSession.beginTransaction();
 
+//		get lender with lenderid
 		Lender lender = getLender(lenderID);
 		
+//		analyse changed parameters
 		for(int i = 0; i < changes.size(); i++) {
 			String key = changes.get(i).getKey().toString();
 			switch(key) {
@@ -113,53 +103,52 @@ public class LenderController {
 		changeLenderSession.update(lender);
 		
 		changeLenderSession.getTransaction().commit();
-		
-		System.out.println("Lender changed");
 		changeLenderSession.close();		
 	}
 
 	/**
 	 * gets the lender with the id
+	 * 
 	 * @param id
 	 * @return
 	 */
 	public Lender getLender(int id) {
-		System.out.println("LC - getLender");
+		System.out.println("LenderController - getLender");
 		factory = SingletonFactory.getFactory();
 		Session getLenderSession = factory.openSession();
-		
-		Lender lender = null;
-		//start transaction
 		getLenderSession.beginTransaction();
 		
-		lender = (Lender) getLenderSession.get(Lender.class, id);
+		Lender lender = (Lender) getLenderSession.get(Lender.class, id);
 		
-		//commit the transaction
 		getLenderSession.getTransaction().commit();
-		
 		getLenderSession.close();	
 	
 		return lender;
 	}
 
+	
 	/**
 	 * gets the lender last added
+	 * 
 	 * @return
 	 */
 	public int getLastLenderId(){
-		System.out.println("LC - getLastLenderId");
+		System.out.println("LenderController - getLastLenderId");
 		int lastId = 0;
 
 		factory = SingletonFactory.getFactory();
 		Session findMaxIdSession = factory.openSession();
 		findMaxIdSession.beginTransaction();
 		
+//		get all lender ids
 		String hql = "select l.idLender from Lender l";
 		Query query = findMaxIdSession.createQuery(hql);
-
 		List<Integer> ids = query.getResultList();
+		
+//		if there are lenders
 		if(ids.size() != 0) {
-			lastId = ids.size();
+//			get lastId
+			lastId = ids.get(ids.size()-1);
 		}
 		
 		findMaxIdSession.getTransaction().commit();
@@ -169,76 +158,72 @@ public class LenderController {
 	}
 
 	/**
-	 * find the lender ids of the lenders with this name
+	 * find the lenderids of the lenders with this name
+	 * 
 	 * @param fN
 	 * @param lN
 	 * @return
 	 */
 	public List<Integer> findLenderIdByName(String fN, String lN) {
-		System.out.println("LC - findLenderId");
+		System.out.println("LenderController - findLenderId");
 		factory = SingletonFactory.getFactory();
 		Session findSession = factory.openSession();
 		findSession.beginTransaction();
 		
-//		String und query erstellen zur Uebergabe der Parameter
+//		get lenderids for matching firstName and lastName
 		String hql = "select l.idLender from Lender l where l.firstName = '" + fN + "' and l.lastName = '" + lN + "'";				
-	
-//		uebergebe hql an query
 		Query query = findSession.createQuery(hql);
-		
-//		hole Ids
 		ArrayList<Integer> lenderIds = (ArrayList<Integer>) query.getResultList();		
 					
 		findSession.getTransaction().commit();
-		
 		findSession.close();
 	
 		return lenderIds;	
 	}
 	
+	
 	/**
 	 * get ids of lenders with this email
+	 * 
 	 * @param email
 	 * @return
 	 */
 	public ArrayList<Integer> findLenderIdByEmail(String email) {
-		System.out.println("LC - findLenderIdByName");
+		System.out.println("LenderController - findLenderIdByName");
 		factory = SingletonFactory.getFactory();
 		Session searchEmailSession = factory.openSession();
-		
-		//start transaction
 		searchEmailSession.beginTransaction();
 		
+//		get lenderids for matching emails
 		String hql = "select l.idLender from Lender l where l.email = '" + email + "'";		
 		Query query = searchEmailSession.createQuery(hql);
 		ArrayList<Integer> emailIds = (ArrayList<Integer>) query.getResultList();	
 		
-		//commit the transaction
 		searchEmailSession.getTransaction().commit();
-		
 		searchEmailSession.close();	
 		
 		return emailIds;
 	}
 
+	
 	/**
 	 * get ids of lender with this firstName
+	 * 
 	 * @param firstName
 	 * @return
 	 */
 	public ArrayList<Integer> findLenderIdByFirstName(String firstName){
-		System.out.println("LC - findLenderIdByFirstName");
+		System.out.println("LenderController - findLenderIdByFirstName");
 		factory = SingletonFactory.getFactory();
 		Session searchForFirstNameSession = factory.openSession();
 		searchForFirstNameSession.beginTransaction();
 		
+//		get lenderids for matching firstName
 		String hql = "select l.idLender from Lender l where l.firstName = '" + firstName + "'";		
 		Query query = searchForFirstNameSession.createQuery(hql);
 		ArrayList<Integer> emailIds = (ArrayList<Integer>) query.getResultList();	
 		
-		//commit the transaction
 		searchForFirstNameSession.getTransaction().commit();
-		
 		searchForFirstNameSession.close();	
 		
 		return emailIds;

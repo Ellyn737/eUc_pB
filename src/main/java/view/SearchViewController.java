@@ -38,6 +38,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+/**
+ * manages the search options
+ * 
+ * @author ellyn
+ *
+ */
 public class SearchViewController implements Initializable {
 
 	@FXML AnchorPane rootPane;
@@ -80,15 +86,16 @@ public class SearchViewController implements Initializable {
 	}
 	
 	/**
-	 * genre, subgenre und isBorrowed auswerten
+	 * checks genre, subgenre, rating and isBorrowed
+	 * 
 	 * @param location
 	 * @param resources
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		System.out.println("SVC - initialize");
+		System.out.println("SearchViewController - initialize");
 		
-//		setze Genre und Subgenre
+//		set subgenre and genre onclick
 		ObservableList<MenuItem> genreItems = menuGenre.getItems();
 		for(MenuItem genreItem: genreItems ) {
 			genreItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -98,9 +105,7 @@ public class SearchViewController implements Initializable {
 					
 					String genreIt = genreItem.getText();
 					menuGenre.setText(genreIt);
-					genre = genreIt;
-					System.out.println(genre);
-					
+					genre = genreIt;					
 				}
 			});
 		}
@@ -114,9 +119,7 @@ public class SearchViewController implements Initializable {
 					
 					String subGenreIt = sbSubGenreItem.getText();
 					menuGenre.setText(subGenreIt);
-					subGenre = subGenreIt;
-					System.out.println(subGenre);
-					
+					subGenre = subGenreIt;					
 				}
 			});
 		}
@@ -131,13 +134,12 @@ public class SearchViewController implements Initializable {
 					String subGenreIt = rSubGenreItem.getText();
 					menuGenre.setText(subGenreIt);
 					subGenre = subGenreIt;
-					System.out.println(subGenre);
 					
 				}
 			});
 		}
 		
-//		setzen von isBorrowed on click
+//		set isBorrowed onClicked
 		radioBtnBorrowed.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
@@ -145,17 +147,15 @@ public class SearchViewController implements Initializable {
 				if(radioBtnBorrowed.isSelected()) {
 //					1 == true
 					isBorrowed = "1";
-					System.out.println("RadioButton wurde gedrückt");
 				}else {
 //					0 == false
 					isBorrowed = "0";
-					System.out.println("RadioButton wurde nicht gedrückt");
 				}				
 			}
 		});
 		
 		
-//		setzen von rating on click
+//		set rating onClicked
 		ratingStars.setPartialRating(false);
 		ratingStars.setRating(0);
 		
@@ -166,22 +166,34 @@ public class SearchViewController implements Initializable {
 				ratingIsClicked = true;
 				rating = (int) ratingStars.getRating();
 			}
-			
 		});
 		
 	}	
 
+	/**
+	 * on cancel go to StartMenu
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
-		System.out.println("SVC - handleCancelButton");
+		System.out.println("SearchViewController - handleCancelButton");
 		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 		rootPane.getChildren().setAll(startPane);
 		}	
 	
+	/**
+	 * on search get searchParameters
+	 * call bibController
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleSearchButton(ActionEvent event) throws IOException{
-		System.out.println("SVC - handleSearchButton");
-		//ausserdem suchparameter weiter und an db geben
+		System.out.println("SearchViewController - handleSearchButton");
 		bc = new BibController();
 	
+//		get searchParameters
 		title = txtFiTitle.getText().trim();
 		author = txtFiAuthor.getText().trim();
 		publisher = txtFiPublisher.getText().trim();
@@ -189,84 +201,87 @@ public class SearchViewController implements Initializable {
 		edition = txtFiEdition.getText().trim();
 		exemplar = txtFiExemplar.getText().trim();
 		
-//		ArrayListe mit key und value anlegen
+//		generate ArrayListe with key and value
 		ArrayList <Pair> parameters = new ArrayList<Pair>();
 		
+//		analyse input and add Pair with key and value
 		if(!title.isEmpty()) {
 			Pair titlePair = new Pair("title", title);
 			parameters.add(titlePair);
-			System.out.println("Setze Paar für Titel: "+title);
 		}
 		
 		if(!author.isEmpty()) {
 			Pair authorPair = new Pair("author", author);
 			parameters.add(authorPair);
-			System.out.println(author);
 		}
 		
 		if(!publisher.isEmpty()) {
 			Pair publisherPair = new Pair("publisher", publisher);
 			parameters.add(publisherPair);		
-			System.out.println(publisher);	
 		}
 		
 		if(!year.isEmpty()) {
 			Pair yearPair = new Pair("year", year);
 			parameters.add(yearPair);
-			System.out.println(year);
 		}
 		
 		System.out.println(genre);
 		if(genre != null) {
 			Pair genrePair = new Pair("genre", genre);
 			parameters.add(genrePair);
-			System.out.println(genre);
 		}
 		
 		System.out.println(subGenre);
 		if(subGenre != null) {
 			Pair subGenrePair = new Pair("subGenre", subGenre);
 			parameters.add(subGenrePair);
-			System.out.println(subGenre);
 		}
 
-		
 		if(!edition.isEmpty()) {
 			Pair editionPair = new Pair("edition", edition);
 			parameters.add(editionPair);	
-			System.out.println(edition);
-			}
+		}
 		
 		if(!exemplar.isEmpty()) {
 			Pair exemplarPair = new Pair("exemplar", exemplar);
 			parameters.add(exemplarPair);
-			System.out.println(exemplar);
 		}
 		
 		if(isBorrowed != null) {
 			Pair isBorrowedPair = new Pair("isBorrowed", isBorrowed);
 			parameters.add(isBorrowedPair);
-			System.out.println(isBorrowed);
 		}
 	
 		if(ratingIsClicked) {
 			parameters.add(new Pair("rating", rating));
 		}
 		
-//		wenn parameter gesetzt wurden
+//		if parameters were not set
 		if(parameters.size() <= 0) {
-			setWarningNoSearchParameters();
+//			showWarning
+			String message1 = "Es wurden keine Suchangaben gemacht.";
+			String message2 = "Bitte füllen Sie mindestens einen Suchparameter aus.";
+			setWarning(message1, message2);
 		}else {
-//			List mit Ids holen, die zu den Suchparametern passen
+//			else get matching bookids
 			List<Integer> ids = bc.findBookId(parameters);
+//			go to findBook
 			findBook(ids, parameters);
 		}
 	}
 
 
+	/**
+	 * 
+	 * @param ids
+	 * @param searchParameters
+	 */
 	public void findBook(List<Integer> ids, ArrayList<Pair> searchParameters) {
-		
+		System.out.println("SearchViewController - findBook");
+
+//			checks if ids were found
 			if(ids.size() >= 1) {
+//				yes --> give ids and searchParameters to ResultsView and show them there
 				try {
 					FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
 					AnchorPane pane = (AnchorPane) loader.load();
@@ -280,25 +295,23 @@ public class SearchViewController implements Initializable {
 					e.printStackTrace();
 				}
 			}else {
-				setWarningNoResult();
+//				--> no setWarning
+				String message1 = "Es wurden keine passenden Titel gefunden.";
+				String message2 = "Bitte überprüfen Sie Ihre Sucheingabe.";
+				setWarning(message1, message2);
 			}
 	}
 	
-	public void setWarningNoSearchParameters() {
+	/**
+	 * sets a warning
+	 */
+	public void setWarning(String message1, String message2) {
+		System.out.println("SearchViewController - setWarning");
 //		Alert fuer moegliche fehlende Eingaben
-		Alert warning = new Alert(AlertType.WARNING, "Bitte füllen Sie mindestens einen Suchparameter aus. ", ButtonType.OK);
+		Alert warning = new Alert(AlertType.WARNING, message2, ButtonType.OK);
 		warning.setTitle("ACHTUNG");
-		warning.setHeaderText("Es wurden keine Suchangaben gemacht.");
+		warning.setHeaderText(message1);
 		warning.showAndWait();
 	}
-	
-	public void setWarningNoResult() {
-//		Alert fuer moegliche fehlende Eingaben
-		Alert warning = new Alert(AlertType.WARNING, "Bitte überprüfen Sie Ihre Sucheingabe.", ButtonType.OK);
-		warning.setTitle("ACHTUNG");
-		warning.setHeaderText("Es wurden keine passenden Titel gefunden.");
-		warning.showAndWait();
-	}
-
 	
 }

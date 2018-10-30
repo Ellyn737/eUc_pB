@@ -41,6 +41,12 @@ import models.Book;
 import models.Media;
 import models.BorrowMedia;
 
+/**
+ * class for updating the book with new or changed data
+ * 
+ * @author ellyn
+ *
+ */
 public class ChangeTitleController {
 	@FXML AnchorPane rootPane;
 	@FXML Label titleLabel;
@@ -89,26 +95,39 @@ public class ChangeTitleController {
 		this.mainBib = mainBib;
 	}
 	
+	/**
+	 * on cancel go to showTitle
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 		AnchorPane pane = (AnchorPane) loader.load();
 		
-		//id an ShowTitle uebergeben
+//		give bookID and old searchParameters and results to ShowTitle
 		ShowTitleController showTitle = loader.getController();
 		showTitle.fillView(bookID);
+		showTitle.setOldParametersForReturning(resultIds, oldParameters);
 		
 		Scene scene = new Scene(pane);
 		rootPane.getChildren().setAll(pane);
 		}	
 	
-	
+	/**
+	 * on save check the differences and update the book
+	 * 
+	 * change isBorrowed only with borrowing
+	 * change exemplar only with adding or deleting
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleSaveChangeButton(ActionEvent event) throws IOException{
-			System.out.println("CTC - handleSaveChangeButton");
+			System.out.println("ChangeTitleController - handleSaveChangeButton");
 			bc = new BibController();
-		
-//			inBIb nur über Ausleihe ändern
-//			exemplar nur ueber hinzufügen oder löschen ändern
 			
+//			get values of input
 			title = txtFiTitle.getText();
 			subTitle = txtFiSubTitle.getText();
 			author = txtFiAuthor.getText();
@@ -118,7 +137,7 @@ public class ChangeTitleController {
 			comment = txtArComment.getText();
 			edition = Integer.parseInt(txtFiEdition.getText());
 			
-			//setze values
+//			set values
 			bc.setAuthor(author);
 			bc.setTitle(title);
 			bc.setSubTitle(subTitle);
@@ -133,15 +152,17 @@ public class ChangeTitleController {
 				bc.setRating(stars);
 			}
 			
+//			change book with id
 			bc.changeTitle(bookID);
 			
-			
+//			load ShowTitle
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
 			
-			//id an ShowTitle uebergeben
+//			give id, old resultlist and searchParameters to Showtitle
 			ShowTitleController showTitle = loader.getController();
 			showTitle.fillView(bookID);
+			showTitle.setOldParametersForReturning(resultIds, oldParameters);
 			
 			Scene scene = new Scene(pane);
 			rootPane.getChildren().setAll(pane);
@@ -149,22 +170,24 @@ public class ChangeTitleController {
 		}	
 	
 	@FXML private void handleChangeImageButton(ActionEvent event) throws IOException{
-		//change image of title in db
-		System.out.println("CTC - handleChangeImageButton");
+
 	}	
 	
+	/**
+	 * fills the labels and other variables with the values of the given book
+	 * 
+	 * @param id
+	 */
 	public void fillView(int id) {
 		try {
-		System.out.println("CTC - fillView");
-		bc = new BibController();
-
-		bookID = id;
-		System.out.println("uebergebene id: " + id);
-		
-		
+			System.out.println("ChangeTitleController - fillView");
+			bc = new BibController();
+	
+			bookID = id;		
+//			get the book by bookid
 			Book book = bc.getTheBook(id);
 			
-//			setzen der variablen in die Felder
+//			set variables in the fields
 			txtFiTitle.setText(book.getTitle());
 			txtFiAuthor.setText(book.getAuthor());
 			txtFiPublisher.setText(book.getPublisher());
@@ -186,11 +209,11 @@ public class ChangeTitleController {
 			}
 			
 			
-//			anklicken ueberwachen
+//			set subgenre and genre onClick
 			ObservableList<MenuItem> sbItems = sbMenu.getItems();
 			for(MenuItem item: sbItems) {
 				item.setOnAction(new EventHandler<ActionEvent>() {
-
+	
 					@Override
 					public void handle(ActionEvent event) {
 						String genreItem = item.getText();
@@ -208,7 +231,7 @@ public class ChangeTitleController {
 			ObservableList<MenuItem> rItems = rMenu.getItems();
 			for(MenuItem rItem: rItems) {
 				rItem.setOnAction(new EventHandler<ActionEvent>() {
-
+	
 					@Override
 					public void handle(ActionEvent event) {
 						String rGenreItem = rItem.getText();
@@ -222,8 +245,9 @@ public class ChangeTitleController {
 				});
 			}
 			
+//			set ratingStars onClick
 			ratingStars.setOnMouseClicked(new EventHandler<Event>() {
-
+	
 				@Override
 				public void handle(Event event) {
 					ratingIsChanged = true;
@@ -238,13 +262,19 @@ public class ChangeTitleController {
 		}	
 	}
 	
+	/**
+	 * saves information to return it later
+	 * 
+	 * @param ids
+	 * @param searchParams
+	 */
 	public void setOldParametersForReturning(List<Integer> ids, ArrayList<Pair> searchParams) {
 		resultIds = ids;
 		oldParameters = searchParams;
 	}
 	
 	/**
-	 * ermöglicht die uebergabe von daten von einem anderen FXController an diesen
+	 * makes it possible to call methods of this class from another controller
 	 * 
 	 * @return
 	 */

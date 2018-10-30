@@ -18,7 +18,7 @@ import models.BorrowMedia;
  * 
  * @author ellyn
  *
- * Klasse zur Kontrolle der Ausleihen und Rückgaben
+ * class fpor controlling the borrowings and returnings
  * 
  */
 public class BorrowController {
@@ -28,23 +28,22 @@ public class BorrowController {
 	private BibController bc = new BibController();
 	
 	/**
-	 * borrow a book -> titleId, lenderID, returnDate and message
+	 * borrow a book with titleId, lenderID, returnDate and message
+	 * sets isReturned to false
+	 * 
 	 * @param buchID
 	 * @param ausleiherID
 	 * @param returnDate
 	 * @param message
 	 */
 	public void borrowBook(int buchID, int ausleiherID, LocalDate returnDate, String message) {
-		System.out.println("BoC - borrowBook");
-		/*
-		 * sucht das Buch heraus und 
-		 * ordnet in DB den ausleiher dem Buch zu
-		 * aendert istInBib auf false
-		 */
+		System.out.println("BorrowController - borrowBook");
 		
 		factory = SingletonFactory.getFactory();
 		Session newBorrowingSession = factory.openSession();
+		newBorrowingSession.beginTransaction();
 		
+//		sets variables of borrowing
 		BorrowMedia borrowing = new BorrowMedia();
 		date = java.sql.Date.valueOf(returnDate);
 		
@@ -53,48 +52,43 @@ public class BorrowController {
 		borrowing.setReturnDate(date);
 		borrowing.setMessage(message);
 		borrowing.setIsReturned(false);
-		
-		//start transaction
-		newBorrowingSession.beginTransaction();
-		
-		//save the book
+	
 		newBorrowingSession.save(borrowing);
 		
-		//commit the transaction
 		newBorrowingSession.getTransaction().commit();
-		
-		System.out.println("Book borrowed");
 		newBorrowingSession.close();	
 		
+//		sets isBorrowed to true
 		bc.setBookToBorrowed(buchID, true);
 		
 	}
 	
+	
 	/**
-	 * sets borrowMedia.isReturned
+	 * returns a book to the library
 	 * @param buchID
 	 */
 	public void returnBook(int bookID) {
-		System.out.println("BoC - returnBook");
+		System.out.println("BorrowController - returnBook");
 		
 		factory = SingletonFactory.getFactory();
 		Session returnSession = factory.openSession();
-		
-		BorrowMedia bm = getLastBorrowingOfTitle(bookID);
-		bm.setIsReturned(true);
-			
-		//start transaction
 		returnSession.beginTransaction();
 		
+//		gets the last borrowing of that title
+		BorrowMedia bm = getLastBorrowingOfTitle(bookID);
+//		sets the isReturned variable to true
+		bm.setIsReturned(true);
+
 		returnSession.update(bm);
 					
-		//commit the transaction
+
 		returnSession.getTransaction().commit();
-		
-		System.out.println("Book borrowed");
 		returnSession.close();	
 		
+//		sets isBorrowed to false
 		bc.setBookToBorrowed(bookID, false);
+		
 	}
 
 	/**
@@ -103,33 +97,37 @@ public class BorrowController {
 	 * @return
 	 */
 	public BorrowMedia getLastBorrowingOfTitle(int titleID) {
-		System.out.println("BoC - getLastBorrowingOfTitle");
+		System.out.println("BorrowController - getLastBorrowingOfTitle");
 		
 		factory = SingletonFactory.getFactory();
 		Session findMaxIdWithDateSession = factory.openSession();
 		findMaxIdWithDateSession.beginTransaction();
 		
-//		hole borrowIds von diesem titel
+//		get borrowIds of that title
 		String hql = "select bm.borrowId from BorrowMedia bm where bm.idMedia = '" + titleID + "'";
 		Query query = findMaxIdWithDateSession.createQuery(hql);
 		ArrayList<Integer> lastBorrowedIds = (ArrayList<Integer>) query.getResultList();
 		
-//		hole letzte der ids
+//		get last id of the ids
 		int lastBorrowedId = lastBorrowedIds.get(lastBorrowedIds.size()-1);
 		
-//		hole das ganze borrowing
-		BorrowMedia bm = findMaxIdWithDateSession.get(BorrowMedia.class, lastBorrowedId);
+//		get the borrowing with the id
+		BorrowMedia bm = getTheBorrowing(lastBorrowedId);
 		
 		findMaxIdWithDateSession.getTransaction().commit();
 		findMaxIdWithDateSession.close();
 		
 		return bm;
-		
-		
 	}
 	
+	/**
+	 * get a borrowing with the id
+	 * 
+	 * @param borrowingId
+	 * @return
+	 */
 	public BorrowMedia getTheBorrowing(int borrowingId) {
-		System.out.println("In BOC - getTheBorrowing");
+		System.out.println("BorrowController - getTheBorrowing");
 		
 		factory = SingletonFactory.getFactory();
 		Session findBorrowingSession = factory.openSession();
@@ -145,15 +143,20 @@ public class BorrowController {
 	
 
 	
-	
+	/**
+	 * gets all borrowingIds of a title
+	 * 
+	 * @param bookID
+	 * @return
+	 */
 	public List<Integer> findBorrowingIds(int bookID) {
-		System.out.println("BoC - findBorrowingIds");
+		System.out.println("BorrowController - findBorrowingIds");
 		
 		factory = SingletonFactory.getFactory();
 		Session findIdSession = factory.openSession();
 		findIdSession.beginTransaction();
 		
-//		hole borrowIds von diesem titel
+//		get borrowIds of that title
 		String hql = "select bm.borrowId from BorrowMedia bm where bm.idMedia = '" + bookID + "'";
 		Query query = findIdSession.createQuery(hql);
 		List<Integer> lastBorrowedIds = query.getResultList();
@@ -165,20 +168,24 @@ public class BorrowController {
 
 	}
 	
+	/**
+	 * delete all borrowings of a title
+	 * 
+	 * @param bookID
+	 */
 	public void deleteBorrowingsOfTitle(int bookID) {
-		System.out.println("BOC - deleteBorrowingOfTitle");
+		System.out.println("BorrowController - deleteBorrowingOfTitle");
 		
 //		get borrowingids of this book
 		List<Integer> borrowIds = findBorrowingIds(bookID);
 		
-//		hole ratings für diese ratingIds und lösche alle ratings zu diesem titel
+//		get ratings for ratingIds and delete them
 		for(int bId: borrowIds) {
-			System.out.println(bId);
-//			hole das borrowing der id
+//			get borrowing with the borrowId
 			BorrowMedia bm = getTheBorrowing(bId);
-			
+//			if there is a borrowing
 			if(bm != null) {
-	//			lösche das borrowing
+	//			delete the borrowing
 				factory = SingletonFactory.getFactory();
 				Session deleteSession = factory.openSession();
 				deleteSession.beginTransaction();
@@ -186,12 +193,17 @@ public class BorrowController {
 				deleteSession.delete(bm);
 				
 				deleteSession.getTransaction().commit();
-				System.out.println("Rating deleted");
 				deleteSession.close();			
 			}
 		}
 	}
 	
+	/**
+	 * get a List of Borrowings that are overdue
+	 * 
+	 * @param today
+	 * @return
+	 */
 	public List<BorrowMedia> getBorrowingByDate(LocalDate today) {
 
 		factory = SingletonFactory.getFactory();

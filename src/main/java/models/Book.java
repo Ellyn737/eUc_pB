@@ -9,10 +9,9 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 
 /**
+ * class for building the books in the database 
  * 
  * @author ellyn
- *
- * Klasse zum Erstellen und Verwalten der Buecher
  */
 
 @Entity
@@ -96,8 +95,8 @@ public class Book extends Media implements Serializable{
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: autor={1}, verlag={2}, auflage={3}, genre={4}, subgenre={5}", 
-				new Object[] {getClass().getSimpleName(), author, publisher, edition, genre, subGenre});
+		return MessageFormat.format("{0}: autor={1}, verlag={2}, auflage={3}, genre={4}, subgenre={5}, subtitle={6}", 
+				new Object[] {getClass().getSimpleName(), author, publisher, edition, genre, subGenre, subTitle});
 	}
 	
 	

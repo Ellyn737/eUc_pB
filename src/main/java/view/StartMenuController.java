@@ -22,7 +22,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 
-
+/**
+ * manages the menu 
+ * 
+ * @author ellyn
+ *
+ */
 public class StartMenuController{
 	
 	@FXML private AnchorPane rootPane;
@@ -37,30 +42,54 @@ public class StartMenuController{
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
-		System.out.println(System.getProperties());
+//		System.out.println(System.getProperties());
 	}
 	
+	/**
+	 * on search go to SearchView
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleSearchButton(ActionEvent event) throws IOException{
 		AnchorPane searchPane = FXMLLoader.load(getClass().getResource("../view/SearchView.fxml"));
 		rootPane.getChildren().setAll(searchPane);
 		}	
 	
+	/**
+	 * on add go to AddNewTitle
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleAddButton(ActionEvent event) throws IOException{
 		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/AddNewTitle.fxml"));
 		rootPane.getChildren().setAll(addPane);
 		}	
 	
+	/**
+	 * on statistics go to Overview
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleStatisticsButton(ActionEvent event) throws IOException{
 		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/Overview.fxml"));
 		rootPane.getChildren().setAll(addPane);
 		}	
 	
+	/**
+	 * on exit close the program
+	 * @param event
+	 * @throws IOException
+	 */
 		@FXML private void handleExitButton(ActionEvent event) throws IOException{
-			//close the app
 //		Platform.exit();
 		System.exit(0);
 		}	
 	
+	/**
+	 * Set the title of the program with the librarians name
+	 * 
+	 * @param title
+	 */
 	public void setTitleOfStartMenu(String title) {
 		titleLabel.setText(title);
 	}

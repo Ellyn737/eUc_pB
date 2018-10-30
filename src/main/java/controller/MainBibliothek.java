@@ -36,9 +36,8 @@ import view.StartMenuController;
 /**
  * @author ellyn
  * 
- * Klasse zum Aufrufen der Main-Methode
- * 
- * Regelt den Aufruf des Programms
+ * this class manages the main method
+ * and calls the programm
  */
 public class MainBibliothek extends Application{
 
@@ -53,7 +52,7 @@ public class MainBibliothek extends Application{
 	}
 	
 	public void mainWindow(){
-//		wenn admin noch nicht existiert --> tabelle lender.isEmpty --> dann Dialog zum erstellen des admins
+//		if admin doesn't exist --> tabelle lender.isEmpty --> then dialog for generating the admin
 		lc = new LenderController();
 		int lastID = lc.getLastLenderId();
 		
@@ -62,7 +61,7 @@ public class MainBibliothek extends Application{
 			showStartMenu();
 		}else {
 			setAddAdminDialog();
-			showStartMenu();
+			
 		}
 		
 	}
@@ -102,15 +101,16 @@ public class MainBibliothek extends Application{
 		return primaryStage;
 	}
 	
+	
 	/**
-	 * Anlegen des Bibliothekars als ersten Lender
+	 * generates the librarian = the first lender
 	 */
 	public void setAddAdminDialog() {
 		Alert dialog = new Alert(AlertType.WARNING, "Bitte geben Sie Ihren Namen und Ihre Email ein. ", ButtonType.OK);
 		dialog.setTitle("ERSTELLUNG DER BIBLIOTHEK");
 		dialog.setHeaderText("Der Bibliothekar existiert noch nicht.");
 		
-//		x in rechter oberer ecke ausgeschaltet
+//		deactivate the x in the right upper corner
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
 		stage.setOnCloseRequest(event ->{
 			event.consume();
@@ -142,7 +142,7 @@ public class MainBibliothek extends Application{
 			lc = new LenderController();
 			ArrayList<Pair> params = new ArrayList<Pair>();
 			if(!adminFNameTxt.getText().isEmpty()) {
-//				Bibliothekar als ersten Lender anlegen
+//				set variables 
 				params.add(new Pair("Firstname", adminFNameTxt.getText()));
 			}
 			if(!adminLNameTxt.getText().isEmpty()) {
@@ -151,18 +151,19 @@ public class MainBibliothek extends Application{
 			if(!adminEmailTxt.getText().isEmpty()) {
 				params.add(new Pair("Email", adminEmailTxt.getText()));
 			}
+//			check if everything is filled out
 			if(params.size() < 3) {
 				setWarningFillOutAllFields();
 			}else {
 				lc.addNewLender(params);
+				showStartMenu();
 				dialog.close();
 			}
 		}
-//		javafx.scene.control.FXDialog.requestPermissionToClose(Dialog<?>)
 	}
 	
 	/**
-	 * Warnung, wenn nicht alle Felder des Bibliothekaranlegedialogs ausgefüllt sind
+	 * warning for when not all fields are filled out
 	 */
 	public void setWarningFillOutAllFields() {
 		Alert warning = new Alert(AlertType.WARNING, "Bitte füllen Sie alle Felder aus. ", ButtonType.OK);
@@ -173,7 +174,6 @@ public class MainBibliothek extends Application{
 			warning.close();
 		}
 	}
-	
 
 
 }

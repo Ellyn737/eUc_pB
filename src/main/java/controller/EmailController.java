@@ -11,6 +11,9 @@ import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 import models.Book;
 import models.BorrowMedia;
 import models.Lender;
@@ -63,12 +66,18 @@ public class EmailController {
 				
 	//			send email
 				sendRememberingEmail(lender, librarian, message);
+				
+	//			set information alert
+				String message1 = "Die Ausleihfrist wurde von "+ lender.getFirstName() + " " + lender.getLastName() +"überschritten.";
+				String message2 = "Eine Erinnerungsemail wurde versandt.";
+				setWarningOverdue(message1, message2);
 			}else {
-//				show Alert --> No books need to be returned
+				String message1 = "Zur Zeit werden keine Ausleihfristen überschritten.";
+				String message2 = "Alles ist gut.";
+				setWarningOverdue(message1, message2);
 			}
 		}
-		
-		
+	
 	}
 	
 	public void sendRememberingEmail(Lender lender, Lender librarian, String message) {
@@ -91,6 +100,19 @@ public class EmailController {
 			
 			
 			mailer.sendMail(email);
+	}
+	
+	/**
+	 * Alert --> are there books that are overdue?
+	 */
+	public void setWarningOverdue(String headerMsg, String otherMsg) {
+		Alert warning = new Alert(AlertType.WARNING, otherMsg, ButtonType.OK);
+		warning.setTitle("ACHTUNG");
+		warning.setHeaderText(headerMsg);
+		warning.showAndWait();
+		if(warning.getResult() == ButtonType.OK) {
+			warning.close();
+		}
 	}
 	
 	

@@ -41,6 +41,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+/**
+ * controller for the view AddNewTitle
+ * 
+ * @author ellyn
+ *
+ */
 public class AddNewTitleController implements Initializable{
 	
 	@FXML AnchorPane rootPane;
@@ -86,17 +92,17 @@ public class AddNewTitleController implements Initializable{
 	
 	
 	/**
-	 * setzen von genre und subgenre bei klick
+	 * sets subgenre, isBorrowed and rating on click
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		System.out.println("ANTC - initialize");
+		System.out.println("AddNewTitleController - initialize");
 
 //		sachbuch auf OnAction
 		ObservableList<MenuItem> sbItems = sbMenu.getItems();
 		/**
-		 * subgenre wird auf das ausgewählte subgenre gesetzt
-		 * genre wird entsprechend des angeklickten menues gesetzt (sb, r)
+		 * set subgenre to collected subgenre
+		 * set genre to the clicked mennu (sb, r)
 		 */
 		for(MenuItem item: sbItems) {
 			item.setOnAction(new EventHandler<ActionEvent>() {
@@ -112,7 +118,7 @@ public class AddNewTitleController implements Initializable{
 			});
 		}
 		
-//		romane auf OnAction
+//		novels onAction
 		ObservableList<MenuItem> rItems = rMenu.getItems();
 		
 		for(MenuItem rItem: rItems) {
@@ -129,7 +135,7 @@ public class AddNewTitleController implements Initializable{
 			});
 		}
 		
-//		setzen von isBorrowed on click
+//		isBorrowed onClicked
 		radioBtnBorrowed.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
@@ -144,9 +150,10 @@ public class AddNewTitleController implements Initializable{
 			}
 		});
 		
-//		set rating as whole stars
+//		set rating as whole stars and with a default value of 0 stars
 		ratingStars.setPartialRating(false);
 		ratingStars.setRating(0);
+//		set ratingStars onClicked
 		ratingStars.setOnMouseClicked(new EventHandler<Event>() {
 
 			@Override
@@ -160,20 +167,33 @@ public class AddNewTitleController implements Initializable{
 		
 	}
 	
+	/**
+	 * on cancel go back to StartMenu
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
-		System.out.println("ANTC - handleCancelButton");
+		System.out.println("AddNewTitleController - handleCancelButton");
 		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 		rootPane.getChildren().setAll(startPane);
 		}	
 	
+	/**
+	 * on addTitle add a new book
+	 * go to ShowTitle
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleAddTitleButton(ActionEvent event) throws IOException{
-		System.out.println("ANTC - handleAddTitleButton");
+		System.out.println("AddNewTitleController - handleAddTitleButton");
 		
 //		not necessary: rating
 		int numberOfNecessaryFields = 9;
 		List txtFields = new ArrayList<>();
 
-//		Ueberprüfen, ob alle nötigen Textfelder gesetzt sind
+//		check if all necessary fields are filled out
 		System.out.println("Setze Variablen");
 		if(!txtFiTitle.getText().isEmpty()) {
 			title = txtFiTitle.getText();
@@ -192,15 +212,18 @@ public class AddNewTitleController implements Initializable{
 				year = Integer.parseInt(txtFiYear.getText());
 				txtFields.add(year);
 			}catch(NumberFormatException ex) {
-				setWarningNoInt();
-			}
+				String message1 = "Es wird eine Zahl benötigt.";
+				String message2 = "Bitte geben Sie als Auflage oder Erscheinungsjahr eine Zahl an.";
+				setWarning(message1, message2);			}
 		}
 		if(!txtFiEdition.getText().isEmpty()) {
 			try {
 				edition = Integer.parseInt(txtFiEdition.getText());
 				txtFields.add(edition);
 			}catch(NumberFormatException ex) {
-				setWarningNoInt();
+				String message1 = "Es wird eine Zahl benötigt.";
+				String message2 = "Bitte geben Sie als Auflage oder Erscheinungsjahr eine Zahl an.";
+				setWarning(message1, message2);
 			}
 		}
 		if(!txtArContent.getText().isEmpty()) {
@@ -222,12 +245,15 @@ public class AddNewTitleController implements Initializable{
 			System.out.println("Alles ausgefüllt");
 			addBook();
 		}else {
-			setWarningNeedToFill();
+			String message1 = "Das Buch ist nicht vollständig.";
+			String message2 = "Bitte geben Sie alle erforderlichen Daten an.";
+			setWarning(message1, message2);
 		}
 		
 
 		
 	}
+
 
 	@FXML private void handleAddImageButton(ActionEvent event) throws IOException{
 		//add image to title in db
@@ -236,8 +262,12 @@ public class AddNewTitleController implements Initializable{
 		
 	}
 
+	/**
+	 * sets the variables for the new book
+	 * calls BibController
+	 */
 	public void addBook() {
-		System.out.println("ANTC - addBook");
+		System.out.println("AddNewTitleController - addBook");
 		bc = new BibController();
 		try {
 
@@ -293,19 +323,13 @@ public class AddNewTitleController implements Initializable{
 		}
 	}
 	
-	public void setWarningNeedToFill() {
-//		Alert fuer moegliche fehlende Eingaben
-		Alert warning = new Alert(AlertType.WARNING, "Bitte geben Sie alle erforderlichen Daten an. ", ButtonType.OK);
+	/**
+	 * sets a warning
+	 */
+	public void setWarning(String message1, String message2) {
+		Alert warning = new Alert(AlertType.WARNING, message2, ButtonType.OK);
 		warning.setTitle("ACHTUNG");
-		warning.setHeaderText("Das Buch ist nicht vollständig.");
-		warning.showAndWait();
-	}
-	
-	public void setWarningNoInt() {
-//		Fehler, wenn bei Jahr oder Edition keine Zahle eingegeben wurde
-		Alert warning = new Alert(AlertType.WARNING, "Bitte geben Sie als Auflage oder Ersscheinungsjahr eine Zahl an. ", ButtonType.OK);
-		warning.setTitle("ACHTUNG");
-		warning.setHeaderText("Es wird eine Zahl benötigt.");
+		warning.setHeaderText(message1);
 		warning.showAndWait();
 	}
 

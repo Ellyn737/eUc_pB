@@ -10,11 +10,9 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 
 /**
+ * class for building the lenders in the database
+ * 
  * @author ellyn
- * 
- * Klasse zur Erstellung neuer Nutzer, die Buecher 
- * ausleihen wollen
- * 
  */
 
 @Entity

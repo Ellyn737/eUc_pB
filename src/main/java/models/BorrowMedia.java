@@ -11,6 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
+/**
+ * class for building the borrowing in the database
+ * 
+ * @author ellyn
+ */
 @Entity
 @Table(name="borrow_media", schema="ellynhb")
 public class BorrowMedia implements Serializable {

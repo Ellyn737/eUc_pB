@@ -28,10 +28,10 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import models.Book;
 /**
+ * shows the given title
+ * values from ResultsViewController or AddNewTitleController
  * 
  * @author ellyn
- *
- *Werte werden von ResultsViewController oder AddNewTitleController uebergeben
  */
 public class ShowTitleController {
 	@FXML AnchorPane rootPane;
@@ -71,39 +71,43 @@ public class ShowTitleController {
 	}
 
 	/**
-	 * zurück zu ResultsView
+	 * on cancel go to StartMenu
 	 * 
 	 * @param event
 	 * @throws IOException
 	 */
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
-		System.out.println("STC - handleCancelButton");
+		System.out.println("ShowTitleController - handleCancelButton");
 		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 		rootPane.getChildren().setAll(startPane);
 		}	
 	
 	/**
-	 * alert aufrufen und nach Bestätigung löschen des Titels
+	 * call alert
+	 * on yes: delete title
+	 * on no: showTitle
+	 * 
 	 * @param event
 	 * @throws IOException
 	 */
 	@FXML private void handleDeleteTitleButton(ActionEvent event) throws IOException{
-		System.out.println("STC - handleDeleteButton");
+		System.out.println("ShowTitleController - handleDeleteButton");
 		try {
-			//show warning
-			//delete title from db then go to menu
+//			get book with bookid
 			Book selection = bc.getTheBook(titleId);
+//			get number of copys of this title
 			int exemplars = selection.getExemplar();
-			System.out.println(exemplars);
-			
+//			set the alert and ask for confirmation
 			Alert alert = new Alert(AlertType.CONFIRMATION, "Sind Sie sicher, dass sie " + selection.getTitle() + " löschen möchten?", ButtonType.YES, ButtonType.NO);
 			alert.showAndWait();
 			
+//			on yes
 			if(alert.getResult() == ButtonType.YES) {
 
-//				checken ob noch andere exemplare vom titel existieren
+//				analyse the number of other copys
+//				if this is not the last copy
 				if(exemplars > 1) {
-//					zu ResultsView
+//					go to ResultsView and show the rest
 					FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
 					AnchorPane pane = (AnchorPane) loader.load();
 					
@@ -113,20 +117,22 @@ public class ShowTitleController {
 					Scene scene = new Scene(pane);
 					rootPane.getChildren().setAll(pane);
 				}else {					
-//					borrowings löschen
+//					else delete the borrowings of this title
 					boc = new BorrowController();
 					boc.deleteBorrowingsOfTitle(titleId);
 					
-//					buch löschen
+//					delete the book
 					bc.deleteFromBib(titleId);
 					
-//					zu StartMenu
+//					go to StartMenu
 					AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 					rootPane.getChildren().setAll(startPane);
 				}
 			}
+			
+//			on no
 			if(alert.getResult() == ButtonType.NO) {
-//				zu ShowTitle
+//				go to ShowTitle
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 				AnchorPane pane = (AnchorPane) loader.load();
 				
@@ -146,18 +152,18 @@ public class ShowTitleController {
 	
 	
 	/**
-	 * id an ChangeTitleView uebergeben und dorthin wechseln
+	 * on changeTitle go there
+	 * 
 	 * @param event
 	 * @throws IOException
 	 */
 	@FXML private void handleChangeTitleButton(ActionEvent event) throws IOException{
-		System.out.println("STC - handleChangeTitleButton");
+		System.out.println("ShowTitleController - handleChangeTitleButton");
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangeTitle.fxml"));
 		AnchorPane pane = (AnchorPane) loader.load();
-		
-		
-		//id an ChangeTitle uebergeben
+
+//		give id to ChangeTitle
 		ChangeTitleController changeTitle = loader.getController();
 		changeTitle.fillView(titleId);
 		changeTitle.setOldParametersForReturning(resultIds, oldParameters);
@@ -168,27 +174,36 @@ public class ShowTitleController {
 		}	
 	
 	/**
-	 * id an TitelAusleihe uebergeben und dahin wechseln
+	 * on Borrow go to TitleBorrowController or TitleReturnController
+	 * 
 	 * @param event
 	 * @throws IOException
 	 */
 	@FXML private void handleBorrowButton(ActionEvent event) throws IOException{
-		System.out.println("STC - handleBorrowButton");
+		System.out.println("ShowTitleController - handleBorrowButton");
 
+//		check if isBorrowed is selected
+//		on yes
 		if(radioBtnBorrowed.isSelected()) {
+//			go to TitleReturn
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("TitleReturn.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
 			
+//			give it the needed variables
 			TitleReturnController trc = loader.getController();
 			trc.setOldParametersForReturning(resultIds, oldParameters);
 			trc.fillView(titleId);
 			
 			Scene scene = new Scene(pane);
 			rootPane.getChildren().setAll(pane);
-		}else {
+		}
+//		on no
+		else {
+//			go to TitleBorrow
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("TitleBorrow.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
 			
+//			give it the needed variables
 			TitleBorrowController tbc = loader.getController();
 			tbc.setOldParametersForReturning(resultIds, oldParameters);
 			tbc.fillView(titleId);
@@ -199,21 +214,21 @@ public class ShowTitleController {
 	}
 
 	/**
-	 * uebernimmt die id des buches, das angezeigt werden soll
-	 * holt das passende buch und füllt die labels...
+	 * takes the given bookid
+	 * gets the book and fills labels
 	 * 
 	 * @param id
 	 */
 	public void fillView(int id) {
-		System.out.println("ST - fillView");
+		System.out.println("ShowTitleController - fillView");
 		
 		titleId = id;
-
-		bc = new BibController();
 		try {
+			bc = new BibController();
+
 			Book book = bc.getTheBook(id);
 			
-			System.out.println("Setze variablen in die Felder");
+//			set variables into the fields
 			titleLabel.setText(book.getTitle().toUpperCase());
 			givenTitle.setText(book.getTitle());
 			givenAuthor.setText(book.getAuthor());
@@ -226,23 +241,23 @@ public class ShowTitleController {
 			givenExemplar.setText("Exemplar: " + String.valueOf(book.getExemplar()));
 			givenEdition.setText("Auflage: " + String.valueOf(book.getEdition()));
 			
+//			checks if there is a subtitle
 			if(book.getSubTitle() != null) {
 				givenSubTitle.setText(book.getSubTitle());
 			}else {
 				givenSubTitle.setText("");				
 			}
 
+//			checks if it is borrowed
 			if(book.getIsBorrowed()) {
 				radioBtnBorrowed.setSelected(true);
-				System.out.println("Buch ist ausgeliehen");
 				borrowBtn.setText("RÜCKGABE");
 			}else {
 				radioBtnBorrowed.setSelected(false);
-				System.out.println("Buch ist verfügbar");
 				borrowBtn.setText("AUSLEIHEN");
 			}
 			
-//			set rating
+//			sets rating
 			ratingStars.setPartialRating(false);
 			if(book.getStars() != null) {
 				ratingStars.setRating(book.getStars());
@@ -256,14 +271,17 @@ public class ShowTitleController {
 	}
 		
 		
-	
+	/**
+	 * @param ids
+	 * @param searchParams
+	 */
 	public void setOldParametersForReturning(List<Integer> ids, ArrayList<Pair> searchParams) {
 		resultIds = ids;
 		oldParameters = searchParams;
 	}
 	
 	/**
-	 * ermöglicht die uebergabe von daten von einem anderen FXController an diesen
+	 * makes datatransfer possible between controllers
 	 * 
 	 * @return
 	 */

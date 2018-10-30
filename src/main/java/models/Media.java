@@ -15,10 +15,10 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 
 /**
+ * class for building the media in the database
+ * superclass for book and other mediatypes in the future
  * 
  * @author ellyn
- * 
- * Superklasse fuer Buch und später weitere Medien
  * 
  */
 @Entity
