@@ -73,7 +73,7 @@ public class MainBibliothek extends Application{
 			String librarianName = librarian.getFirstName();
 			String title = librarianName.toUpperCase() + "'s BIBLIOTHEK";	
 			
-			FXMLLoader loader = new FXMLLoader(MainBibliothek.class.getResource("/view/StartMenu.fxml"));
+			FXMLLoader loader = new FXMLLoader(MainBibliothek.class.getResource("../view/StartMenu.fxml"));
 			Parent pane = loader.load();
 	
 			StartMenuController startMenuController = loader.getController();

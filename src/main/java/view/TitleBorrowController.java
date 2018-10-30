@@ -59,6 +59,7 @@ public class TitleBorrowController {
 	@FXML Button cancelBtn;
 	@FXML Label lblReturnDate;
 	@FXML TextArea txtArMessage;
+	@FXML Label messageLbl;
 
 	
 	private MainBibliothek mainBib;
@@ -76,6 +77,7 @@ public class TitleBorrowController {
 	private String lastName;
 	private String message;
 	private LocalDate returnDate;
+	
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -223,6 +225,7 @@ public class TitleBorrowController {
 		System.out.println("TBoC - fillView");
 		titleId = id;
 		bc = new BibController();
+		lc = new LenderController();
 		
 		try {
 			Book book = bc.getTheBook(id);
@@ -237,6 +240,17 @@ public class TitleBorrowController {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.LLLL.yyyy");
 			lblReturnDate.setText("Rückgabedatum: " + returnDate.format(formatter));
 			
+//			set default Email
+			String librarianName = lc.getLender(1).getFirstName();
+			
+			String defaultMessage = "Hallo"
+			+ ",\r\ndu hast dir das Buch '" + book.getTitle() + "' von mir ausgeliehen."
+			+ "\r\nDie Ausleihfrist lief bis zum " + returnDate.format(formatter) + ". "
+			+ "Sei so lieb und bring es zurück.\r\n"
+			+ "Liebe Grüße\r\n" + librarianName; 
+			
+//			set defaultEmail into messageTxtField
+			txtArMessage.setText(defaultMessage);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

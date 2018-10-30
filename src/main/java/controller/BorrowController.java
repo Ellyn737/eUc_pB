@@ -128,13 +128,13 @@ public class BorrowController {
 		
 	}
 	
-	public BorrowMedia getTheBorrowing(int bookID) {
+	public BorrowMedia getTheBorrowing(int borrowingId) {
 		System.out.println("In BOC - getTheBorrowing");
 		
 		factory = SingletonFactory.getFactory();
 		Session findBorrowingSession = factory.openSession();
 		
-		BorrowMedia bm = (BorrowMedia) findBorrowingSession.get(BorrowMedia.class, bookID);
+		BorrowMedia bm = (BorrowMedia) findBorrowingSession.get(BorrowMedia.class, borrowingId);
 		
 		findBorrowingSession.beginTransaction();
 		findBorrowingSession.getTransaction().commit();
@@ -142,6 +142,8 @@ public class BorrowController {
 		
 		return bm;
 	}
+	
+
 	
 	
 	public List<Integer> findBorrowingIds(int bookID) {
@@ -173,7 +175,7 @@ public class BorrowController {
 		for(int bId: borrowIds) {
 			System.out.println(bId);
 //			hole das borrowing der id
-			BorrowMedia bm = getTheBorrowing(bookID);
+			BorrowMedia bm = getTheBorrowing(bId);
 			
 			if(bm != null) {
 	//			lösche das borrowing
@@ -188,6 +190,28 @@ public class BorrowController {
 				deleteSession.close();			
 			}
 		}
+	}
+	
+	public List<BorrowMedia> getBorrowingByDate(LocalDate today) {
+
+		factory = SingletonFactory.getFactory();
+		Session findOverdueSession = factory.openSession();
+		findOverdueSession.beginTransaction();
+		
+		String hql = "select bm.borrowId from BorrowMedia bm where bm.returnDate < '" + today + "'";
+		Query query = findOverdueSession.createQuery(hql);
+		List<Integer> returnIds = query.getResultList();
+		
+		List<BorrowMedia> returnMedia = new ArrayList<BorrowMedia>();
+		for(int returnId: returnIds) {
+			returnMedia.add(getTheBorrowing(returnId));
+			
+		}
+		
+		findOverdueSession.getTransaction().commit();
+		findOverdueSession.close();	
+		
+		return returnMedia;
 	}
 	
 	/**

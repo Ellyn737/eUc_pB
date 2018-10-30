@@ -39,9 +39,10 @@
                            <children>
                               <TextField fx:id="txtFiFirstName" layoutX="35.0" layoutY="50.0" prefHeight="45.0" prefWidth="200.0" promptText="Vorname" />
                               <TextField fx:id="txtFiEmail" layoutX="35.0" layoutY="114.0" prefHeight="45.0" prefWidth="402.0" promptText="Email: max.mustermann@,ail.de" />
-                              <Label fx:id="lblReturnDate" layoutX="37.0" layoutY="270.0" prefHeight="36.0" prefWidth="169.0" text="Rückgabedatum" />
-                              <TextArea fx:id="txtArMessage" layoutX="35.0" layoutY="173.0" prefHeight="81.0" prefWidth="402.0" promptText="Message" />
+                              <Label fx:id="lblReturnDate" layoutX="37.0" layoutY="283.0" prefHeight="36.0" prefWidth="169.0" text="Rückgabedatum" />
+                              <TextArea fx:id="txtArMessage" layoutX="35.0" layoutY="203.0" prefHeight="81.0" prefWidth="402.0" promptText="Message" />
                               <TextField fx:id="txtFiLastName" layoutX="237.0" layoutY="50.0" prefHeight="45.0" prefWidth="200.0" promptText="Nachname" />
+                              <Label fx:id="messageLbl" layoutX="35.0" layoutY="172.0" prefHeight="25.0" prefWidth="402.0" text="Diese Nachricht wird bei verspäteter Rückgabe versendet:" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="117.0" prefWidth="472.0">
