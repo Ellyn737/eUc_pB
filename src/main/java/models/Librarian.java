@@ -10,6 +10,8 @@ public class Librarian extends Lender implements Serializable{
 
 	@Column(name="email_password")
 	private String emailPW;
+	@Column(name="smtp_host")
+	private String smtpHost;
 	
 	public Librarian() {
 		super();
@@ -23,10 +25,24 @@ public class Librarian extends Lender implements Serializable{
 		this.emailPW = emailPW;
 	}
 
+	public String getSmtpHost() {
+		return smtpHost;
+	}
+
+	public void setSmtpHost(String smtpHost) {
+		this.smtpHost = smtpHost;
+	}
+
 	@Override
 	public String toString() {
-		return "Librarian [emailPW=" + emailPW + "]";
+		return "Librarian [emailPW=" + emailPW + ", smtpHost=" + smtpHost + "]";
 	}
+
+	
+	
+	
+
+
 	
 	
 	

@@ -171,7 +171,7 @@ public class StartMenuController {
 				changes.add(new Pair("EmailPW", adminEmailPWTxt.getText()));
 			}
 //			check if everything is filled out
-			if(changes.size() < 4) {
+			if(changes.size() < 1) {
 				String message1 = "Es fehlen Daten, um den Bibliothekar zu registrieren.";
 				String message2 = "Bitte füllen Sie alle Felder aus. ";
 				setWarning(message1, message2);

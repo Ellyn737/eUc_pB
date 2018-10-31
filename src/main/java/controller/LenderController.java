@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.persistence.Query;
 
@@ -25,9 +26,10 @@ public class LenderController {
 	private String lastName;
 	private String email;
 	private String emailPW;
+	private String smtpHost;
 	
 	private SessionFactory factory;
-
+	
 	/**
 	 * adds a new lender to the db
 	 * @param params
@@ -93,6 +95,12 @@ public class LenderController {
 						break;
 					}
 		}
+//		get parts of the email before and after the @
+		String[] emailParts = email.split(Pattern.quote("@")); 
+//		set smtp host String with last part of the email
+		smtpHost = "smtp." + emailParts[1];
+
+//		set a new librarian
 		factory = SingletonFactory.getFactory();
 		Session newLibrarianSession = factory.openSession();
 		newLibrarianSession.beginTransaction();
@@ -104,6 +112,7 @@ public class LenderController {
 		librarian.setLastName(lastName);
 		librarian.setEmail(email);
 		librarian.setEmailPW(emailPW);
+		librarian.setSmtpHost(smtpHost);
 
 		newLibrarianSession.save(librarian);
 		
@@ -165,13 +174,15 @@ public class LenderController {
 
 //		get lender with lenderid
 		Librarian librarian = getLibrarian();
-		
+		Boolean emailIsChanged = false;
 //		analyse changed parameters
 		for(int i = 0; i < changes.size(); i++) {
 			String key = changes.get(i).getKey().toString();
 			switch(key) {
 			case "Email":
 				librarian.setEmail(changes.get(i).getValue().toString());
+				email = changes.get(i).getValue().toString();
+				emailIsChanged = true;
 				break;
 			case "EmailPW":
 				librarian.setEmailPW(changes.get(i).getValue().toString());
@@ -182,7 +193,17 @@ public class LenderController {
 			case "Lastname":
 				librarian.setLastName(changes.get(i).getValue().toString());
 				break;
+			case "Smtp":
+				librarian.setSmtpHost(changes.get(i).getValue().toString());
 			}
+		}
+		
+		if(emailIsChanged) {
+//			get parts of the email before and after the @
+			String[] emailParts = email.split(Pattern.quote("@")); 
+//			set smtp host String with last part of the email
+			smtpHost = "smtp." + emailParts[1];
+			librarian.setSmtpHost(smtpHost);
 		}
 		
 		changeLibrarianSession.update(librarian);
@@ -225,13 +246,6 @@ public class LenderController {
 		getLibrarianSession.beginTransaction();
 		
 		Librarian librarian = getLibrarianSession.get(Librarian.class, 1);
-		System.out.println(librarian);
-		
-//		String hql = "select * from LIBRARIAN";
-//		
-//		Query query = getLibrarianSession.createQuery(hql);
-//		
-//		List list = query.getResultList();
 		
 		getLibrarianSession.getTransaction().commit();
 		getLibrarianSession.close();	

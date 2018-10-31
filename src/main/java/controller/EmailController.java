@@ -1,10 +1,13 @@
 package controller;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.simplejavamail.email.Email;
 import org.simplejavamail.email.EmailBuilder;
@@ -14,7 +17,11 @@ import org.simplejavamail.mailer.config.TransportStrategy;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
 import models.Book;
 import models.BorrowMedia;
 import models.Lender;
@@ -73,11 +80,11 @@ public class EmailController {
 	//			set information alert
 				String message1 = "Die Ausleihfrist wurde von "+ lender.getFirstName() + " " + lender.getLastName() +"überschritten.";
 				String message2 = "Eine Erinnerungsemail wurde versandt.";
-				setWarningOverdue(message1, message2);
+				setWarning(message1, message2);
 			}else {
 				String message1 = "Zur Zeit werden keine Ausleihfristen überschritten.";
 				String message2 = "Alles ist gut.";
-				setWarningOverdue(message1, message2);
+				setWarning(message1, message2);
 			}
 		}
 	
@@ -94,7 +101,7 @@ public class EmailController {
 			    .buildEmail();
 
 			Mailer mailer = MailerBuilder
-					.withSMTPServer("smtp.mail.de", 587, librarian.getEmail(), librarian.getEmailPW())
+					.withSMTPServer(librarian.getSmtpHost(), 587, librarian.getEmail(), librarian.getEmailPW())
 					.withTransportStrategy(TransportStrategy.SMTP_TLS)
 					.withSessionTimeout(10 * 1000)
 					.withDebugLogging(true).buildMailer();
@@ -104,9 +111,31 @@ public class EmailController {
 	}
 	
 	/**
-	 * Alert --> are there books that are overdue?
+	 * tests the connection of a new librarian
 	 */
-	public void setWarningOverdue(String headerMsg, String otherMsg) {
+	public Boolean testLibrarianData(String mail, String smtpH, String pw) {
+		System.out.println("EmailController - testLibrarianData");
+
+		Boolean isConnected = true;
+		
+		Mailer mailer = MailerBuilder
+				.withSMTPServer(smtpH, 587, mail, pw)
+				.withTransportStrategy(TransportStrategy.SMTP_TLS)
+				.withSessionTimeout(10 * 1000)
+				.withDebugLogging(true).buildMailer();
+		
+		try {
+			mailer.testConnection();
+		}catch(Exception e) {
+			isConnected = false;
+		}
+		return isConnected;
+	}
+	
+	/**
+	 * sets a warning
+	 */
+	public void setWarning(String headerMsg, String otherMsg) {
 		System.out.println("EmailController - setWarningOverdue");
 
 		Alert warning = new Alert(AlertType.WARNING, otherMsg, ButtonType.OK);
@@ -117,6 +146,5 @@ public class EmailController {
 			warning.close();
 		}
 	}
-	
 	
 }
