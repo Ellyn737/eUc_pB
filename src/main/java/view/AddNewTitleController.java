@@ -3,6 +3,7 @@ package view;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -28,6 +29,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -38,6 +40,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -240,6 +243,12 @@ public class AddNewTitleController implements Initializable{
 		if(subGenre != null) {
 			txtFields.add("subGenre");
 		}
+		
+//		if the book is added as allready borrowed
+		if(isBorrowed) {
+//			show alert --> which lender? to when?
+			
+		}
 
 		if(txtFields.size() == numberOfNecessaryFields) {
 			System.out.println("Alles ausgefüllt");
@@ -331,6 +340,55 @@ public class AddNewTitleController implements Initializable{
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText(message1);
 		warning.showAndWait();
+	}
+	
+	public void setAddBorrowedBookDialog(String bookTitle, String librarianName) {
+		Alert dialog = new Alert(AlertType.WARNING, "Bitte füllen Sie die entsprechenden Felder aus.", ButtonType.OK);
+		dialog.setTitle("DAS BUCH IST AUSGELIEHEN");
+		dialog.setHeaderText("Der Ausleiher und ein  Rückgabedatum müssen festgelegt werden.");
+		
+//		deactivate the x in the right upper corner
+		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+		stage.setOnCloseRequest(event ->{
+			event.consume();
+		});
+		
+		Label lenderFName = new Label("Vorname: ");
+		TextField lenderFNameTxt = new TextField();
+		Label lenderLName = new Label("Nachname: ");
+		TextField lenderLNameTxt = new TextField();
+		Label lenderEmail = new Label("Email: ");
+		TextField lenderEmailTxt = new TextField();
+		Label lenderMsg = new Label("Erinnerungsnachricht: ");
+		TextArea lenderMsgTxt = new TextArea();
+		Label returnDate = new Label("Rückgabedatum: ");
+		DatePicker returnDateTxt = new DatePicker();
+		
+		String defaultMessage = "Hallo"
+				+ ",\r\ndu hast dir das Buch '" + bookTitle + "' von mir ausgeliehen.\r\n"
+				+ "Sei so lieb und bring es zurück.\r\n"
+				+ "Liebe Grüße\r\n" + librarianName; 
+		lenderMsgTxt.setText(defaultMessage);
+		
+		GridPane grid = new GridPane();
+		grid.add(lenderFName, 1, 1);
+		grid.add(lenderFNameTxt, 2, 1);
+		grid.add(lenderLName, 1, 2);
+		grid.add(lenderLNameTxt, 2, 2);
+		grid.add(lenderEmail, 1, 3);
+		grid.add(lenderEmailTxt, 2, 3);
+		grid.add(lenderMsg, 1, 4);
+		grid.add(lenderMsgTxt, 2, 4);
+		grid.add(returnDate, 1, 5);
+		grid.add(returnDateTxt, 2, 5);
+		
+		dialog.getDialogPane().setContent(grid);
+		dialog.showAndWait();
+		
+		if(dialog.getResult() == ButtonType.OK){
+			
+		}
+		
 	}
 
 }

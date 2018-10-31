@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -59,7 +60,7 @@ public class EmailController {
 		
 //		check if returnDates are overdue 
 		List<BorrowMedia> bms = boc.getBorrowingByDate(today);
-
+		int rememberCounter = 0;
 		for(BorrowMedia bm: bms) {
 //			check if isReturned is false
 			if(!bm.getIsReturned()) {
@@ -77,15 +78,27 @@ public class EmailController {
 	//			send email
 				sendRememberingEmail(lender, librarian, message);
 				
+	//			Ausleihfrist um 2 Wochen verlängeren, dann neue Erinnerungsemail
+				LocalDate nextReturnDate = LocalDate.now().plusDays(14);
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.LLLL.yyyy");
+				
+				int borrowingID = bm.getBorrowId();
+				
+				boc.changeDateOfBorrowing(borrowingID, Date.valueOf(nextReturnDate));
+				
 	//			set information alert
-				String message1 = "Die Ausleihfrist wurde von "+ lender.getFirstName() + " " + lender.getLastName() +"überschritten.";
-				String message2 = "Eine Erinnerungsemail wurde versandt.";
+				String message1 = "Die Ausleihfrist wurde von "+ lender.getFirstName() + " " + lender.getLastName() +" überschritten.";
+				String message2 = "Eine Erinnerungsemail wurde versandt.\r\n"
+									+ "Als neues Rückgabedatum wurde der " 
+									+ nextReturnDate.format(formatter) + " festgelegt." ;
 				setWarning(message1, message2);
-			}else {
-				String message1 = "Zur Zeit werden keine Ausleihfristen überschritten.";
-				String message2 = "Alles ist gut.";
-				setWarning(message1, message2);
+				rememberCounter++;
 			}
+		}
+		if(rememberCounter <= 0) {
+			String message1 = "Zur Zeit werden keine Ausleihfristen überschritten.";
+			String message2 = "Alles ist gut.";
+			setWarning(message1, message2);
 		}
 	
 	}

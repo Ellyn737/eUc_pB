@@ -2,7 +2,7 @@ package controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.time.temporal.ChronoUnit;
 
@@ -45,7 +45,7 @@ public class BorrowController {
 		
 //		sets variables of borrowing
 		BorrowMedia borrowing = new BorrowMedia();
-		date = java.sql.Date.valueOf(returnDate);
+		Date date = Date.valueOf(returnDate);
 		
 		borrowing.setIdMedia(buchID);
 		borrowing.setIdLender(ausleiherID);
@@ -91,6 +91,28 @@ public class BorrowController {
 		
 	}
 
+	/**
+	 * changes the returnDate of a borrowing
+	 * 
+	 * @param borrowingID
+	 * @param newReturnDate
+	 */
+	public void changeDateOfBorrowing(int borrowingID, Date newReturnDate) {
+		System.out.println("BorrowController - changeTheBorrowing");
+		
+		factory = SingletonFactory.getFactory();
+		Session changeSession = factory.openSession();
+		changeSession.beginTransaction();
+		
+		BorrowMedia bm = getTheBorrowing(borrowingID);
+		bm.setReturnDate(newReturnDate);
+		
+		changeSession.update(bm);
+	
+		changeSession.getTransaction().commit();
+		changeSession.close();	
+	}
+	
 	/**
 	 * gets the last id of a borrowing of a title
 	 * @param titleID
