@@ -244,7 +244,7 @@ public class TitleBorrowController {
 			lblReturnDate.setText("Rückgabedatum: " + returnDate.format(formatter));
 			
 //			set default Email
-			String librarianName = lc.getLender(1).getFirstName();
+			String librarianName = lc.getLibrarian().getFirstName();
 			
 			String defaultMessage = "Hallo"
 			+ ",\r\ndu hast dir das Buch '" + book.getTitle() + "' von mir ausgeliehen."

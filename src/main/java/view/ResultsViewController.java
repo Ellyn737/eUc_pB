@@ -36,7 +36,7 @@ import models.Book;
  * @author ellyn
  *
  */
-public class ResultsViewController{
+public class ResultsViewController {
 	@FXML AnchorPane rootPane;
 	@FXML Label titleLabel;
 	@FXML Button cancelBtn;

@@ -11,6 +11,7 @@ import org.hibernate.SessionFactory;
 import javafx.util.Pair;
 import models.Book;
 import models.Lender;
+import models.Librarian;
 
 /**
  * 
@@ -23,6 +24,7 @@ public class LenderController {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String emailPW;
 	
 	private SessionFactory factory;
 
@@ -67,6 +69,48 @@ public class LenderController {
 
 	}
 
+	/**
+	 * adds the librarian
+	 */
+	public void addNewLibrarian(ArrayList<Pair> params){
+		System.out.println("LenderController - addNewLibrarian");
+
+//		analyse textfields parameters by key
+		for(int i= 0; i<params.size(); i++) {
+			String key = params.get(i).getKey().toString();
+					switch(key) {
+					case "Firstname":
+						firstName = params.get(i).getValue().toString();
+						break;
+					case "Lastname":
+						lastName = params.get(i).getValue().toString();
+						break;
+					case "Email":
+						email = params.get(i).getValue().toString();
+						break;
+					case "EmailPW":
+						emailPW = params.get(i).getValue().toString();
+						break;
+					}
+		}
+		factory = SingletonFactory.getFactory();
+		Session newLibrarianSession = factory.openSession();
+		newLibrarianSession.beginTransaction();
+		
+//		add parameters to a new lender object
+		Librarian librarian = new Librarian();
+		
+		librarian.setFirstName(firstName);
+		librarian.setLastName(lastName);
+		librarian.setEmail(email);
+		librarian.setEmailPW(emailPW);
+
+		newLibrarianSession.save(librarian);
+		
+		newLibrarianSession.getTransaction().commit();
+		newLibrarianSession.close();	
+
+	}
 	
 	/**
 	 * updates the lender with changed parameters
@@ -105,6 +149,48 @@ public class LenderController {
 		changeLenderSession.getTransaction().commit();
 		changeLenderSession.close();		
 	}
+	
+	/**
+	 * updates the librarian with changed parameters
+	 * 
+	 * @param lenderID
+	 * @param changes
+	 */
+	public void changeLibrarian(ArrayList<Pair> changes) {
+		System.out.println("LenderController - changeLibrarian");
+
+		factory = SingletonFactory.getFactory();
+		Session changeLibrarianSession = factory.openSession();
+		changeLibrarianSession.beginTransaction();
+
+//		get lender with lenderid
+		Librarian librarian = getLibrarian();
+		
+//		analyse changed parameters
+		for(int i = 0; i < changes.size(); i++) {
+			String key = changes.get(i).getKey().toString();
+			switch(key) {
+			case "Email":
+				librarian.setEmail(changes.get(i).getValue().toString());
+				break;
+			case "EmailPW":
+				librarian.setEmailPW(changes.get(i).getValue().toString());
+				break;
+			case "Firstname":
+				librarian.setFirstName(changes.get(i).getValue().toString());
+				break;
+			case "Lastname":
+				librarian.setLastName(changes.get(i).getValue().toString());
+				break;
+			}
+		}
+		
+		changeLibrarianSession.update(librarian);
+		
+		changeLibrarianSession.getTransaction().commit();
+		changeLibrarianSession.close();		
+	}
+	
 
 	/**
 	 * gets the lender with the id
@@ -126,6 +212,32 @@ public class LenderController {
 		return lender;
 	}
 
+	/**
+	 * gets the librarian
+	 * there is only one
+	 * 
+	 * @return
+	 */
+	public Librarian getLibrarian() {
+		System.out.println("LenderController - getLibrarian");
+		factory = SingletonFactory.getFactory();
+		Session getLibrarianSession = factory.openSession();
+		getLibrarianSession.beginTransaction();
+		
+		Librarian librarian = getLibrarianSession.get(Librarian.class, 1);
+		System.out.println(librarian);
+		
+//		String hql = "select * from LIBRARIAN";
+//		
+//		Query query = getLibrarianSession.createQuery(hql);
+//		
+//		List list = query.getResultList();
+		
+		getLibrarianSession.getTransaction().commit();
+		getLibrarianSession.close();	
+	
+		return librarian;
+	}
 	
 	/**
 	 * gets the lender last added

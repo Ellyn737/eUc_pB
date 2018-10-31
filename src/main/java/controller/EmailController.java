@@ -10,6 +10,7 @@ import org.simplejavamail.email.Email;
 import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
+import org.simplejavamail.mailer.config.TransportStrategy;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -17,6 +18,7 @@ import javafx.scene.control.Alert.AlertType;
 import models.Book;
 import models.BorrowMedia;
 import models.Lender;
+import models.Librarian;
 
 
 /**
@@ -39,13 +41,14 @@ public class EmailController {
 	
 	
 	public void checkOverdueReturns() {
+		System.out.println("EmailController - checkOverdueReturns");
 		boc = new BorrowController();
 		bc = new BibController();
 		lc = new LenderController();
 		
 //		get todays date and the librarian
 		today = LocalDate.now();
-		Lender librarian = lc.getLender(1);
+		Librarian librarian = lc.getLibrarian();
 		
 //		check if returnDates are overdue 
 		List<BorrowMedia> bms = boc.getBorrowingByDate(today);
@@ -80,7 +83,9 @@ public class EmailController {
 	
 	}
 	
-	public void sendRememberingEmail(Lender lender, Lender librarian, String message) {
+	public void sendRememberingEmail(Lender lender, Librarian librarian, String message) {
+		System.out.println("EmailController - sendRememberingEmail");
+
 		Email email = EmailBuilder.startingBlank()
 			    .from(librarian.getFirstName() + " " + librarian.getLastName(), librarian.getEmail())
 			    .to(lender.getFirstName() + " " + lender.getLastName(), lender.getEmail())
@@ -89,16 +94,12 @@ public class EmailController {
 			    .buildEmail();
 
 			Mailer mailer = MailerBuilder
+					.withSMTPServer("smtp.mail.de", 587, librarian.getEmail(), librarian.getEmailPW())
+					.withTransportStrategy(TransportStrategy.SMTP_TLS)
+					.withSessionTimeout(10 * 1000)
 					.withDebugLogging(true).buildMailer();
 			
-//			  .withSMTPServer("smtp.host.com", 587, "user@host.com", "password")
-//	          .withTransportStrategy(TransportStrategy.SMTP_TLS)
-//	          .withProxy("socksproxy.host.com", 1080, "proxy user", "proxy password")
-//	          .withSessionTimeout(10 * 1000)
-//	          .clearEmailAddressCriteria() // turns off email validation
-//	          .withProperty("mail.smtp.sendpartial", true)
-			
-			
+//			mailer.testConnection();
 			mailer.sendMail(email);
 	}
 	
@@ -106,6 +107,8 @@ public class EmailController {
 	 * Alert --> are there books that are overdue?
 	 */
 	public void setWarningOverdue(String headerMsg, String otherMsg) {
+		System.out.println("EmailController - setWarningOverdue");
+
 		Alert warning = new Alert(AlertType.WARNING, otherMsg, ButtonType.OK);
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText(headerMsg);

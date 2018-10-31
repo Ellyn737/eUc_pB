@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
@@ -27,6 +28,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import models.Lender;
+import models.Librarian;
 import models.Book;
 import models.Media;
 import models.BorrowMedia;
@@ -43,6 +45,7 @@ public class MainBibliothek extends Application{
 
 	private Stage primaryStage;
 	private LenderController lc;
+	private EmailController emc;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -58,6 +61,9 @@ public class MainBibliothek extends Application{
 		
 		System.out.println(lastID);
 		if(lastID >= 1) {
+			emc = new EmailController();
+			emc.checkOverdueReturns();
+			
 			showStartMenu();
 		}else {
 			setAddAdminDialog();
@@ -68,7 +74,7 @@ public class MainBibliothek extends Application{
 	
 	public void showStartMenu() {
 		try {
-			Lender librarian = lc.getLender(1);
+			Librarian librarian = lc.getLibrarian();
 			String librarianName = librarian.getFirstName();
 			String title = librarianName.toUpperCase() + "'s BIBLIOTHEK";	
 			
@@ -106,7 +112,7 @@ public class MainBibliothek extends Application{
 	 * generates the librarian = the first lender
 	 */
 	public void setAddAdminDialog() {
-		Alert dialog = new Alert(AlertType.WARNING, "Bitte geben Sie Ihren Namen und Ihre Email ein. ", ButtonType.OK);
+		Alert dialog = new Alert(AlertType.WARNING, "Bitte geben Sie Ihren Namen, Ihre Email-Adresse und das zugehörige Email-Passwort an. ", ButtonType.OK);
 		dialog.setTitle("ERSTELLUNG DER BIBLIOTHEK");
 		dialog.setHeaderText("Der Bibliothekar existiert noch nicht.");
 		
@@ -123,6 +129,8 @@ public class MainBibliothek extends Application{
 		TextField adminLNameTxt = new TextField();
 		Label adminEmail = new Label("Email: ");
 		TextField adminEmailTxt = new TextField();
+		Label adminEmailPW = new Label("Emailpasswort: ");
+		PasswordField adminEmailPWTxt = new PasswordField();
 
 		
 		GridPane grid = new GridPane();
@@ -133,6 +141,8 @@ public class MainBibliothek extends Application{
 		grid.add(adminLNameTxt, 2, 3);
 		grid.add(adminEmail, 1, 4);
 		grid.add(adminEmailTxt, 2, 4);
+		grid.add(adminEmailPW, 1, 5);
+		grid.add(adminEmailPWTxt, 2, 5);
 		
 		dialog.getDialogPane().setContent(grid);
 
@@ -141,6 +151,7 @@ public class MainBibliothek extends Application{
 		if(dialog.getResult() == ButtonType.OK){
 			lc = new LenderController();
 			ArrayList<Pair> params = new ArrayList<Pair>();
+//			if textfield is not empty
 			if(!adminFNameTxt.getText().isEmpty()) {
 //				set variables 
 				params.add(new Pair("Firstname", adminFNameTxt.getText()));
@@ -151,11 +162,14 @@ public class MainBibliothek extends Application{
 			if(!adminEmailTxt.getText().isEmpty()) {
 				params.add(new Pair("Email", adminEmailTxt.getText()));
 			}
+			if(!adminEmailPWTxt.getText().isEmpty()) {
+				params.add(new Pair("EmailPW", adminEmailPWTxt.getText()));
+			}
 //			check if everything is filled out
-			if(params.size() < 3) {
+			if(params.size() < 4) {
 				setWarningFillOutAllFields();
 			}else {
-				lc.addNewLender(params);
+				lc.addNewLibrarian(params);
 				showStartMenu();
 				dialog.close();
 			}
