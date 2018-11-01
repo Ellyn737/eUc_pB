@@ -357,6 +357,7 @@ public class BibController {
 			List<Integer> lastIds = query.getResultList();
 			
 			if(lastIds.size() != 0) {
+				System.out.println("lastIds ist nicht null. Das ist die id: " + lastIds.get(lastIds.size()-1));
 //				get value from list with bookIDs that we have in the bib on index size-1
 				lastId = lastIds.get(lastIds.size()-1);
 			}

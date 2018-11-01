@@ -245,6 +245,7 @@ public class LenderController {
 		Session getLibrarianSession = factory.openSession();
 		getLibrarianSession.beginTransaction();
 		
+		System.out.println("Get Librarian wird aufgerufen");
 		Librarian librarian = getLibrarianSession.get(Librarian.class, 1);
 		
 		getLibrarianSession.getTransaction().commit();
@@ -282,7 +283,7 @@ public class LenderController {
 	
 		return lastId;
 	}
-
+	
 	/**
 	 * find the lenderids of the lenders with this name
 	 * 
@@ -291,7 +292,7 @@ public class LenderController {
 	 * @return
 	 */
 	public List<Integer> findLenderIdByName(String fN, String lN) {
-		System.out.println("LenderController - findLenderId");
+		System.out.println("LenderController - findLenderIdByName");
 		factory = SingletonFactory.getFactory();
 		Session findSession = factory.openSession();
 		findSession.beginTransaction();
@@ -315,7 +316,7 @@ public class LenderController {
 	 * @return
 	 */
 	public ArrayList<Integer> findLenderIdByEmail(String email) {
-		System.out.println("LenderController - findLenderIdByName");
+		System.out.println("LenderController - findLenderIdByEmail");
 		factory = SingletonFactory.getFactory();
 		Session searchEmailSession = factory.openSession();
 		searchEmailSession.beginTransaction();

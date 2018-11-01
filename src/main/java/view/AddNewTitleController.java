@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 import org.controlsfx.control.Rating;
 
 import controller.BibController;
+import controller.BorrowController;
+import controller.LenderController;
 import controller.MainBibliothek;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -43,6 +45,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import models.Librarian;
 
 /**
  * controller for the view AddNewTitle
@@ -88,6 +91,8 @@ public class AddNewTitleController implements Initializable{
 	
 	private MainBibliothek mainBib;
 	private BibController bc;
+	private LenderController lc;
+	private BorrowController boc;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -145,10 +150,8 @@ public class AddNewTitleController implements Initializable{
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(radioBtnBorrowed.isSelected()) {
 					isBorrowed = true;
-					System.out.println("RadioButton wurde gedrückt");
 				}else {
 					isBorrowed = false;
-					System.out.println("RadioButton wurde nicht gedrückt");
 				}				
 			}
 		});
@@ -197,7 +200,6 @@ public class AddNewTitleController implements Initializable{
 		List txtFields = new ArrayList<>();
 
 //		check if all necessary fields are filled out
-		System.out.println("Setze Variablen");
 		if(!txtFiTitle.getText().isEmpty()) {
 			title = txtFiTitle.getText();
 			txtFields.add(title);
@@ -243,15 +245,8 @@ public class AddNewTitleController implements Initializable{
 		if(subGenre != null) {
 			txtFields.add("subGenre");
 		}
-		
-//		if the book is added as allready borrowed
-		if(isBorrowed) {
-//			show alert --> which lender? to when?
-			
-		}
 
 		if(txtFields.size() == numberOfNecessaryFields) {
-			System.out.println("Alles ausgefüllt");
 			addBook();
 		}else {
 			String message1 = "Das Buch ist nicht vollständig.";
@@ -306,7 +301,16 @@ public class AddNewTitleController implements Initializable{
 			
 //			set Parameters to show at the side and give list with this id
 			int id = bc.getLastId();
-			System.out.println(id);
+
+//			if the book is added as borrowed
+			if(isBorrowed) {
+				System.out.println("isBorrowed ist true");
+				lc = new LenderController();
+				Librarian librarian = lc.getLibrarian();
+				System.out.println("Das ist der Bibliothekar: " + librarian.getFirstName());
+//				show alert --> which lender? to when?
+				setAddBorrowedBookDialog(title, librarian.getFirstName(), id);
+			}
 			
 			List<Integer> ids = new ArrayList<>();
 			ids.add(id);
@@ -332,17 +336,8 @@ public class AddNewTitleController implements Initializable{
 		}
 	}
 	
-	/**
-	 * sets a warning
-	 */
-	public void setWarning(String message1, String message2) {
-		Alert warning = new Alert(AlertType.WARNING, message2, ButtonType.OK);
-		warning.setTitle("ACHTUNG");
-		warning.setHeaderText(message1);
-		warning.showAndWait();
-	}
-	
-	public void setAddBorrowedBookDialog(String bookTitle, String librarianName) {
+	public void setAddBorrowedBookDialog(String bookTitle, String librarianName, int bookID) {
+		System.out.println("AddNewTitleController - setAddNewBorrowedBookDialog");
 		Alert dialog = new Alert(AlertType.WARNING, "Bitte füllen Sie die entsprechenden Felder aus.", ButtonType.OK);
 		dialog.setTitle("DAS BUCH IST AUSGELIEHEN");
 		dialog.setHeaderText("Der Ausleiher und ein  Rückgabedatum müssen festgelegt werden.");
@@ -363,6 +358,8 @@ public class AddNewTitleController implements Initializable{
 		TextArea lenderMsgTxt = new TextArea();
 		Label returnDate = new Label("Rückgabedatum: ");
 		DatePicker returnDateTxt = new DatePicker();
+		
+		returnDateTxt.setValue(LocalDate.now().plusDays(30));
 		
 		String defaultMessage = "Hallo"
 				+ ",\r\ndu hast dir das Buch '" + bookTitle + "' von mir ausgeliehen.\r\n"
@@ -385,10 +382,115 @@ public class AddNewTitleController implements Initializable{
 		dialog.getDialogPane().setContent(grid);
 		dialog.showAndWait();
 		
+		ArrayList<Pair> params = new ArrayList<>();
 		if(dialog.getResult() == ButtonType.OK){
+//			check if all fields are set
+			int necessaryFields = 0;
+			if(!lenderFNameTxt.getText().isEmpty()) {
+				params.add(new Pair("Firstname", lenderFNameTxt.getText()));
+				necessaryFields++;
+			}
+			if(!lenderLNameTxt.getText().isEmpty()) {
+				params.add(new Pair("Lastname", lenderLNameTxt.getText()));
+				necessaryFields++;
+			}
+			if(!lenderEmailTxt.getText().isEmpty()) {
+				params.add(new Pair("Email", lenderEmailTxt.getText()));
+				necessaryFields++;
+			}
+			if(!lenderMsgTxt.getText().isEmpty()) {
+				necessaryFields++;
+			}
+			
+//			if all fields are filled out
+			if(necessaryFields == 4) {
+//				check if lender exists
+				lc = new LenderController();
+				boc = new BorrowController();
+//				get lenderid by email
+				ArrayList<Integer> lenderIDs = lc.findLenderIdByEmail(lenderEmailTxt.getText());
+				if(lenderIDs.size() == 1) {
+					System.out.println("lenderIDs ist 1");
+//					get the id
+					int lenderID = lenderIDs.get(0);
+//					if yes: add borrowing
+					boc.borrowBook(bookID, lenderID, returnDateTxt.getValue(), lenderMsgTxt.getText());
+					dialog.close();
+				}else if(lenderIDs.size() <= 0) {
+					System.out.println("lenderIDs ist 0");
+
+//					check if lender name can be found
+					List<Integer> lenderNameIDs = lc.findLenderIdByName(lenderFNameTxt.getText(), lenderLNameTxt.getText());
+					if(lenderNameIDs.size() >= 1) {
+						System.out.println("lenderNameIDs ist größer gleich 1");
+
+//						set warning new email?--> change this lender
+						int lenderNameID = lenderNameIDs.get(0); 
+						setChangeLenderWarning(lenderNameID);
+						boc.borrowBook(bookID, lenderNameID, returnDateTxt.getValue(), lenderMsgTxt.getText());
+						dialog.close();
+					}
+					else {
+						System.out.println("lenderNameIDs ist kleiner als 1");
+
+//						if not: add new lender + new borrowing	
+						lc.addNewLender(params);
+						int lastLenderID = lc.getLastLenderId();
+						boc.borrowBook(bookID, lastLenderID, returnDateTxt.getValue(), lenderMsgTxt.getText());
+						dialog.close();
+					}
+				}
+	
+			}
 			
 		}
 		
+	}
+	
+	public void setChangeLenderWarning(int lenderID) {
+		System.out.println("AddNewTitleController - setChangeLenderWarning");
+
+		Alert dialog = new Alert(AlertType.WARNING, "Bitte geben Sie die richtige Email-Adresse an.", ButtonType.OK);
+		dialog.setTitle("FEHLER BEIM SUCHEN DES AUSLEIHERS");
+		dialog.setHeaderText("Die Email des Ausleihers stimmt nicht.");
+		
+//		deactivate the x in the right upper corner
+		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+		stage.setOnCloseRequest(event ->{
+			event.consume();
+		});
+		
+		Label newEmail = new Label("Neue Email-Adresse: ");
+		TextField newEmailTxt = new TextField();
+		
+		GridPane grid = new GridPane();
+		grid.add(newEmail, 1, 1);
+		grid.add(newEmailTxt, 2, 1);
+		
+		dialog.getDialogPane().setContent(grid);
+		dialog.showAndWait();
+		
+		if(dialog.getResult() == ButtonType.OK){
+			if(!newEmailTxt.getText().isEmpty()) {
+	//			change lender email
+				lc = new LenderController();
+				ArrayList<Pair> changedEmail = new ArrayList<>();
+				changedEmail.add(new Pair("Email", newEmailTxt.getText()));
+				lc.changeLender(lenderID, changedEmail);
+				dialog.close();
+			}
+		}
+		
+	}
+	
+	/**
+	 * sets a warning
+	 */
+	public void setWarning(String message1, String message2) {
+		Alert warning = new Alert(AlertType.WARNING, message2, ButtonType.OK);
+		warning.setTitle("ACHTUNG");
+		warning.setHeaderText(message1);
+		warning.showAndWait();
 	}
 
 }
