@@ -15,12 +15,12 @@
 <?import javafx.scene.layout.Pane?>
 <?import org.controlsfx.control.Rating?>
 
-<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.AddNewTitleController">
+<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" styleClass="title-background" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.AddNewTitleController">
    <children>
-      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="TITEL HINZUFÜGEN" />
+      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" prefHeight="42.0" prefWidth="346.0" styleClass="title-label" text="TITEL HINZUFÜGEN" />
       <SplitPane dividerPositions="0.8317972350230415" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" styleClass="background">
                <children>
                   <Button fx:id="addImageBtn" layoutX="35.0" layoutY="252.0" mnemonicParsing="false" onAction="#handleAddImageButton" prefHeight="25.0" prefWidth="131.0" text="BILD HINZUFÜGEN" />
                   <ImageView fx:id="image" fitHeight="180.0" fitWidth="200.0" layoutX="35.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="116.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="514.1752624511719" AnchorPane.topAnchor="62.0">

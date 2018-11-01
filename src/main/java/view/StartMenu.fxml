@@ -4,10 +4,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.StartMenuController">
+<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" styleClass="title-background" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.StartMenuController">
    <children>
-      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="ELLYNs BIBLIOTHEK" />
-      <AnchorPane layoutY="79.0" prefHeight="446.0" prefWidth="676.0">
+      <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" styleClass="title-label" text="ELLYNs BIBLIOTHEK" />
+      <AnchorPane layoutY="79.0" prefHeight="446.0" prefWidth="676.0" styleClass="divider">
          <children>
             <Button fx:id="searchBtn" layoutX="165.0" layoutY="100.0" mnemonicParsing="false" onAction="#handleSearchButton" prefHeight="42.0" prefWidth="346.0" text="BIBLIOTHEK DURCHSUCHEN" />
             <Button fx:id="addBtn" layoutX="165.0" layoutY="176.0" mnemonicParsing="false" onAction="#handleAddButton" prefHeight="42.0" prefWidth="346.0" text="TITEL ZUR BIBLIOTHEK HINZUFÜGEN" />
