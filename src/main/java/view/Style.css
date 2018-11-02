@@ -43,12 +43,12 @@
 	-fx-text-fill: white;
 }
 
-.radio-button .dot {
-	-fx-background-color: white;
+.radio-button .dot:determinate {
+	-fx-background-color: #ff9900;
 }
 
-.radio-button .dot onclick {
-		-fx-background-color: #336600;
+.radio-button .radio {
+	-fx-background-color: white;
 }
 
 .split-menu-button{
@@ -97,6 +97,10 @@
 	
 }
 
+.button:hover{
+	-fx-background-color: #ff9900;
+}
+
 .rating .container .button{
 	-fx-background-color: #333333;
 	-fx-border-width: 0 0 0 0;
@@ -117,18 +121,20 @@
 	-fx-text-fill: white;
 }
 
-.list-view:even {
+.list-cell:even {
 	-fx-background-color: #1a1a1a;
 	-fx-text-fill: white;	
 }
 
-.list-cell:filled:selected {
-	-fx-background-color: #336600;
-	-fx-text-fill: white;
+.list-cell:odd {
+	-fx-background-color: #333333;
+	-fx-text-fill: white;	
 }
 
 .list-cell:filled:hover {
-	-fx-background-color: #284d00;
+	-fx-background-color: #ff9900;
+	-fx-text-fill: white;
+	
 }
 
 
