@@ -79,7 +79,7 @@ public class SearchViewController implements Initializable {
 	private Boolean ratingIsClicked = false;
 	
 	private MainBibliothek mainBib;
-	private BibController bc;
+	private BibController bc = new BibController();
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -191,7 +191,6 @@ public class SearchViewController implements Initializable {
 	 */
 	@FXML private void handleSearchButton(ActionEvent event) throws IOException{
 		System.out.println("SearchViewController - handleSearchButton");
-		bc = new BibController();
 	
 //		get searchParameters
 		title = txtFiTitle.getText().trim();

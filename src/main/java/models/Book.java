@@ -95,9 +95,16 @@ public class Book extends Media implements Serializable{
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: autor={1}, verlag={2}, auflage={3}, genre={4}, subgenre={5}, subtitle={6}", 
-				new Object[] {getClass().getSimpleName(), author, publisher, edition, genre, subGenre, subTitle});
+		return "Book [author=" + author + ", publisher=" + publisher + ", edition=" + edition + ", genre=" + genre
+				+ ", subGenre=" + subGenre + ", subTitle=" + subTitle + "]";
 	}
+
+
+//	@Override
+//	public String toString() {
+//		return MessageFormat.format("{0}: autor={1}, verlag={2}, auflage={3}, genre={4}, subgenre={5}, subtitle={6}", 
+//				new Object[] {getClass().getSimpleName(), author, publisher, edition, genre, subGenre, subTitle});
+//	}
 	
 	
 

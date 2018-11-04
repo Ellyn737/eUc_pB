@@ -61,7 +61,7 @@ public class ResultsViewController {
 	ArrayList<Pair> oldParameters;
 		
 	private MainBibliothek mainBib;
-	private BibController bc;
+	private BibController bc = new BibController();
 	private ResultsViewController resContr;
 	
 	public void setMain(MainBibliothek mainBib) {
@@ -228,9 +228,7 @@ public class ResultsViewController {
 		String resultListString = "";
 		String isB = "";
 		
-		try {
-			bc = new BibController();
-			
+		try {			
 //			get the book with the bookid
 			Book book = bc.getTheBook(id);
 		

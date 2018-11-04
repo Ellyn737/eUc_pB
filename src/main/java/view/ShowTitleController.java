@@ -59,8 +59,8 @@ public class ShowTitleController {
 
 	private MainBibliothek mainBib;
 	private ShowTitleController showTitleC;
-	private BibController bc;
-	private BorrowController boc;
+	private BibController bc = new BibController();
+	private BorrowController boc = new BorrowController();
 	
 	private int titleId;
 	private List<Integer> resultIds;
@@ -95,30 +95,45 @@ public class ShowTitleController {
 		try {
 //			get book with bookid
 			Book selection = bc.getTheBook(titleId);
-//			get number of copys of this title
+//			hole Daten des Buchs
+			int edition = selection.getEdition();
+			String title = selection.getTitle();
+			String author = selection.getAuthor();
 			int exemplars = selection.getExemplar();
+			
 //			set the alert and ask for confirmation
-			Alert alert = new Alert(AlertType.CONFIRMATION, "Sind Sie sicher, dass sie " + selection.getTitle() + " löschen möchten?", ButtonType.YES, ButtonType.NO);
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Sind Sie sicher, dass sie " + title + " löschen möchten?", ButtonType.YES, ButtonType.NO);
 			alert.showAndWait();
 			
 //			on yes
 			if(alert.getResult() == ButtonType.YES) {
-
 //				analyse the number of other copys
 //				if this is not the last copy
-				if(exemplars > 1) {
+				if(exemplars >= 1) {
+//					delete this exemplar of the book
+					bc.deleteFromBib(titleId);
+					
+//					set new exemplarNumber
+					bc.setNewExemplarListing(author, title, edition);
+					
+//					get the ids of the other copys that are still in the bib
+					ArrayList<Pair> searchParams = new ArrayList<>();
+					searchParams.add(new Pair("title", title));
+					searchParams.add(new Pair("author", author));
+					searchParams.add(new Pair("edition", edition));
+					List<Integer> idsOfOtherCopys = bc.findBookId(searchParams);
+					
 //					go to ResultsView and show the rest
 					FXMLLoader loader = new FXMLLoader(getClass().getResource("ResultsView.fxml"));
 					AnchorPane pane = (AnchorPane) loader.load();
 					
 					ResultsViewController resultsView = loader.getController();
-					resultsView.fillListAndView(resultIds, oldParameters);
+					resultsView.fillListAndView(idsOfOtherCopys, oldParameters);
 					
 					Scene scene = new Scene(pane);
 					rootPane.getChildren().setAll(pane);
 				}else {					
 //					else delete the borrowings of this title
-					boc = new BorrowController();
 					boc.deleteBorrowingsOfTitle(titleId);
 					
 //					delete the book
@@ -224,8 +239,6 @@ public class ShowTitleController {
 		
 		titleId = id;
 		try {
-			bc = new BibController();
-
 			Book book = bc.getTheBook(id);
 			
 //			set variables into the fields

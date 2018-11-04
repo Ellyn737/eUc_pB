@@ -114,7 +114,6 @@ public class BibController {
 		
 		Book book = getTheBook(bookID);
 		deleteSession.delete(book);
-		setNewExemplarListing(bookID);
 		
 		deleteSession.getTransaction().commit();
 		deleteSession.close();
@@ -135,7 +134,7 @@ public class BibController {
 		Session changeSession = factory.openSession();
 		
 //		get book with bookID
-		Book book = (Book)changeSession.get(Book.class, bookID);
+		Book book = getTheBook(bookID);
 	
 		if(!title.equals(book.getTitle())) {
 			book.setTitle(title);
@@ -321,14 +320,13 @@ public class BibController {
 	public Book getTheBook(int bookID) {
 
 			System.out.println("BibController - getTheBook");
-			Book book = null;
 			
 			factory = SingletonFactory.getFactory();
 			Session findBookSession = factory.openSession();
-	
-			book = (Book) findBookSession.get(Book.class, bookID);
-			
 			findBookSession.beginTransaction();
+
+			Book book = (Book) findBookSession.get(Book.class, bookID);
+			
 			findBookSession.getTransaction().commit();
 			findBookSession.close();
 			
@@ -376,39 +374,40 @@ public class BibController {
 	 * @param mediaId
 	 * 
 	 */
-	public void setNewExemplarListing(int mediaId){
-
-			System.out.println("BibController - setNewExemplarListing");
-			
-			Book book = getTheBook(mediaId);
-			
+	public void setNewExemplarListing(String author, String title, int edition){
+			System.out.println("BibController - setNewExemplarListing");			
 //			get exemplarNumbber 
-			int newExemplarnumber = searchForOthers(book.getAuthor(), book.getTitle(), book.getEdition());
-			
-//			getting bookIDs of other exemplars
-			ArrayList<Pair> exemplarParameters = new ArrayList<>();
-			exemplarParameters.add(new Pair("title", book.getTitle()));
-			exemplarParameters.add(new Pair("author", book.getAuthor()));
-			List<Integer> exemplarIds = findBookId(exemplarParameters);
-			
-			factory = SingletonFactory.getFactory();
-	
-//			sorting new exemplarNumbers
-			for(int i = 0; i< newExemplarnumber; i++) {
-				Session exemplarSession = factory.openSession();
-				
-				int id = exemplarIds.get(i);
-				
-				Book exemplar = (Book)exemplarSession.get(Book.class, id);
-				
-				exemplar.setExemplar(i+1);
-			
-				exemplarSession.beginTransaction();
-				
-				exemplarSession.update(exemplar);
-				
-				exemplarSession.getTransaction().commit();
-				exemplarSession.close();
+			int newExemplarnumber = searchForOthers(author, title, edition);
+
+			if(newExemplarnumber > 0) {
+
+	//			getting bookIDs of other exemplars
+				ArrayList<Pair> exemplarParameters = new ArrayList<>();
+				exemplarParameters.add(new Pair("title", title));
+				exemplarParameters.add(new Pair("author", author));
+				exemplarParameters.add(new Pair("edition", edition));
+//				get ids of the other copys
+				List<Integer> exemplarIds = findBookId(exemplarParameters);
+
+				factory = SingletonFactory.getFactory();
+		
+	//			sorting new exemplarNumbers
+				for(int i = 0; i< newExemplarnumber; i++) {
+					Session exemplarSession = factory.openSession();
+					exemplarSession.beginTransaction();
+
+					int id = exemplarIds.get(i);
+
+					Book exemplar = getTheBook(id);
+					System.out.println(exemplar);
+					
+					exemplar.setExemplar(i+1);
+									
+					exemplarSession.update(exemplar);
+					
+					exemplarSession.getTransaction().commit();
+					exemplarSession.close();
+				}
 			}
 
 	}

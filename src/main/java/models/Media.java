@@ -128,11 +128,17 @@ public class Media implements Serializable {
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: idmedia={1}, title={2}, erscheinungsjahr={4}, "
-				+ "ausgeliehen={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
-				new Object[] {getClass().getSimpleName(), idmedia, title, year, isBorrowed, content, comment, exemplar});
+		return "Media [idmedia=" + idmedia + ", title=" + title + ", year=" + year + ", isBorrowed=" + isBorrowed
+				+ ", content=" + content + ", comment=" + comment + ", exemplar=" + exemplar + ", stars=" + stars + "]";
 	}
-	
+
+//	@Override
+//	public String toString() {
+//		return MessageFormat.format("{0}: idmedia={1}, title={2}, erscheinungsjahr={4}, "
+//				+ "ausgeliehen={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
+//				new Object[] {getClass().getSimpleName(), idmedia, title, year, isBorrowed, content, comment, exemplar});
+//	}
+//	
 	
 	
 

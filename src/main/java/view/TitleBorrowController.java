@@ -70,9 +70,9 @@ public class TitleBorrowController {
 	
 	private MainBibliothek mainBib;
 	private TitleBorrowController tbc;
-	private BibController bc;
-	private LenderController lc;
-	private BorrowController borC;
+	private BibController bc = new BibController();
+	private LenderController lc = new LenderController();
+	private BorrowController borC = new BorrowController();
 	
 	private List<Integer> resultIds;
 	private ArrayList<Pair> oldParameters;
@@ -143,15 +143,11 @@ public class TitleBorrowController {
 		
 //		if all fields are filled out
 		if(params.size() == 4) {
-			lc = new LenderController();
 //			search for list of lenders --> by name (first + last)
 			List<Integer> lenderNameIds = lc.findLenderIdByName(firstName, lastName);
 			
 //			if there is only one lender with this name
 			if(lenderNameIds.size() == 1) {		
-				borC = new BorrowController();
-				bc = new BibController();
-				
 //				get lenderid
 				int lenderId = lenderNameIds.get(0);
 
@@ -226,10 +222,7 @@ public class TitleBorrowController {
 		System.out.println("TitleBorrowController - fillView");
 		titleId = id;
 		
-		try {
-			bc = new BibController();
-			lc = new LenderController();
-			
+		try {			
 			Book book = bc.getTheBook(id);
 			
 //			set parameters on the left side
@@ -273,7 +266,6 @@ public class TitleBorrowController {
 //		if NOT: ask if email should be changed or old one should be used
 //		if YES: close dialog and continue
 		
-		lc = new LenderController();
 		Lender lender = lc.getLender(id);
 		if(!email.equals(lender.getEmail())) {
 			differs = true;
@@ -288,7 +280,6 @@ public class TitleBorrowController {
 	 */
 	public void setChangeEmailDialog(int id) {
 		System.out.println("TitleBorrowController - setChangeEmailDialog");
-		lc = new LenderController();
 		
 		Alert dialog = new Alert(AlertType.WARNING, "Möchten Sie die alte Email-Adresse ersetzen?", ButtonType.YES, ButtonType.NO);
 		dialog.setTitle("Email anpassen");
@@ -339,7 +330,6 @@ public class TitleBorrowController {
 	 */
 	public void setChangeLenderDialog(int id) {
 		System.out.println("TitleBorrowController - setChangeLenderDialog");
-		lc = new LenderController();
 		
 		Alert dialog = new Alert(AlertType.WARNING, "Möchten Sie einen neuen Nachnamen eingeben?", ButtonType.YES, ButtonType.NO);
 		dialog.setTitle("Nachname anpassen");
@@ -388,7 +378,6 @@ public class TitleBorrowController {
 	 */
 	public void setAddNewLenderDialog() {
 		System.out.println("TitleBorrowController - setAddNewLenderDialog");
-		lc = new LenderController();
 
 		Alert dialog = new Alert(AlertType.WARNING, "Möchten Sie den neuen Ausleiher speichern?", ButtonType.YES, ButtonType.NO);
 		dialog.setTitle("Der Ausleiher existiert nicht.");

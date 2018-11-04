@@ -84,7 +84,7 @@ public class ChangeTitleController {
 	private Boolean ratingIsChanged = false;
 	
 	private MainBibliothek mainBib;
-	private BibController bc;
+	private BibController bc = new BibController();
 	private ChangeTitleController ctc;
 	
 	private List<Integer> resultIds;
@@ -125,7 +125,6 @@ public class ChangeTitleController {
 	 */
 	@FXML private void handleSaveChangeButton(ActionEvent event) throws IOException{
 			System.out.println("ChangeTitleController - handleSaveChangeButton");
-			bc = new BibController();
 			
 //			get values of input
 			title = txtFiTitle.getText();
@@ -181,7 +180,6 @@ public class ChangeTitleController {
 	public void fillView(int id) {
 		try {
 			System.out.println("ChangeTitleController - fillView");
-			bc = new BibController();
 	
 			bookID = id;		
 //			get the book by bookid
@@ -257,7 +255,6 @@ public class ChangeTitleController {
 			
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}

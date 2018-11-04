@@ -52,10 +52,11 @@ public class TitleReturnController {
 	
 	
 	private MainBibliothek mainBib;
-	private BibController bc;
 	private TitleReturnController trc;
-	private BorrowController boC;
-	private LenderController lc;
+
+	private BibController bc = new BibController();
+	private BorrowController boC = new BorrowController();
+	private LenderController lc = new LenderController();
 
 	private List<Integer> resultIds;
 	private ArrayList<Pair> oldParameters;
@@ -93,7 +94,6 @@ public class TitleReturnController {
 	 */
 	@FXML private void handleGiveBackButton(ActionEvent event) throws IOException{
 		System.out.println("TitleReturnController - handleGiveBackButton");
-		boC = new BorrowController();
 //		call BorrowController and return the book
 		boC.returnBook(titleId);
 		
@@ -117,7 +117,6 @@ public class TitleReturnController {
 	public void fillView(int id) {
 		System.out.println("TitleReturnController - fillView");
 		titleId = id;
-		bc = new BibController();
 
 		Book book = bc.getTheBook(titleId);
 //		set parameters on the left side
@@ -127,7 +126,6 @@ public class TitleReturnController {
 		givenYear.setText(String.valueOf(book.getYearOfPublication()));
 		
 //		get the last borrowing of the title
-		boC = new BorrowController();
 		BorrowMedia borrowing = boC.getLastBorrowingOfTitle(titleId);
 		
 //		get returnDate and compare to now
@@ -137,7 +135,6 @@ public class TitleReturnController {
 		returnDateLbl.setText("Rückgabedatum: " + returnDate.format(formatter) + "\r\nDas Buch ist " + daysOver + " Tage drüber.");
 
 //		set lender
-		lc = new LenderController();
 		Lender lender = lc.getLender(borrowing.getIdLender());
 		borrowerLbl.setText("Von: " + lender.getFirstName()  + " " + lender.getLastName());
 		

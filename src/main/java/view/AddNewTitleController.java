@@ -45,6 +45,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import models.Lender;
 import models.Librarian;
 
 /**
@@ -90,9 +91,9 @@ public class AddNewTitleController implements Initializable{
 	private Boolean isRated = false;
 	
 	private MainBibliothek mainBib;
-	private BibController bc;
-	private LenderController lc;
-	private BorrowController boc;
+	private BibController bc = new BibController();
+	private LenderController lc = new LenderController();
+	private BorrowController boc = new BorrowController();
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
@@ -272,7 +273,6 @@ public class AddNewTitleController implements Initializable{
 	 */
 	public void addBook() {
 		System.out.println("AddNewTitleController - addBook");
-		bc = new BibController();
 		try {
 
 //			setze variablen für das Buch
@@ -305,9 +305,7 @@ public class AddNewTitleController implements Initializable{
 //			if the book is added as borrowed
 			if(isBorrowed) {
 				System.out.println("isBorrowed ist true");
-				lc = new LenderController();
 				Librarian librarian = lc.getLibrarian();
-				System.out.println("Das ist der Bibliothekar: " + librarian.getFirstName());
 //				show alert --> which lender? to when?
 				setAddBorrowedBookDialog(title, librarian.getFirstName(), id);
 			}
@@ -383,9 +381,9 @@ public class AddNewTitleController implements Initializable{
 		dialog.showAndWait();
 		
 		ArrayList<Pair> params = new ArrayList<>();
+		int necessaryFields = 0;
 		if(dialog.getResult() == ButtonType.OK){
 //			check if all fields are set
-			int necessaryFields = 0;
 			if(!lenderFNameTxt.getText().isEmpty()) {
 				params.add(new Pair("Firstname", lenderFNameTxt.getText()));
 				necessaryFields++;
@@ -399,55 +397,206 @@ public class AddNewTitleController implements Initializable{
 				necessaryFields++;
 			}
 			if(!lenderMsgTxt.getText().isEmpty()) {
-				necessaryFields++;
+				necessaryFields++;				
 			}
 			
 //			if all fields are filled out
 			if(necessaryFields == 4) {
 //				check if lender exists
-				lc = new LenderController();
-				boc = new BorrowController();
-//				get lenderid by email
-				ArrayList<Integer> lenderIDs = lc.findLenderIdByEmail(lenderEmailTxt.getText());
-				if(lenderIDs.size() == 1) {
-					System.out.println("lenderIDs ist 1");
+//				get lenderid by name
+				List<Integer> lenderNameIDs = lc.findLenderIdByName(lenderFNameTxt.getText(), lenderLNameTxt.getText());
+//				if there is only one lender with this name
+				if(lenderNameIDs.size() == 1) {
 //					get the id
-					int lenderID = lenderIDs.get(0);
-//					if yes: add borrowing
-					boc.borrowBook(bookID, lenderID, returnDateTxt.getValue(), lenderMsgTxt.getText());
-					dialog.close();
-				}else if(lenderIDs.size() <= 0) {
-					System.out.println("lenderIDs ist 0");
-
-//					check if lender name can be found
-					List<Integer> lenderNameIDs = lc.findLenderIdByName(lenderFNameTxt.getText(), lenderLNameTxt.getText());
-					if(lenderNameIDs.size() >= 1) {
-						System.out.println("lenderNameIDs ist größer gleich 1");
-
-//						set warning new email?--> change this lender
-						int lenderNameID = lenderNameIDs.get(0); 
-						setChangeLenderWarning(lenderNameID);
-						boc.borrowBook(bookID, lenderNameID, returnDateTxt.getValue(), lenderMsgTxt.getText());
+					int lenderID = lenderNameIDs.get(0);
+					
+//					check if input.email == id.email
+					if(!checkIfEmailDiffersFromInput(lenderID, lenderEmailTxt.getText())) {
+//						if yes: add borrowing
+						boc.borrowBook(bookID, lenderID, returnDateTxt.getValue(), lenderMsgTxt.getText());
 						dialog.close();
 					}
 					else {
-						System.out.println("lenderNameIDs ist kleiner als 1");
-
-//						if not: add new lender + new borrowing	
-						lc.addNewLender(params);
-						int lastLenderID = lc.getLastLenderId();
-						boc.borrowBook(bookID, lastLenderID, returnDateTxt.getValue(), lenderMsgTxt.getText());
-						dialog.close();
+//						if NOT: ask if email should be changed or old one should be used
+						setChangeLenderEmailWarning(lenderID);
 					}
 				}
+//				if there are no matching lenders
+				else if(lenderNameIDs.size() <= 0) {
+					System.out.println("lenderIDs ist 0");
+
+//					check if lender email can be found
+					List<Integer> lenderEmailIDs = lc.findLenderIdByEmail(lenderEmailTxt.getText());
+//					check if lenders with same firstName can be found
+					ArrayList<Integer> firstNameIDs = lc.findLenderIdByFirstName(lenderFNameTxt.getText());
+//					check for matching ids in both lists
+					ArrayList<Integer> eAndfNIDs = new ArrayList<>();
+					int matchingNameAndEMailID = -1;
+					
+					for(int id: firstNameIDs) {
+						if(lenderEmailIDs.contains(id)) {
+							eAndfNIDs.add(id);
+							matchingNameAndEMailID = id;
+						}
+					}
+					
+//					if yes: 
+					if(eAndfNIDs.size() > 0) {
+//						ask if lastName should be changed
+						setChangeLenderDialog(matchingNameAndEMailID, lenderLNameTxt.getText());
+//						save the book with that id
+						boc.borrowBook(bookID, matchingNameAndEMailID, returnDateTxt.getValue(), lenderMsgTxt.getText());
+					}
+//					if no:
+					else {
+//						ask if new lender should be added
+						setAddNewLenderDialog(bookID, returnDateTxt.getValue(), lenderMsgTxt.getText(), lenderFNameTxt.getText(), lenderLNameTxt.getText(), lenderEmailTxt.getText());
+					}
+				}
+			}
+//			if not all fields are filled out
+			else {
+//				set warning
+				String msg1 = "Daten fehlen.";
+				String msg2 = "Bitte füllen Sie alle nötigen Felder aus.";
+				setWarning(msg1, msg2);
+			}
+		}
+	}
+					
+		
 	
+	
+	/**
+	 * shows a dialog for adding a new lender
+	 */
+	public void setAddNewLenderDialog(int bookID, LocalDate reDate, String msg, String fN, String lN,String email) {
+		System.out.println("AddNewTitleCOntroller - setAddNewLenderDialog");
+
+		Alert dialog = new Alert(AlertType.WARNING, "", ButtonType.YES, ButtonType.NO);
+		dialog.setTitle("Der Ausleiher existiert nicht.");
+		dialog.setHeaderText("Möchten Sie einen neuen Ausleiher anlegen?");
+		
+		Label firstNameLbl = new Label("Vorname ");
+		Label lastNameLbl = new Label("Nachname ");
+		Label emailLbl = new Label("Email ");
+		
+		TextField firstNameTxt = new TextField();
+		TextField lastNameTxt = new TextField();
+		TextField emailTxt = new TextField();
+		
+		GridPane grid = new GridPane();
+		grid.add(firstNameLbl, 1, 1);
+		grid.add(firstNameTxt, 2, 1);
+		grid.add(lastNameLbl, 1, 2);
+		grid.add(lastNameTxt, 2, 2);
+		grid.add(emailLbl, 1, 3);
+		grid.add(emailTxt, 2, 3);
+		dialog.getDialogPane().setContent(grid);
+		
+		firstNameTxt.setText(fN);
+		lastNameTxt.setText(lN);
+		emailTxt.setText(email);
+		
+		dialog.showAndWait();
+		
+//		if yes is pressed
+		if(dialog.getResult() == ButtonType.YES) {
+			ArrayList<Pair> params = new ArrayList<>();
+	
+//			check if all fields are filled out
+//			if yes: add Pairs to ArrayList
+			if(!firstNameTxt.getText().isEmpty()) {
+				params.add(new Pair("Firstname", firstNameTxt.getText()));
+			}
+//			if no: set warning
+			else {
+//				set warning
+				String msg1 = "Daten fehlen.";
+				String msg2 = "Bitte füllen Sie alle nötigen Felder aus.";
+				setWarning(msg1, msg2);
+			}
+			if(!lastNameTxt.getText().isEmpty()) {
+				params.add(new Pair("Lastname", lastNameTxt.getText()));
+			}else {
+//				set warning
+				String msg1 = "Daten fehlen.";
+				String msg2 = "Bitte füllen Sie alle nötigen Felder aus.";
+				setWarning(msg1, msg2);
+			}
+			if(!emailTxt.getText().isEmpty()) {
+				params.add(new Pair("Email", emailTxt.getText()));
+			}else {
+//				set warning
+				String msg1 = "Daten fehlen.";
+				String msg2 = "Bitte füllen Sie alle nötigen Felder aus.";
+				setWarning(msg1, msg2);
 			}
 			
+//			add a new lender in LenderController
+			lc.addNewLender(params);
+			int lastLenderID = lc.getLastLenderId();
+			boc.borrowBook(bookID, lastLenderID, reDate, msg);
+			
 		}
-		
+//		if yes is not pressed
+		else {
+//			do nothing but closing the dialog
+			dialog.close();
+		}
 	}
 	
-	public void setChangeLenderWarning(int lenderID) {
+	/**
+	 * sets a warning for changing the lenders aftername
+	 * 	
+	 * @param id
+	 */
+	public void setChangeLenderDialog(int id, String lN) {
+		System.out.println("AddNewTitleController - setChangeLenderDialog");
+		
+		Alert dialog = new Alert(AlertType.WARNING, "", ButtonType.YES, ButtonType.NO);
+		dialog.setTitle("Nachname anpassen");
+		dialog.setHeaderText("Der Nachname des Ausleihers unterscheidet sich von dem Eingegebenen.\r\n Möchten Sie einen neuen Nachnamen eingeben?");
+		
+		Label lNLbl = new Label("Nachname ");
+		TextField lNTxt = new TextField();
+		
+		GridPane grid = new GridPane();
+		grid.add(lNLbl, 1, 1);
+		grid.add(lNTxt, 2, 1);
+		
+		dialog.getDialogPane().setContent(grid);
+		lNTxt.setText(lN);
+		
+		dialog.showAndWait();
+//		if yes is pressed
+		if(dialog.getResult() == ButtonType.YES){
+			ArrayList<Pair> changes = new ArrayList<Pair>();
+//			if field is filled out
+			if(!lNTxt.getText().isEmpty()) {
+				
+//				update the lender with a new lastName
+				changes.add(new Pair("Lastname", lNTxt.getText()));
+				lc.changeLender(id, changes);
+
+			}
+//			if not all fields are filled out
+			else {
+//				set warning
+				String msg1 = "Daten fehlen.";
+				String msg2 = "Bitte füllen Sie alle nötigen Felder aus.";
+				setWarning(msg1, msg2);
+			}
+		}
+//		if yes is not pressed
+		else {
+//			use old lastName
+			dialog.close();
+		}
+	}
+	
+	
+	public void setChangeLenderEmailWarning(int lenderID) {
 		System.out.println("AddNewTitleController - setChangeLenderWarning");
 
 		Alert dialog = new Alert(AlertType.WARNING, "Bitte geben Sie die richtige Email-Adresse an.", ButtonType.OK);
@@ -491,6 +640,26 @@ public class AddNewTitleController implements Initializable{
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText(message1);
 		warning.showAndWait();
+	}
+	
+	/**
+	 * checks if the email is different
+	 * every lender can only have one email address
+	 * 
+	 * @param id
+	 */
+	public Boolean checkIfEmailDiffersFromInput(int id, String email) {
+		System.out.println("TitleBorrowController - checkForDifferentEmail");
+		Boolean differs = false;
+//		check if email is the same
+//		if NOT: ask if email should be changed or old one should be used
+//		if YES: close dialog and continue
+		
+		Lender lender = lc.getLender(id);
+		if(!email.equals(lender.getEmail())) {
+			differs = true;
+		}
+		return differs;
 	}
 
 }
