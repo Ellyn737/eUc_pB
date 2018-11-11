@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import javafx.collections.ObservableList;
 import javafx.util.Pair;
 import models.Book;
 import models.Media;
@@ -23,7 +25,7 @@ import models.Media;
  * 
  */
 public class BibController {
-	
+
 	private Boolean isBorrowed;
 	private String isBorrowedString;
 	private String title;
@@ -273,6 +275,8 @@ public class BibController {
 			
 	}
 	
+
+	
 	/**
 	 * looks for other copys of a title
 	 * 
@@ -439,7 +443,6 @@ public class BibController {
 	
 //	--------------------GETTER SETTER --------------------------------------------------------	
 	
-
 
 	public String getSubTitle() {
 		return subTitle;

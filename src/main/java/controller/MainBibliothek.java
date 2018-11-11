@@ -42,7 +42,7 @@ import view.StartMenuController;
  */
 public class MainBibliothek extends Application{
 
-	private Stage primaryStage;
+	private Stage primaryStage; 
 	private LenderController lc;
 	
 	@Override
@@ -65,7 +65,7 @@ public class MainBibliothek extends Application{
 			showStartMenu();
 		}
 		
-	}
+}
 	
 	public void showStartMenu() {
 		try {

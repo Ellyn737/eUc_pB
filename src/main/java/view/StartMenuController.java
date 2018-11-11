@@ -57,12 +57,11 @@ public class StartMenuController{
 	
 		@FXML private void handleExitButton(ActionEvent event) throws IOException{
 			//close the app
-//		Platform.exit();
 		System.exit(0);
 		}	
 	
 	public void setTitleOfStartMenu(String title) {
 		titleLabel.setText(title);
-	}
+		}
 	
 	}
