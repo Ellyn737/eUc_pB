@@ -48,7 +48,7 @@ import view.StartMenuController;
  */
 public class MainBibliothek extends Application{
 
-	private Stage primaryStage;
+	private Stage primaryStage; 
 	private LenderController lc;
 	private EmailController emc;
 	
@@ -85,7 +85,7 @@ public class MainBibliothek extends Application{
 			
 		}
 		
-	}
+}
 	
 	public void showStartMenu() {
 		try {

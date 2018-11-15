@@ -1,6 +1,7 @@
 package view;
 
 import java.io.IOException;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -30,10 +31,7 @@ public class OverviewController implements Initializable{
 	@FXML private Button publisherBtn;
 	@FXML private Button yearBtn;
 	@FXML private Button ratingBtn;
-	@FXML private Button languageBtn;
 	@FXML private Button backBtn;
-	@FXML Menu sbMenu;
-	@FXML Menu rMenu;
 	
 	private MainBibliothek mainBib;
 
@@ -43,72 +41,39 @@ public class OverviewController implements Initializable{
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resource) {
-		System.out.println("ANTC - initialize");
+		System.out.println("OC - initialize");
 		
 	}
 	
-	//AuthorButton
-	@FXML private void handleAuthorButton(ActionEvent event) throws IOException	{
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/OverviewAuthor.fxml"));
-		Scene searchScene = new Scene(searchPane);
+//	AuthorButton
+	@FXML private void handleAuthorButton(ActionEvent event) throws IOException{
 		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
+		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/OverviewAuthor.fxml"));
+		rootPane.getChildren().setAll(addPane);
+		}
+//	GenreButton
+		@FXML private void handleGenreButton(ActionEvent event) throws IOException{
+			AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/OverviewGenre.fxml"));
+			rootPane.getChildren().setAll(addPane);
 	}
-	//GenreButton
-	@FXML private void handleGenreButton(ActionEvent event) throws IOException	{
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/OverviewGenre.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
-	}
-	//PublisherButton
-	@FXML private void handlePublisherButton(ActionEvent event) throws IOException	{
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/OverviewPublisher.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
-	}
-	//YearButton
-	@FXML private void handleYearButton(ActionEvent event) throws IOException	{
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/OverviewYear.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
-	}
-	//EditionButton
-	@FXML private void handleRatingButton(ActionEvent event) throws IOException	{
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/OverviewRating.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
-	}
-	//LanguageButton
-	@FXML private void handleLanguageButton(ActionEvent event) throws IOException	{
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/OverviewLanguage.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
-	}
-	//BackButton
+//	PublisherButton
+	@FXML private void handlePublisherButton(ActionEvent event) throws IOException{
+		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/OverviewPublisher.fxml"));
+		rootPane.getChildren().setAll(addPane);
+		}
+//	YearButton
+	@FXML private void handleYearButton(ActionEvent event) throws IOException{
+		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/OverviewYear.fxml"));
+		rootPane.getChildren().setAll(addPane);
+		}
+//	RatingButton
+	@FXML private void handleRatingButton(ActionEvent event) throws IOException{
+		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/OverviewRating.fxml"));
+		rootPane.getChildren().setAll(addPane);
+		}
+//	BackButton
 	@FXML private void handleBackButton(ActionEvent event) throws IOException{
-		System.out.println("ANTC - handleBackButton");
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
-		}	
+		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
+		rootPane.getChildren().setAll(addPane);
+		}
 }

@@ -2,29 +2,50 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.OverviewYearController">
+<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" styleClass="title-background" stylesheets="@Style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.OverviewYearController">
    <children>
       <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="STATISTIKEN: JAHRE" />
       <SplitPane dividerPositions="0.8318" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <SplitPane dividerPositions="0.2865961199294533" prefHeight="358.0" prefWidth="682.0">
-                    <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                           <children>
-                              <Button fx:id="changeTitleBtn121" layoutX="21.0" layoutY="201.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="150.0" text="SUCHEN" />
-                              <TextField layoutX="21.0" layoutY="115.0" prefHeight="36.0" prefWidth="150.0" text="JAHR" />
-                              <Label layoutX="21.0" layoutY="44.0" prefHeight="36.0" prefWidth="150.0" text="Bitte eingeben:" textAlignment="CENTER" />
-                           </children>
-                        </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-                    </items>
-                  </SplitPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="360.0" prefWidth="680.0">
+                     <children>
+                        <ListView fx:id="listView" layoutX="14.0" layoutY="47.0" onMouseClicked="#yearSelected" prefHeight="312.0" prefWidth="113.0" />
+                        <ListView fx:id="listViewTitle" layoutX="359.0" layoutY="47.0" prefHeight="312.0" prefWidth="307.0" />
+                        <Label fx:id="yearLabelTitle" layoutX="465.0" layoutY="8.0" prefHeight="39.0" prefWidth="96.0" text="Bücher">
+                           <font>
+                              <Font name="System Bold" size="27.0" />
+                           </font>
+                        </Label>
+                        <Text fx:id="yearText" fill="WHITE" layoutX="202.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jahre" textAlignment="CENTER">
+                           <font>
+                              <Font size="28.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="numberText" fill="WHITE" layoutX="224.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="--" textAlignment="CENTER">
+                           <font>
+                              <Font name="System Bold" size="25.0" />
+                           </font>
+                        </Text>
+                        <Text fill="WHITE" layoutX="178.0" layoutY="136.0" opacity="0.46" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt; &lt; Auswahl &gt; &gt;" textAlignment="CENTER">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Text>
+                        <Label fx:id="yearLabelTitle1" layoutX="35.0" layoutY="8.0" prefHeight="39.0" prefWidth="71.0" text="Jahre" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="27.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
                </children>
             </AnchorPane>
           <AnchorPane prefHeight="153.0" prefWidth="681.0">

@@ -100,7 +100,7 @@ public class StartMenuController {
 	 * @throws IOException
 	 */
 		@FXML private void handleExitButton(ActionEvent event) throws IOException{
-//		Platform.exit();
+			//close the app
 		System.exit(0);
 		}	
 	
@@ -111,15 +111,15 @@ public class StartMenuController {
 	 */
 	public void setTitleOfStartMenu(String title) {
 		titleLabel.setText(title);
-	}
+		}
 	
 	/**
 	 * changes the data for the librarian
 	 */
 	public void setChangeAdminDialog() {
-		Alert dialog = new Alert(AlertType.WARNING, "Bitte geben Sie die erforderlichen Veränderungen ein.", ButtonType.OK);
-		dialog.setTitle("ÄNDERUNGEN FÜR DEN BIBLIOTHEKAR");
-		dialog.setHeaderText("Sie möchten die Daten für den Bibliothekar ändern.");
+		Alert dialog = new Alert(AlertType.WARNING, "Bitte geben Sie die erforderlichen Verï¿½nderungen ein.", ButtonType.OK);
+		dialog.setTitle("ï¿½NDERUNGEN Fï¿½R DEN BIBLIOTHEKAR");
+		dialog.setHeaderText("Sie mï¿½chten die Daten fï¿½r den Bibliothekar ï¿½ndern.");
 		
 //		deactivate the x in the right upper corner
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
@@ -173,12 +173,12 @@ public class StartMenuController {
 //			check if everything is filled out
 			if(changes.size() < 1) {
 				String message1 = "Es fehlen Daten, um den Bibliothekar zu registrieren.";
-				String message2 = "Bitte füllen Sie alle Felder aus. ";
+				String message2 = "Bitte fï¿½llen Sie alle Felder aus. ";
 				setWarning(message1, message2);
 			}else {
 				lc.changeLibrarian(changes);
-				String message1 = "Die Änderungen wurden gespeichert.";
-				String message2 = "Drücken Sie auf OK und fahren Sie fort.";
+				String message1 = "Die ï¿½nderungen wurden gespeichert.";
+				String message2 = "Drï¿½cken Sie auf OK und fahren Sie fort.";
 				setWarning(message1, message2);
 //				close dialog
 				dialog.close();

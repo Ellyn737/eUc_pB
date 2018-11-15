@@ -6,8 +6,10 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.OverviewPublisherController">
+<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" styleClass="title-background" stylesheets="@Style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.OverviewPublisherController">
    <children>
       <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="STATISTIKEN: VERLAGE" />
       <SplitPane dividerPositions="0.8318" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">
@@ -18,13 +20,25 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <TextField layoutX="21.0" layoutY="115.0" prefHeight="36.0" prefWidth="150.0" text="VERLAG" />
-                              <Label layoutX="21.0" layoutY="44.0" prefHeight="36.0" prefWidth="150.0" text="Bitte eingeben:" textAlignment="CENTER" />
+                              <TextField fx:id="givenPublisher" layoutX="21.0" layoutY="97.0" prefHeight="36.0" prefWidth="150.0" promptText="VERLAG" />
+                              <Label layoutX="21.0" layoutY="61.0" prefHeight="36.0" prefWidth="150.0" text="Bitte eingeben:" textAlignment="CENTER" />
+                              <Button fx:id="searchBtn" layoutX="21.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleSearchBtn" prefHeight="36.0" prefWidth="150.0" text="SUCHEN" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <ListView layoutX="-5.0" layoutY="6.0" prefHeight="357.0" prefWidth="490.0" />
+                              <ListView fx:id="listView" layoutX="241.0" layoutY="15.0" prefHeight="334.0" prefWidth="232.0" />
+                              <ListView fx:id="listViewSearch" layoutX="6.0" layoutY="81.0" prefHeight="269.0" prefWidth="216.0" />
+                              <Text fx:id="publisherText" fill="WHITE" layoutX="40.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Verlag" textAlignment="CENTER" wrappingWidth="149.99999922513962">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                              </Text>
+                              <Label fx:id="searchLabel" alignment="CENTER" layoutX="29.0" layoutY="56.0" prefHeight="26.0" prefWidth="171.0" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </AnchorPane>
                     </items>

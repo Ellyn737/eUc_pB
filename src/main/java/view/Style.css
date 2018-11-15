@@ -148,3 +148,27 @@
 }
 
 
+
+/*Statistic*/
+
+.chart-pie{
+}
+	-fx-clockwise: true;
+.chart-pie-label {
+    -fx-font-size: 1em;
+    -fx-fill: white;
+}
+.chart-legend {
+   -fx-background-color:  grey;
+   -fx-border-color: white;
+}
+.label-underline {
+    -fx-border-width: 0 0 2 0, 0 0 1 0, 0 0 2 0;
+    -fx-border-color: white, transparent, white;
+    -fx-border-insets: 0 0 1 0, 0 0 2 0, 0 0 3 0;
+}
+    -fx-background-color: #ff9900;
+.chart-bar{
+    -fx-label-fill: white;
+    -fx-border-color: black;
+}

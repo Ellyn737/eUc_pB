@@ -1,6 +1,7 @@
 package models;
 
 import javax.persistence.Column;
+
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -38,7 +39,7 @@ public class Media implements Serializable {
 	@Column(name="title")
 	private String title;
 	@Column(name="year_of_publication")
-	private int year;
+	private Integer year;
 	@Column(name="is_borrowed")
 	private boolean isBorrowed;
 	@Column(name="content")
@@ -49,6 +50,8 @@ public class Media implements Serializable {
 	private int exemplar;
 	@Column(name="rating")
 	private Integer stars;
+	@Column(name="author")
+	private String author;
 	
 	
 	public Media() {}
@@ -124,6 +127,14 @@ public class Media implements Serializable {
 
 	public void setStars(Integer stars) {
 		this.stars = stars;
+	}
+	
+	public String getauthor() {
+		return author;
+	}
+	
+	public void setauthr(String author) {
+		this.author = author;
 	}
 
 	@Override
