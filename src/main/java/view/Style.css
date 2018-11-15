@@ -136,3 +136,15 @@
 	-fx-text-fill: white;
 	
 }
+
+.dialog-pane {
+	-fx-background-color: #333333;
+	-fx-text-fill: white;	
+}
+
+.dialog-pane:header *.header-panel {
+	-fx-background-color: #1a1a1a;
+	-fx-text-fill: white;	
+}
+
+

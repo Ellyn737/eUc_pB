@@ -19,6 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Alert.AlertType;
@@ -103,6 +104,11 @@ public class ShowTitleController {
 			
 //			set the alert and ask for confirmation
 			Alert alert = new Alert(AlertType.CONFIRMATION, "Sind Sie sicher, dass sie " + title + " löschen möchten?", ButtonType.YES, ButtonType.NO);
+			
+//			add styling to dialogPane
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+			
 			alert.showAndWait();
 			
 //			on yes

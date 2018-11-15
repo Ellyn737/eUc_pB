@@ -131,6 +131,10 @@ public class MainBibliothek extends Application{
 		dialog.setTitle("ERSTELLUNG DER BIBLIOTHEK");
 		dialog.setHeaderText("Der Bibliothekar existiert noch nicht.");
 		
+//		add styling to dialogPane
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 //		deactivate the x in the right upper corner
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
 		stage.setOnCloseRequest(event ->{
@@ -143,7 +147,7 @@ public class MainBibliothek extends Application{
 		String fName ="";
 		String lName ="";
 		
-		Label adminLbl = new Label("Bibliothekar: ");
+		Label adminLbl = new Label("BIBLIOTHEKAR ");
 		Label adminFName = new Label("Vorname: ");
 		TextField adminFNameTxt = new TextField();
 		Label adminLName = new Label("Nachname: ");
@@ -224,10 +228,16 @@ public class MainBibliothek extends Application{
 	 */
 	public void setWarning(String headerMsg, String message) {
 		Alert warning = new Alert(AlertType.WARNING, message, ButtonType.OK);
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = warning.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText(headerMsg);
 		warning.showAndWait();
 		if(warning.getResult() == ButtonType.OK) {
+			setAddAdminDialog();
 			warning.close();
 		}
 	}
@@ -242,6 +252,11 @@ public class MainBibliothek extends Application{
 		Alert warning = new Alert(AlertType.WARNING, "", ButtonType.OK);
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText(headerMsg);
+		
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = warning.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
 		
 		lc = new LenderController();
 		Librarian librarian = lc.getLibrarian();
