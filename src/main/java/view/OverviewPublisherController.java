@@ -13,6 +13,7 @@ import controller.MainBibliothek;
 import controller.StatisticsController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,6 +27,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.scene.Node;
@@ -35,7 +37,6 @@ import javafx.event.EventHandler;
 
 public class OverviewPublisherController implements Initializable{
 	
-	private String publisher;
 	private BibController bc;
 	private StatisticsController sc;
 	
@@ -43,8 +44,15 @@ public class OverviewPublisherController implements Initializable{
 	@FXML private Button backBtn;
 	@FXML Button searchBtn;
 	@FXML TextField givenPublisher;
+    @FXML private Label searchLabel;
 	@FXML ListView<String> listView;
+    @FXML private ListView<String> listViewSearch;
+    @FXML private Text publisherText;
 	
+	private ObservableList<String> resultList;
+    private String showPublisherResult;
+	private String publisher;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resource) {
 		System.out.println("OPuC - initialize");
@@ -53,99 +61,124 @@ public class OverviewPublisherController implements Initializable{
 	}
 	
 	@FXML private void handleSearchBtn(ActionEvent event) throws IOException{
-//		if a author is searched
-		if(!givenPublisher.getText().isEmpty()) {
-//			get input String 
-			publisher = givenPublisher.getText();
-			
-			bc = new BibController();
-//			make list with searchParameters for bc.findBookId
-			ArrayList<Pair> searchParameter = new ArrayList<>();
-			searchParameter.add(new Pair("publisher", publisher));
-//			get the bookIds
-			List<Integer> matchingPublisherIds = bc.findBookId(searchParameter);
-//			set String to show in listView
-			String showPublisherResult = publisher + ": " + matchingPublisherIds.size();
-//			set list for listView
-			ObservableList<String> results = FXCollections.observableArrayList();
-//			add String
-			results.add(showPublisherResult);
-//			add resuts to listView
-			listView.setItems(results);
-		}else {
-//			WARNUNG
-		}
-}
+		System.out.println("OPuC - handleSearchBtn");
 
-
-public void statisticPublisher() {
-	System.out.println("BibController - statisticAuthor");
+		searchLabel.setText("Bücher:");
+		searchPublisher();
+	}
 	
+//	BackButton
+	@FXML private void handleBackButton(ActionEvent event) throws IOException{
+		System.out.println("OPuC - handleBackButton");
+		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/Overview.fxml"));
+		rootPane.getChildren().setAll(startPane);
+	}	
+
+	/*
+	 * setzen von Liste der Autoren
+	 */
+	public void statisticPublisher() {
+		System.out.println("OPuC - statisticAuthor");
 	
 		ArrayList<String> allreadyCounted = new ArrayList<>();
-//		ObservableList<String> resultListName = FXCollections.observableArrayList();
-//		ObservableList<Integer> resultListNumber = FXCollections.observableArrayList();
-		ObservableList<String> resultList = FXCollections.observableArrayList();
-		List <Pair> pairList = new ArrayList<>();
+
+		resultList = FXCollections.observableArrayList();
+
 		sc = new StatisticsController();
 		List <String> allPublisher = sc.getAllPublisher();
 		
-		//Anfang von Auflistung top Autoren
-		//Für jeden Namen in der Liste
+//		Anfang von Auflistung top Autoren
+//		Für jeden Namen in der Liste
 		for(int i = 0; i<allPublisher.size(); i++) {
-			//Setze counter auf 0
+//			Setze counter auf 0
 			int doublePublisher = 0;
-			//Wenn der Namenoch nicht vorkam
+//			Wenn der Namenoch nicht vorkam
 			if(!allreadyCounted.contains(allPublisher.get(i))) {
-			//Geh die List mit Autoren Namen durch
+//			Geh die List mit Autoren Namen durch
 				for(int j = 0; j<allPublisher.size(); j++) {
-					//Wenn der Name gleich ist
+//					Wenn der Name gleich ist
 					if(allPublisher.get(i).equals(allPublisher.get(j))) {
-						//Zähle counter hoch
+//						Zähle counter hoch
 						doublePublisher++;
-						
 					}
 				}
-				//Setze Ergebnis String
+//				Setze Ergebnis String
 				String result = allPublisher.get(i) + ":  " + doublePublisher;
 				
-//				String authorResult = allAuthors.get(i);
-//				resultListName.add(authorResult);
-//				int numberResult = doubleAuthor;
-//				resultListNumber.add(numberResult);
-				//Setze eergebnis String in Liste
 				resultList.add(result);
-				
-				pairList.add(new Pair(doublePublisher, result));
-				
-				
-				
-				//Füge den analysierten Namen der List mit Namen zu, die nicht nochmal durchgeguckt wurden
+							
+//				Füge den analysierten Namen der Liste mit Namen zu, die nicht nochmal durchgeguckt wurden
 				allreadyCounted.add(allPublisher.get(i));
 				System.out.println(result);
+			}	
 		}
-			
-		}
-		
-//		System.out.println(resultListName);
-//		System.out.println(resultListNumber);
-//		
-	//	Arrays.sort(pairList.get);
-		
-		
-		//Setze in Liste
-		listView.setItems(resultList);
-		
+		SortedList<String> sortedList = new SortedList(resultList);
+
+//		Setze in Liste
+		listView.setItems(sortedList.sorted());
 		
 	}		
-
-
 	
-//BackButton
-@FXML private void handleBackButton(ActionEvent event) throws IOException{
-	System.out.println("OPC - handleBackButton");
-	AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/Overview.fxml"));
-	rootPane.getChildren().setAll(startPane);
-	}	
+	/*
+	 * BuchTitel der gesuchten Verlage
+	 */
+	public void searchPublisher(){
+		System.out.println("OPuC - searchPublisher");
 
+		ArrayList<String> allreadyCounted = new ArrayList<>();
+		
+//		 	if a author is searched
+			if(!givenPublisher.getText().isEmpty()) {
+				
+//				get input String 
+				publisher = givenPublisher.getText();
+				
+				bc = new BibController();
+//				make list with searchParameters for bc.findBookId
+				ArrayList<Pair> searchParameter = new ArrayList<>();
+				searchParameter.add(new Pair("publisher", publisher));
+//				get the bookIds
+				List<Integer> matchingPublisherIds = bc.findBookId(searchParameter);
+//				set String to show n Label
+				String showAuthorResult = publisher;
+//				set new Label
+				publisherText.setText(showAuthorResult);
+			}else {
+//				WARNUNG
+			}
+			
+			resultList = FXCollections.observableArrayList();
+			List <Pair> pairList = new ArrayList<>();
+			
+			sc = new StatisticsController();
+			List<String> allTitle = sc.searchTitle(publisher);
+			
+//			Anfang von Auflistung top Autoren
+//			Für jeden Namen in der Liste
+			for(int i = 0; i<allTitle.size(); i++) {
+//				Setze counter auf 0
+				int doubleAuthor = 0;
+//				Wenn der Namenoch nicht vorkam
+				if(!allreadyCounted.contains(allTitle.get(i))) {
+//				Geh die List mit Autoren Namen durch
+					for(int j = 0; j<allTitle.size(); j++) {
+//						Wenn der Name gleich ist
+						if(allTitle.get(i).equals(allTitle.get(j))) {
+//							Zähle counter hoch
+							doubleAuthor++;
+						}
+					}
+//					Setze Ergebnis String
+					String result = allTitle.get(i);
+					
+					resultList.add(result);
+					
+					pairList.add(new Pair(doubleAuthor, result));
+	
+//					Füge den analysierten Namen der Liste mit Namen zu, die nicht nochmal durchgeguckt wurden
+					allreadyCounted.add(allTitle.get(i));
+					}
+			}
+			listViewSearch.setItems(resultList);
+	}
 }

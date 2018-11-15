@@ -39,7 +39,7 @@ public class Media implements Serializable {
 	@Column(name="title")
 	private String title;
 	@Column(name="year_of_publication")
-	private int year;
+	private Integer year;
 	@Column(name="is_borrowed")
 	private boolean isBorrowed;
 	@Column(name="content")

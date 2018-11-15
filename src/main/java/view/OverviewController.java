@@ -32,8 +32,6 @@ public class OverviewController implements Initializable{
 	@FXML private Button yearBtn;
 	@FXML private Button ratingBtn;
 	@FXML private Button backBtn;
-	@FXML Menu sbMenu;
-	@FXML Menu rMenu;
 	
 	private MainBibliothek mainBib;
 
@@ -47,33 +45,33 @@ public class OverviewController implements Initializable{
 		
 	}
 	
-	//AuthorButton
+//	AuthorButton
 	@FXML private void handleAuthorButton(ActionEvent event) throws IOException{
 		
 		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/OverviewAuthor.fxml"));
 		rootPane.getChildren().setAll(addPane);
 		}
-	//GenreButton
+//	GenreButton
 		@FXML private void handleGenreButton(ActionEvent event) throws IOException{
 			AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/OverviewGenre.fxml"));
 			rootPane.getChildren().setAll(addPane);
 	}
-	//PublisherButton
+//	PublisherButton
 	@FXML private void handlePublisherButton(ActionEvent event) throws IOException{
 		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/OverviewPublisher.fxml"));
 		rootPane.getChildren().setAll(addPane);
 		}
-	//YearButton
+//	YearButton
 	@FXML private void handleYearButton(ActionEvent event) throws IOException{
 		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/OverviewYear.fxml"));
 		rootPane.getChildren().setAll(addPane);
 		}
-	//RatingButton
+//	RatingButton
 	@FXML private void handleRatingButton(ActionEvent event) throws IOException{
 		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/OverviewRating.fxml"));
 		rootPane.getChildren().setAll(addPane);
 		}
-	//BackButton
+//	BackButton
 	@FXML private void handleBackButton(ActionEvent event) throws IOException{
 		AnchorPane addPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 		rootPane.getChildren().setAll(addPane);

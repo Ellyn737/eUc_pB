@@ -1,6 +1,7 @@
 package view;
 
 import javafx.scene.input.MouseEvent;
+
 import javafx.event.EventHandler;
 import java.io.IOException;
 import java.net.URL;
@@ -16,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -34,27 +36,19 @@ public class OverviewGenreController implements Initializable{
 	
 	
 	
-	@FXML 
-	private Button backBtn;	
-	@FXML 
-	private Button non_fictionBtn;	
-	@FXML 
-	private Button novelBtn;
-	@FXML 
-	private AnchorPane rootPane;
-	@FXML 
-	private SplitMenuButton menuGenre;
-    @FXML
-    private PieChart pieChartGenre;
-    @FXML
-    private Label genreValue;
+	@FXML private Button backBtn;	
+	@FXML private Button non_fictionBtn;	
+	@FXML private Button novelBtn;
+	@FXML private AnchorPane rootPane;
+	@FXML private SplitMenuButton menuGenre;
+    @FXML private PieChart pieChartGenre;
+    @FXML private Label genreValue;
+    @FXML private Label genreCat;
 	
-	private MainBibliothek mainBib;
+	ArrayList <String> allreadyCounted;
+	ObservableList<String> resultList;
+    
 	private StatisticsController sc;
-	
-	public void setMain(MainBibliothek mainBib){
-		this.mainBib = mainBib;
-	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resource) {
@@ -62,19 +56,18 @@ public class OverviewGenreController implements Initializable{
 		pieChartGenre.setTitle("GenreStatistiken");
 		
 		statisticGenre();
-		}
+	}
 	
-	//SachbuchButton
+//	SachbuchButton
     @FXML
     void handlenNon_fictionButton(ActionEvent event) throws IOException{
 		System.out.println("OGC - handleNon_fictionButton");
 		pieChartGenre.setTitle("Sachbücher");
 		
 		statisticSubGenreS();
-
     }
     
-	//RomanButton
+//	RomanButton
     @FXML
     void handleNovelButton(ActionEvent event) throws IOException{
 		System.out.println("OGC - handleNovelButton");
@@ -83,150 +76,167 @@ public class OverviewGenreController implements Initializable{
 		statisticSubGenreR();
     }
     
-	//BackButton
-	@FXML private void handleBackButton(ActionEvent event) throws IOException{
-		System.out.println("OGC - handleBackButton");
-		Parent searchPane = FXMLLoader.load(getClass().getResource("../view/Overview.fxml"));
-		Scene searchScene = new Scene(searchPane);
-		
-		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-		window.setScene(searchScene);
-		window.show();
-		}	
+//  BackButton
+    @FXML private void handleBackButton(ActionEvent event) throws IOException{
+    	System.out.println("OGC - handleBackButton");
+    	AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/Overview.fxml"));
+    	rootPane.getChildren().setAll(startPane);
+    }	
 	
+    /*
+     * Piechart Daten durch Klicks
+     */
     @FXML
     void showValues(MouseEvent event) {
     	System.out.println("OGC - MoueseEvent");
 
 		for (final PieChart.Data data : pieChartGenre.getData()) {
-		    data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
+		    data.getNode().addEventHandler(MouseEvent.MOUSE_CLICKED,
 		        new EventHandler<MouseEvent>() {
 		            @Override public void handle(MouseEvent e) {
-		                genreValue.setText(String.valueOf(data.getPieValue()));
+		            	
+//		    			Angezeigte Texte überschreiben
+		            	genreValue.setText(String.valueOf((int)data.getPieValue()));
+	                    genreCat.setText(data.getName() + ":");
 		             } 
 		        });
 			}
     }
 	
+    /*
+	 * Auflistung der Genre und Anzahl
+     */
 	public void statisticGenre() {
-		System.out.println("BibController - statisticGenre");
+		System.out.println("OGeC - statisticGenre");
+		
 		sc = new StatisticsController();
-		List <Pair> pairList = new ArrayList<>();
-
-
 		List<String> allGenre = sc.getAllGenre();
 		
-		ArrayList <String> allreadyCounted = new ArrayList<>();
-		ObservableList<String> resultList = FXCollections.observableArrayList();
+		allreadyCounted = new ArrayList<>();
+		resultList = FXCollections.observableArrayList();
 
-		
-		//Anfang von Auflistung top Autoren
-		//Für jeden Namen in der Liste
+//		Anfang von Auflistung top Autoren
+//		Für jeden Namen in der Liste
 		for(int i = 0; i<allGenre.size(); i++) {
-			//Setze counter auf 0
+//			Setze counter auf 0
 			int doubleGenre = 0;
-			//Wenn der Name noch nicht vorkam
+//			Wenn der Name noch nicht vorkam
 			if(!allreadyCounted.contains(allGenre.get(i))) {
-			//Geh die List mit Autoren Namen durch
+//			Geh die List mit Autoren Namen durch
 				for(int j = 0; j<allGenre.size(); j++) {
-					//Wenn der Name gleich ist
+//					Wenn der Name gleich ist
 					if(allGenre.get(i).equals(allGenre.get(j))) {
-						//Zähle counter hoch
+//						Zähle counter hoch
 						doubleGenre++;
-						
 					}
 				}
 				String result = allGenre.get(i);
-				//Füge den analysierten Namen der List mit Namen zu, die nicht nochmal durchgeguckt wurden
 				resultList.add(result);
 				
-				pairList.add(new Pair(allGenre, result));
 				allreadyCounted.add(allGenre.get(i));
 				
 				pieChartGenre.getData().add(new Data(result, doubleGenre));
+				
+//    			Angezeigter Text überschreiben
+				String all = "" + allGenre.size();
+				genreValue.setText(all);
 			}
 		}
 		
-		
-
 	} 
+	
+	/*
+	 * Auflistung der Subgenre Roman
+	 */
 	public void statisticSubGenreR() {
-		System.out.println("BibController - statisticSubGenreRoman");
+		System.out.println("OGeC - statisticSubGenreRoman");
+		
+//		Piechart löschen
 		pieChartGenre.getData().clear();
+		
 		sc = new StatisticsController();
-
 		List<String> allSubGenreR = sc.getAllSubGenreR();
 		
-		ArrayList <String> allreadyCounted = new ArrayList<>();
-		ObservableList<String> resultList = FXCollections.observableArrayList();
+		allreadyCounted = new ArrayList<>();
+		resultList = FXCollections.observableArrayList();
 
 		
-		//Anfang von Auflistung top Autoren
-		//Für jeden Namen in der Liste
+//		Anfang von Auflistung top Autoren
+//		Für jeden Namen in der Liste
 		for(int i = 0; i<allSubGenreR.size(); i++) {
-			//Setze counter auf 0
+//			Setze counter auf 0
 			int doubleGenre = 0;
-			//Wenn der Name noch nicht vorkam
+//			Wenn der Name noch nicht vorkam
 			if(!allreadyCounted.contains(allSubGenreR.get(i))) {
-			//Geh die List mit Autoren Namen durch
+//			Geh die Liste mit Autoren Namen durch
 				for(int j = 0; j<allSubGenreR.size(); j++) {
-					//Wenn der Name gleich ist
+//					Wenn der Name gleich ist
 					if(allSubGenreR.get(i).equals(allSubGenreR.get(j))) {
-						//Zähle counter hoch
+//						Zähle counter hoch
 						doubleGenre++;
 						
 					}
 				}
 				String result = allSubGenreR.get(i);
-				//Füge den analysierten Namen der List mit Namen zu, die nicht nochmal durchgeguckt wurden
+//				Füge den analysierten Namen der Liste mit Namen zu, die nicht nochmal durchgeguckt wurden
 				resultList.add(result);
 				
 				allreadyCounted.add(allSubGenreR.get(i));
-				System.out.println(result);
 				
 				pieChartGenre.getData().add(new Data(allSubGenreR.get(i), doubleGenre));
+				genreCat.setText("Romane:");
+				
+//    			Angezeigter Text überschreiben
+				String all = "" + allSubGenreR.size();
+				genreValue.setText(all);
 			}
 		}
 	} 
+	
+	/*
+	 * Auflistung der Subgenre Sachbuch
+	 */
 	public void statisticSubGenreS() {
-		System.out.println("BibController - statisticGenreSachbuch");
+		System.out.println("OGeC - statisticGenreSachbuch");
+		
+//		Piechart löschen
 		pieChartGenre.getData().clear();
 		
 		sc = new StatisticsController();
-		List <Pair> pairList = new ArrayList<>();
-
-
 		List<String> allSubGenreS = sc.getAllSubGenreS();
 		
-		ArrayList <String> allreadyCounted = new ArrayList<>();
-		ObservableList<String> resultList = FXCollections.observableArrayList();
+		allreadyCounted = new ArrayList<>();
+		resultList = FXCollections.observableArrayList();
 
-		
-		//Anfang von Auflistung top Autoren
-		//Für jeden Namen in der Liste
+//		Anfang von Auflistung top Autoren
+//		Für jeden Namen in der Liste
 		for(int i = 0; i<allSubGenreS.size(); i++) {
-			//Setze counter auf 0
+//			Setze counter auf 0
 			int doubleGenre = 0;
-			//Wenn der Name noch nicht vorkam
+//			Wenn der Name noch nicht vorkam
 			if(!allreadyCounted.contains(allSubGenreS.get(i))) {
-			//Geh die List mit Autoren Namen durch
+//			Geh die List mit Autoren Namen durch
 				for(int j = 0; j<allSubGenreS.size(); j++) {
-					//Wenn der Name gleich ist
+//					Wenn der Name gleich ist
 					if(allSubGenreS.get(i).equals(allSubGenreS.get(j))) {
-						//Zähle counter hoch
+//						Zähle counter hoch
 						doubleGenre++;
 						
 					}
 				}
 				String result = allSubGenreS.get(i);
-				//Füge den analysierten Namen der List mit Namen zu, die nicht nochmal durchgeguckt wurden
+//				Füge den analysierten Namen der Liste mit Namen zu, die nicht nochmal durchgeguckt wurden
 				resultList.add(result);
 				
-				pairList.add(new Pair(allSubGenreS, result));
 				allreadyCounted.add(allSubGenreS.get(i));
 				System.out.println(result);
 				
 				pieChartGenre.getData().add(new Data(result, doubleGenre));
+				genreCat.setText("Sachbücher:");
+				
+//    			Angezeigte Texte überschreiben
+				String all = "" + allSubGenreS.size();
+				genreValue.setText(all);
 			}
 		}
 	} 

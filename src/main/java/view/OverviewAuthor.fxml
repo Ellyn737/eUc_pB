@@ -7,8 +7,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.OverviewAuthorController">
+<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" styleClass="title-background" stylesheets="@Style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.OverviewAuthorController">
    <children>
       <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="STATISTIKEN: AUTOREN" />
       <SplitPane dividerPositions="0.8318" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">
@@ -26,15 +27,20 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <ListView fx:id="listView" layoutX="245.0" prefHeight="358.0" prefWidth="237.0" />
-                              <Label fx:id="authorLabel" alignment="CENTER" layoutX="-1.0" layoutY="32.0" prefHeight="90.0" prefWidth="248.0" text="AUTOR">
+                              <ListView fx:id="listView" layoutX="245.0" layoutY="14.0" prefHeight="335.0" prefWidth="224.0" />
+                              <Label fx:id="numberLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="97.0" layoutY="199.0" prefHeight="92.0" prefWidth="67.0" styleClass="label-underline" stylesheets="@Style.css" text="--" textAlignment="CENTER">
                                  <font>
-                                    <Font name="System Bold" size="25.0" />
+                                    <Font name="System Bold" size="60.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="numberLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="-2.0" layoutY="200.0" prefHeight="90.0" prefWidth="248.0" text="--" textAlignment="CENTER">
+                              <Text fx:id="authorText" fill="WHITE" layoutX="6.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AUTOR" textAlignment="CENTER" wrappingWidth="248.00000739097595">
                                  <font>
-                                    <Font size="60.0" />
+                                    <Font name="System Bold" size="34.0" />
+                                 </font>
+                              </Text>
+                              <Label alignment="CENTER" layoutX="85.0" layoutY="169.0" prefHeight="17.0" prefWidth="98.0" text="ANZAHL:">
+                                 <font>
+                                    <Font size="20.0" />
                                  </font>
                               </Label>
                            </children>

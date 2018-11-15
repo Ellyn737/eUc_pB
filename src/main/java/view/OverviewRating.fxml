@@ -7,17 +7,21 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.OverviewRatingController">
+<AnchorPane fx:id="rootPane" prefHeight="525.0" prefWidth="676.0" styleClass="title-background" stylesheets="@Style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.OverviewRatingController">
    <children>
       <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="TOP" layoutX="167.0" layoutY="31.0" opacity="0.6" prefHeight="42.0" prefWidth="346.0" text="STATISTIKEN: BEWERTUNGEN" />
       <SplitPane dividerPositions="0.8318" layoutY="90.0" orientation="VERTICAL" prefHeight="436.0" prefWidth="682.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <BarChart fx:id="ratingChart" layoutX="-3.0" layoutY="-5.0" prefHeight="358.0" prefWidth="690.0" title="BEWERTUNGEN">
+                  <BarChart fx:id="ratingChart" barGap="10.0" categoryGap="1.0" layoutX="-13.0" layoutY="-5.0" legendVisible="false" prefHeight="381.0" prefWidth="682.0" title="BEWERTUNGEN">
                     <xAxis>
-                      <CategoryAxis label="STERNE" side="BOTTOM" fx:id="x" />
+                      <CategoryAxis label="STERNE" side="BOTTOM" fx:id="x">
+                           <tickLabelFont>
+                              <Font name="System Bold" size="9.0" />
+                           </tickLabelFont></CategoryAxis>
                     </xAxis>
                     <yAxis>
                       <NumberAxis fx:id="y" label="ANZAHL" side="LEFT" />

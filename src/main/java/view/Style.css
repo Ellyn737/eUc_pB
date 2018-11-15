@@ -134,8 +134,28 @@
 .list-cell:filled:hover {
 	-fx-background-color: #ff9900;
 	-fx-text-fill: white;
-	
 }
 
+/*Statistic*/
 
-
+.chart-pie{
+	-fx-clockwise: true;
+}
+.chart-pie-label {
+    -fx-fill: white;
+    -fx-font-size: 1em;
+}
+.chart-legend {
+   -fx-background-color:  grey;
+   -fx-border-color: white;
+}
+.label-underline {
+    -fx-border-color: white, transparent, white;
+    -fx-border-width: 0 0 2 0, 0 0 1 0, 0 0 2 0;
+    -fx-border-insets: 0 0 1 0, 0 0 2 0, 0 0 3 0;
+}
+.chart-bar{
+    -fx-background-color: #ff9900;
+    -fx-border-color: black;
+    -fx-label-fill: white;
+}
