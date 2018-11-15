@@ -86,7 +86,7 @@ public class OverviewYearController implements Initializable{
     	numberText.setText(numberResult);
 		
 //    	Titel in die List einsetzen
-		for(int i = 0; i<=yearList.size(); i++) {
+		for(int i = 0; i<yearList.size(); i++) {
 			String result = yearList.get(i);
 			resultTitleList.add(result);
 			listViewTitle.setItems(resultTitleList);
