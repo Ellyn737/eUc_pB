@@ -11,12 +11,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
+/**
+ * class for building the borrowing in the database
+ * 
+ * @author ellyn
+ */
 @Entity
 @Table(name="borrow_media", schema="ellynhb")
 public class BorrowMedia implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="borrow_id")
 	private int borrowId;
 	
@@ -75,6 +81,14 @@ public class BorrowMedia implements Serializable {
 
 	public void setIsReturned(Boolean isReturned) {
 		this.isReturned = isReturned;
+	}
+
+	public int getBorrowId() {
+		return borrowId;
+	}
+
+	public void setBorrowId(int borrowId) {
+		this.borrowId = borrowId;
 	}
 
 	@Override

@@ -1,31 +1,34 @@
 package models;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.text.MessageFormat;
 
 /**
+ * class for building the lenders in the database
+ * 
  * @author ellyn
- * 
- * Klasse zur Erstellung neuer Nutzer, die Buecher 
- * ausleihen wollen
- * 
  */
 
 @Entity
 @Table(name="lender", schema="ellynhb")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="lender_type", discriminatorType=DiscriminatorType.STRING)
 public class Lender implements Serializable{
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id_lender")
 	private int idLender;
-	
 	@Column(name="firstname")
 	private String firstName;
 	@Column(name="lastname")
@@ -65,6 +68,16 @@ public class Lender implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public int getIdLender() {
+		return idLender;
+	}
+
+
+	public void setIdLender(int idLender) {
+		this.idLender = idLender;
+	}
+
 
 	@Override
 	public String toString() {

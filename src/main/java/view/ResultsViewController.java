@@ -29,16 +29,20 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import models.Book;
 
-public class ResultsViewController{
+/**
+ * gets information from SearchView
+ * lists results of the search in a ListView
+ * 
+ * @author ellyn
+ *
+ */
+public class ResultsViewController {
 	@FXML AnchorPane rootPane;
 	@FXML Label titleLabel;
 	@FXML Button cancelBtn;
 	@FXML Label searchParametersLabel;
 	@FXML TextArea txtArSearchParams;
 	@FXML ListView<String> listView;
-	
-//	ReusablePaneController pane;
-//	private List<Integer> ids;
 	
 	private String title;
 	private String author;
@@ -51,58 +55,61 @@ public class ResultsViewController{
 	private String exemplarString;
 	private boolean isBorrowed;
 	private String isBorrowedString;
+	private String ratingString;
 	
 	private List<Integer> theIds;
 	ArrayList<Pair> oldParameters;
 		
-	private ResultsViewController resContr;
-	
 	private MainBibliothek mainBib;
-	private BibController bc;
+	private BibController bc = new BibController();
+	private ResultsViewController resContr;
 	
 	public void setMain(MainBibliothek mainBib) {
 		this.mainBib = mainBib;
 	}
 
-	
+	/**
+	 * on cancel go to StartMenu
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
-		System.out.println("RVC - handleCancelButton");
+		System.out.println("ResultsViewController - handleCancelButton");
 		AnchorPane startPane = FXMLLoader.load(getClass().getResource("../view/StartMenu.fxml"));
 		rootPane.getChildren().setAll(startPane);
 		}
 
 
 	/**
-	 * empfaengt die Daten von SearchView
-	 * ruft setSearchParameters und setListView auf
+	 * gets data from SearchView
+	 * calls setSearchParameters and setListView
 	 * 
 	 * @param ids
 	 * @param searchParams
 	 */
 	public void fillListAndView(List<Integer> ids, ArrayList<Pair> searchParams) {
-		System.out.println("RVC - FillListAndView");
+		System.out.println("ResultsViewController - FillListAndView");
 		
 		theIds = ids;
 		oldParameters = searchParams;
-		
-		System.out.println("Setze die gesuchten Parameter");
-		setSearchParameters(oldParameters);
-		
-		System.out.println("Setzte die ListView");
-		setListView();
+
+		setSearchParameters(searchParams);
+		setListView(ids);
 		
 	}
 	
 	/**
-	 * setzt die suchParameter am Rand als String
+	 * sets given searchParameters at the side in a Label
 	 * 
 	 * @param parameters
 	 */
 	public void setSearchParameters(ArrayList<Pair> parameters) {
-		System.out.println("RVC - setSearchParameters");
+		System.out.println("ResultsViewController - setSearchParameters");
 
 		String result = "";
 	
+//		analyses the given parameters and sets the string accordingly
 		for(int i = 0; i < parameters.size(); i++) {
 			String key = parameters.get(i).getKey().toString();
 			switch(key) {
@@ -147,53 +154,52 @@ public class ResultsViewController{
 					}
 					result += "Ausgeliehen: " + isBorrowedString + "\r\n";
 					break;
+				case "rating":
+					ratingString = parameters.get(i).getValue().toString();
+					result += "Bewertungssterne: " + ratingString + "\r\n";
+					break;
+					
 			}
+				
 		}
-			
-		System.out.println(result);
+		
+//		sets the text
 		txtArSearchParams.setText(result);
 		
 	}
 	
 	/**
-	 * ruft getBookDataForList auf und setzt Ergebnisstring in ListView
+	 * calls getBookDataForList and sets resultString in listView
 	 * 
 	 * @param ids
 	 */
-	public void setListView() {
-		System.out.println("RVC - setListView");
-		System.out.println(theIds);
+	public void setListView(List<Integer> ids) {
+		System.out.println("ResultsViewController - setListView");
 		
-//		panel an die liste mit panels uebergeben
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
-//		hole die buchdaten und setze sie in die listView
-		for(int i = 0; i < theIds.size(); i++) {					
-			System.out.println("Setze Ergebnisstring in Liste für id: " + theIds.get(i));
-	 		list.add(getTheBookDataForList(theIds.get(i)));
+//		get book data
+		for(int i = 0; i < ids.size(); i++) {					
+	 		list.add(getTheBookDataForList(ids.get(i)));
 		}
 		
-		System.out.println("Setze Liste");
+//		set book data into the listView
 		listView.setItems(list);	
-		System.out.println(list);
 
-		System.out.println("setze MouseEvent");
-		/**
-		 * beim Mausklick auf ein item in der Liste
-		 * den index holen und damit die Id holen
-		 * id an ShowTitleController geben und ShowTitle anzeigen
-		 */
+		
+//		listView on MouseClicked
 		listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				try {
+//					get the id with the index
 					Integer listIndex = listView.getSelectionModel().getSelectedIndex(); 
 					Integer clickedId = theIds.get(listIndex);
 					
 					FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 					AnchorPane pane = (AnchorPane) loader.load();
 					
-					//id an ResultsView uebergeben
+//					give id to showTitle
 					ShowTitleController showTitle = loader.getController();
 					showTitle.fillView(clickedId);
 					showTitle.setOldParametersForReturning(theIds, oldParameters);
@@ -202,7 +208,6 @@ public class ResultsViewController{
 					rootPane.getChildren().setAll(pane);
 
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -211,47 +216,46 @@ public class ResultsViewController{
 	}
 	
 	/**
-	 * holt die daten für das gesuchte Buch und setzt einen String, der in der ListView angezeigt werden kann
+	 * gets the data for the searched book
+	 * sets a string to be shown in the listView
 	 * 
 	 * @param id
 	 * @return
 	 */
 	public String getTheBookDataForList(int id) {
-		System.out.println("RVC - getTheBookDataForList");
+		System.out.println("ResultsViewController - getTheBookDataForList");
 		
 		String resultListString = "";
 		String isB = "";
+		
+		try {			
+//			get the book with the bookid
+			Book book = bc.getTheBook(id);
+		
+//			set variables
+			title = book.getTitle();
+			System.out.println(title);
 			
-			System.out.println(id);
-			bc = new BibController();
-			try {
-				Book book = bc.getTheBook(id);
+			author = book.getAuthor();
+			System.out.println(author);
 			
-	//			setze variablen
-				title = book.getTitle();
-				System.out.println(title);
-				
-				author = book.getAuthor();
-				System.out.println(author);
-				
-				publisher = book.getPublisher();
-				System.out.println(publisher);
-				
-				year = book.getYearOfPublication();
-				System.out.println(year);
-				
-				isBorrowed = book.getIsBorrowed();
-				System.out.println(isBorrowed);
-				
-				if(isBorrowed) {
-					isB = "ausgeliehen";
-				}else {
-					isB = "verfügbar";
-				}
-	
-	//			setze String
-				resultListString += title + ", " + author + ", " + year + ", " + publisher + ", " + isB;
-				System.out.println(resultListString);
+			publisher = book.getPublisher();
+			System.out.println(publisher);
+			
+			year = book.getYearOfPublication();
+			System.out.println(year);
+			
+			isBorrowed = book.getIsBorrowed();
+			System.out.println(isBorrowed);
+			
+			if(isBorrowed) {
+				isB = "ausgeliehen";
+			}else {
+				isB = "verfügbar";
+			}
+
+//			set string
+			resultListString += title + ", " + author + ", " + year + ", " + publisher + ", " + isB;
 			}catch(Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -260,7 +264,7 @@ public class ResultsViewController{
 		}	
 
 	/**
-	 * ermöglicht die uebergabe von daten von einem anderen FXController an diesen
+	 * makes data transfer between different controllers possible 
 	 * 
 	 * @return
 	 */

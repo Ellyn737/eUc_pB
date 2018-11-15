@@ -11,6 +11,8 @@ import controller.BorrowController;
 import controller.LenderController;
 import controller.MainBibliothek;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -27,8 +29,13 @@ import javafx.util.Pair;
 import models.Book;
 import models.BorrowMedia;
 import models.Lender;
-import models.Rating;
 
+/**
+ * manages the returning of a book
+ * 
+ * @author ellyn
+ *
+ */
 public class TitleReturnController {
 	@FXML AnchorPane rootPane;
 	@FXML Label titleLabel;
@@ -42,15 +49,15 @@ public class TitleReturnController {
 	@FXML Label messageLbl;
 	@FXML Button giveBackBtn;
 	@FXML Button cancelBtn;
-	@FXML Rating ratingStars;
 	
 	
 	private MainBibliothek mainBib;
-	private BibController bc;
 	private TitleReturnController trc;
-	private BorrowController boC;
-	private LenderController lc;
-	
+
+	private BibController bc = new BibController();
+	private BorrowController boC = new BorrowController();
+	private LenderController lc = new LenderController();
+
 	private List<Integer> resultIds;
 	private ArrayList<Pair> oldParameters;
 	private int titleId;
@@ -60,7 +67,14 @@ public class TitleReturnController {
 		this.mainBib = mainBib;
 	}
 	
+	/**
+	 * on cancel go to ShowTitle
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleCancelButton(ActionEvent event) throws IOException{
+		System.out.println("TitleReturnController - handleCancelButton");
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 		AnchorPane pane = (AnchorPane) loader.load();
 		
@@ -72,62 +86,62 @@ public class TitleReturnController {
 		rootPane.getChildren().setAll(pane);
 		}	
 	
+	/**
+	 * on return
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
 	@FXML private void handleGiveBackButton(ActionEvent event) throws IOException{
-		//datum checken und auf IsThere setzen, nutzer austragen bei titel
-		boC = new BorrowController();
-		
+		System.out.println("TitleReturnController - handleGiveBackButton");
+//		call BorrowController and return the book
 		boC.returnBook(titleId);
 		
+//		go to ShowTitle
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("ShowTitle.fxml"));
 		AnchorPane pane = (AnchorPane) loader.load();
-		
-		//id an ResultsView uebergeben
 		ShowTitleController showPane = loader.getController();
+		
+		showPane.fillView(titleId);
 		showPane.setOldParametersForReturning(resultIds, oldParameters);
 		
 		Scene scene = new Scene(pane);
 		rootPane.getChildren().setAll(pane);
 		}
 	
+	/**
+	 * fills the view with given book and lender data
+	 * 
+	 * @param id
+	 */
 	public void fillView(int id) {
-		System.out.println("TReC - fillView");
+		System.out.println("TitleReturnController - fillView");
 		titleId = id;
-		bc = new BibController();
 
 		Book book = bc.getTheBook(titleId);
 //		set parameters on the left side
-		System.out.println("Setze Variablen");
 		givenTitle.setText(book.getTitle().toUpperCase());
 		givenAuthor.setText(book.getAuthor());
 		givenPublisher.setText(book.getPublisher());
 		givenYear.setText(String.valueOf(book.getYearOfPublication()));
 		
-		boC = new BorrowController();
 //		get the last borrowing of the title
-		System.out.println("Hole BorrowMedia");
 		BorrowMedia borrowing = boC.getLastBorrowingOfTitle(titleId);
 		
-		System.out.println(borrowing.toString());
-		
-		System.out.println("Setze returnDate und die Tage drüber");
 //		get returnDate and compare to now
 		returnDate = borrowing.getReturnDate().toLocalDate();
 		long daysOver = boC.getDaysOverReturnDate(returnDate);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.LLLL.yyyy");
 		returnDateLbl.setText("Rückgabedatum: " + returnDate.format(formatter) + "\r\nDas Buch ist " + daysOver + " Tage drüber.");
 
-		System.out.println("Hole ausleiher");
-		lc = new LenderController();
 //		set lender
 		Lender lender = lc.getLender(borrowing.getIdLender());
-		System.out.println("Setze ausleiher");
 		borrowerLbl.setText("Von: " + lender.getFirstName()  + " " + lender.getLastName());
 		
 //		set message
-		System.out.println("Setze message");
 		String msg = borrowing.getMessage();
 		messageLbl.setText(msg);
-
+		
 	}
 	
 	public void setOldParametersForReturning(List<Integer> ids, ArrayList<Pair> searchParams) {

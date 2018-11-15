@@ -15,10 +15,10 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 
 /**
+ * class for building the media in the database
+ * superclass for book and other mediatypes in the future
  * 
  * @author ellyn
- * 
- * Superklasse fuer Buch und später weitere Medien
  * 
  */
 @Entity
@@ -31,7 +31,7 @@ import java.text.MessageFormat;
 @DiscriminatorColumn(name="media_type", discriminatorType=DiscriminatorType.STRING)
 public class Media implements Serializable {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id_media")
 	private int idmedia;
 	
@@ -47,6 +47,8 @@ public class Media implements Serializable {
 	private String comment;
 	@Column(name="exemplar")
 	private int exemplar;
+	@Column(name="rating")
+	private Integer stars;
 	
 	
 	public Media() {}
@@ -69,8 +71,6 @@ public class Media implements Serializable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
-
 
 
 	public int getYearOfPublication() {
@@ -118,13 +118,27 @@ public class Media implements Serializable {
 		this.exemplar = exemplar;
 	}
 
+	public Integer getStars() {
+		return stars;
+	}
+
+	public void setStars(Integer stars) {
+		this.stars = stars;
+	}
+
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}: idmedia={1}, title={2}, erscheinungsjahr={4}, "
-				+ "ausgeliehen={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
-				new Object[] {getClass().getSimpleName(), idmedia, title, year, isBorrowed, content, comment, exemplar});
+		return "Media [idmedia=" + idmedia + ", title=" + title + ", year=" + year + ", isBorrowed=" + isBorrowed
+				+ ", content=" + content + ", comment=" + comment + ", exemplar=" + exemplar + ", stars=" + stars + "]";
 	}
-	
+
+//	@Override
+//	public String toString() {
+//		return MessageFormat.format("{0}: idmedia={1}, title={2}, erscheinungsjahr={4}, "
+//				+ "ausgeliehen={5}, inhalt={6}, kommentar={7}, exemplar={8}", 
+//				new Object[] {getClass().getSimpleName(), idmedia, title, year, isBorrowed, content, comment, exemplar});
+//	}
+//	
 	
 	
 
