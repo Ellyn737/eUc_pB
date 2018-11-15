@@ -30,6 +30,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -285,6 +286,10 @@ public class TitleBorrowController {
 		dialog.setTitle("Email anpassen");
 		dialog.setHeaderText("Die Email-Adresse des Ausleihers unterscheidet sich von der eingegebenen.");
 		
+//		add styling to dialogPane
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 		Label emailLabel = new Label("Email ");
 		TextField emailTxt = new TextField();
 		
@@ -335,6 +340,10 @@ public class TitleBorrowController {
 		dialog.setTitle("Nachname anpassen");
 		dialog.setHeaderText("Der Nachname des Ausleihers unterscheidet sich von dem eingegebenen.");
 		
+//		add styling to dialogPane
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 		Label lNLbl = new Label("Nachname ");
 		TextField lNTxt = new TextField();
 		
@@ -382,6 +391,10 @@ public class TitleBorrowController {
 		Alert dialog = new Alert(AlertType.WARNING, "Möchten Sie den neuen Ausleiher speichern?", ButtonType.YES, ButtonType.NO);
 		dialog.setTitle("Der Ausleiher existiert nicht.");
 		dialog.setHeaderText("Füllen Sie bitte alle Felder aus und legen so einen neuen Ausleiher an.");
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
 		
 		Label firstNameLbl = new Label("Vorname ");
 		Label lastNameLbl = new Label("Nachname ");
@@ -448,6 +461,11 @@ public class TitleBorrowController {
 	 */
 	public void setWarningFields() {
 		Alert warning = new Alert(AlertType.WARNING, "Bitte geben Sie alle nötigen Daten an. ", ButtonType.OK);
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = warning.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText("Es sind nicht alle Felder ausgefüllt.");
 		warning.showAndWait();

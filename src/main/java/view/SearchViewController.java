@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -308,9 +309,18 @@ public class SearchViewController implements Initializable {
 		System.out.println("SearchViewController - setWarning");
 //		Alert fuer moegliche fehlende Eingaben
 		Alert warning = new Alert(AlertType.WARNING, message2, ButtonType.OK);
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = warning.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText(message1);
 		warning.showAndWait();
+		
+		if(warning.getResult() == ButtonType.OK) {
+			warning.close();
+		}
 	}
 	
 }

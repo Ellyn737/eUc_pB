@@ -32,6 +32,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -334,11 +335,18 @@ public class AddNewTitleController implements Initializable{
 		}
 	}
 	
+	
+	
 	public void setAddBorrowedBookDialog(String bookTitle, String librarianName, int bookID) {
 		System.out.println("AddNewTitleController - setAddNewBorrowedBookDialog");
 		Alert dialog = new Alert(AlertType.WARNING, "Bitte füllen Sie die entsprechenden Felder aus.", ButtonType.OK);
 		dialog.setTitle("DAS BUCH IST AUSGELIEHEN");
 		dialog.setHeaderText("Der Ausleiher und ein  Rückgabedatum müssen festgelegt werden.");
+		
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
 		
 //		deactivate the x in the right upper corner
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
@@ -477,6 +485,11 @@ public class AddNewTitleController implements Initializable{
 		dialog.setTitle("Der Ausleiher existiert nicht.");
 		dialog.setHeaderText("Möchten Sie einen neuen Ausleiher anlegen?");
 		
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 		Label firstNameLbl = new Label("Vorname ");
 		Label lastNameLbl = new Label("Nachname ");
 		Label emailLbl = new Label("Email ");
@@ -558,6 +571,11 @@ public class AddNewTitleController implements Initializable{
 		dialog.setTitle("Nachname anpassen");
 		dialog.setHeaderText("Der Nachname des Ausleihers unterscheidet sich von dem Eingegebenen.\r\n Möchten Sie einen neuen Nachnamen eingeben?");
 		
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 		Label lNLbl = new Label("Nachname ");
 		TextField lNTxt = new TextField();
 		
@@ -603,6 +621,11 @@ public class AddNewTitleController implements Initializable{
 		dialog.setTitle("FEHLER BEIM SUCHEN DES AUSLEIHERS");
 		dialog.setHeaderText("Die Email des Ausleihers stimmt nicht.");
 		
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 //		deactivate the x in the right upper corner
 		Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
 		stage.setOnCloseRequest(event ->{
@@ -637,9 +660,18 @@ public class AddNewTitleController implements Initializable{
 	 */
 	public void setWarning(String message1, String message2) {
 		Alert warning = new Alert(AlertType.WARNING, message2, ButtonType.OK);
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = warning.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText(message1);
 		warning.showAndWait();
+		
+		if(warning.getResult() == ButtonType.OK){
+			warning.close();
+		}
 	}
 	
 	/**

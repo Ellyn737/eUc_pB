@@ -18,6 +18,7 @@ import org.simplejavamail.mailer.config.TransportStrategy;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
@@ -152,6 +153,11 @@ public class EmailController {
 		System.out.println("EmailController - setWarningOverdue");
 
 		Alert warning = new Alert(AlertType.WARNING, otherMsg, ButtonType.OK);
+		
+//		add styling to dialogPane
+		DialogPane dialogPane = warning.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/Style.css").toExternalForm());
+		
 		warning.setTitle("ACHTUNG");
 		warning.setHeaderText(headerMsg);
 		warning.showAndWait();
